@@ -33,7 +33,7 @@ const KakaoLogin = () => {
     return (
         <div>
             <img
-                src="https://www.kakaosign.com/resources/img/kakao_experience_login_btn.png"
+                src="./img/kakao.png"
                 alt="Login with Kakao"
                 onClick={handleKakaoLogin}
                 style={{ cursor: 'pointer' }} // 이미지에 커서 스타일 추가

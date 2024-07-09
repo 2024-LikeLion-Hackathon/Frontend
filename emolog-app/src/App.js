@@ -1,10 +1,12 @@
+import React from 'react';
 import './App.css';
-import KakaoLogin from './components/kakao_login';
+import Signup from './components/signup';
+
 
 function App() {
   return (
     <div className="App">
-      <KakaoLogin />
+      <Signup />
     </div>
   );
 }
