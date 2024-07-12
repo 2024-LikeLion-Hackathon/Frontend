@@ -31,7 +31,7 @@ const KakaoLogin = () => {
     };
 
     return (
-        <div>
+        <div className='kakaoIdLogin'>
             <img
                 src="./img/kakao.png"
                 alt="Login with Kakao"
