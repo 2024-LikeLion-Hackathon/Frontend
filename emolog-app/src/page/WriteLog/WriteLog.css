@@ -69,10 +69,14 @@ margin: 5px;
 }
 
 #secondBox{
+
+    position: absolute;
+    top: 100px;
     width: 468px;
     height: 7%;
     display: flex;
     margin-bottom: 12px;
+    align-items: center;
 
 }
 #date{
@@ -88,7 +92,7 @@ line-height: 18px;
 /* identical to box height, or 112% */
 display: flex;
 align-items: center;
-align-self: flex-end;
+
 margin-bottom: 10px;
 color: #000000;
 
@@ -98,6 +102,9 @@ color: #000000;
    margin-left: 126px; 
 }
 #inputbox{
+    position: absolute;
+    top:75px;
+    margin-top: 82px;
     width: 468px;
     height: 72%;
     display: flex;
@@ -112,7 +119,7 @@ color: #000000;
 
 #loginput{
     width: 408px;
-    height: 100%;
+    height: 76%;
     border: none;
     background-color:#F5F5F5 ;
     display: flex;
@@ -160,6 +167,8 @@ color: #878787;
 }
 
 #counter{
+   
+    
     margin-right: 20px;
     margin-bottom: 10px;
     height: 34px;
