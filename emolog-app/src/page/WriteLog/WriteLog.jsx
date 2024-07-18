@@ -2,6 +2,8 @@ import React from "react";
 import './WriteLog.css';
 
 function WriteLog(){
+    let month =7;
+    let day = 3;
     
     return(
         <div id="writelog">
@@ -9,16 +11,18 @@ function WriteLog(){
                 <div id="logo"></div>
             </div>
             <div id="secondBox">
-                <div id="date"></div>
+                <div id="date"> {month}월{day}일 일기 작성하기</div>
                 <div id="btnBox">
-                    <button id="cancel"></button>
+                    <button id="cancel">취소</button>
                     <button id="finish"
-                            type="submit"></button>
+                            type="submit">완료</button>
                 </div>
 
             </div>
             <div id="inputbox">
-                <input type="text"></input>
+                <textarea type="text"
+                       id = "loginput"
+                       placeholder="오늘의 일기를 작성해보세요"></textarea>
             </div>
         </div>
     );
