@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import './WriteLog.css';
 
 function WriteLog(){
     let month =7;
     let day = 3;
-    
+
+   
+    const maxLength = 1500;
+    const [text, setText] = useState('');
+
+    const handleChange = (event) => {
+        if (event.target.value.length <= maxLength) {
+            setText(event.target.value);
+        }
+    };
+
+    const textStyle = {
+        color: text.length >= maxLength ? 'red' : '#666',
+    };
+   
     return(
         <div id="writelog">
             <div id="logoBox">
@@ -22,7 +36,21 @@ function WriteLog(){
             <div id="inputbox">
                 <textarea type="text"
                        id = "loginput"
-                       placeholder="오늘의 일기를 작성해보세요"></textarea>
+                       maxLength={maxLength}
+                       value={text}
+                       onChange={handleChange}
+                       placeholder="오늘의 일기를 작성해보세요">
+                       </textarea>
+                   <div id="counter" style={textStyle}> 
+                {text.length}/{maxLength}
+                </div>
+            </div> 
+            
+                   
+            <div id="nevi">
+                <button id="home"></button>
+                <button id="diary"></button>
+                <button id="my"></button>
             </div>
         </div>
     );

@@ -6,7 +6,7 @@
 }
 #writelog{
     width: 500px;
-    height: 100vh;
+    height: 97vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -72,6 +72,7 @@ margin: 5px;
     width: 468px;
     height: 7%;
     display: flex;
+    margin-bottom: 12px;
 
 }
 #date{
@@ -100,11 +101,17 @@ color: #000000;
     width: 468px;
     height: 80%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color:#F5F5F5 ;
+    border-radius: 20px;
+    border-bottom-left-radius:0 ;
+    border-bottom-right-radius:0 ;
 }
 
 #loginput{
-    width: 468px;
+    width: 408px;
     height: 100%;
     border: none;
     background-color:#F5F5F5 ;
@@ -148,4 +155,38 @@ color: #878787;
 }
 #loginput:focus{
     outline: none;
+}
+
+#counter{
+    margin-right: 20px;
+    height: 34px;
+    font-size: 14px;
+    font-weight: normal;
+    align-self: flex-end;
+}
+
+/** 네비게이터 **/
+
+#nevi{
+    width: 500px;
+    height: 96px;
+    background-color: #FCFCFC;
+    border-top-left-radius: 46px;
+    border-top-right-radius: 46px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+#home{
+    height: 52px;
+    width: 52px;
+
+}
+#diary{
+    height: 52px;
+    width: 52px;
+}
+#my{
+    height: 52px;
+    width: 52px;
 }
