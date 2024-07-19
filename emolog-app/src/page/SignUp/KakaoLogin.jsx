@@ -4,7 +4,7 @@ const KakaoLogin = () => {
     useEffect(() => {
         // Kakao SDK 초기화
         if (!window.Kakao.isInitialized()) {
-            window.Kakao.init('process.env.NAVER_SECRET');
+            window.Kakao.init('process.env.KAKAO_SECRET');
         }
     }, []);
 
