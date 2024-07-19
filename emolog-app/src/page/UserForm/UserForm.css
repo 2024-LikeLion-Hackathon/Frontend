@@ -1,0 +1,170 @@
+.container {
+  position: relative;
+  width: 1920px;
+  height: 1024px;
+
+  background: #ffffff;
+}
+
+#back {
+  position: absolute;
+  width: 500px;
+  height: 1024px;
+  left: calc(50% - 500px / 2 - 26px);
+  top: calc(50% - 1024px / 2);
+
+  background: #fcfcfc;
+}
+
+#logo {
+
+  position: absolute;
+  width: 111px;
+  height: 40px;
+  left: calc(50% - 111px / 2 - 178.5px);
+  top: 44px;
+
+  background-image: url("../../asset/img/logo.png");
+}
+
+#text h1 {
+  position: absolute;
+  width: auto;
+  height: 26px;
+  left: calc(50% - 91px / 2 - 188.5px);
+  top: 217px;
+
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+
+  color: #000000;
+}
+
+#text p {
+  position: absolute;
+  width: auto;
+  height: 18px; /* 자동 조정 */
+  left: calc(50% - 173px - 40px); /* 중앙 정렬 */
+  top: 273px;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+}
+
+#nickname {
+  position: absolute;
+  width: 468px;
+  height: 46px;
+  left: 16px;
+  top: 360px;
+
+  background: #f1f1f1;
+  border-radius: 5px;
+  border: none;
+}
+
+#nickname::placeholder {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #878787;
+  padding-left: 9px;
+}
+
+#label_nickname {
+  position: absolute;
+  width: auto; /* 자동 조정 */
+  height: auto; /* 자동 조정 */
+  left: 16px;
+  top: 334px;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 18px;
+  color: #000000;
+}
+
+#label_age {
+  position: absolute;
+  width: auto; /* 자동 조정 */
+  height: auto; /* 자동 조정 */
+  left: 16px;
+  top: 480px;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 18px;
+  color: #000000;
+}
+
+#nickname-message {
+  position: absolute;
+  width: auto; /* 자동 조정 */
+  height: auto; /* 자동 조정 */
+  left: calc(50% - 132.5px - 101.5px); /* 중앙 정렬 */
+  top: 414px;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ff2e00;
+}
+
+select {
+    position: absolute;
+    width: 468px; 
+    height: 46px; 
+    left: calc(50% - 234px);
+    top: 506px; 
+    background: #f1f1f1; 
+    border-radius: 5px; 
+    padding: 0 10px; 
+    font-family: "Pretendard", sans-serif;
+    font-style: normal; 
+    font-weight: 500; 
+    font-size: 14px; 
+    color: #878787; 
+    border: none;
+  }
+  
+
+select option:disabled {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #878787;
+}
+
+button {
+  position: absolute;
+  width: 100%; 
+  max-width: 470px;
+  height: 54px;
+  left: calc(50% - 235px); 
+  top: 627px;
+  background: #f1f1f1;
+  border-radius: 5px;
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 22px;
+  box-sizing: border-box;
+  border: none;
+}
