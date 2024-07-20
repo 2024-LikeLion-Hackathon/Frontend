@@ -1,18 +1,24 @@
-import React from 'react';
-import KakaoLogin from './KakaoLogin';
-import './SignUp.css';
+import React from "react";
+import KakaoLogin from "./KakaoLogin";
+import "./SignUp.css";
 
 const Signup = () => {
-    return (
-        <div>
-            <img src='./asset/emolog_logo.png' alt='logo_img' id='signup_logo'/>
-            <br />
-            <img src='./asset/signup_message.png' alt='signup_message' id='signup_mess'/>
-            <div>
-                <KakaoLogin />
-            </div>
+  return (
+    <div className="SignUp">
+      <div className="container">
+        <div id="back">
+          <div id="logo"></div>
+          <div id="sign_message"></div>
+          <div id="kakao">
+            <KakaoLogin />
+          </div>
+          <div id="naver"></div>
+          <div id="google"></div>
+          <div id="copyright"></div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Signup;
