@@ -4,7 +4,7 @@
     justify-content: center;
     margin: 0;
 }
-#writelog{
+.writelog{
     width: 500px;
     height: 97vh;
     display: flex;
@@ -13,17 +13,15 @@
     align-items: center;
     margin: 0;
     
-}
-#logoBox{
-    
-  
-    width: 468px;
-    height:10% ;
-    display: flex;
-    align-items: center;
 
-}
-#cancel{
+    #logoBox{
+        width: 468px;
+        height:10% ;
+        display: flex;
+        align-items: center;
+
+    }
+    #cancel{
   
 width: 92px;
 height: 40px;
@@ -42,9 +40,11 @@ background: #EEEEEE;
 border-radius: 5px;
 border: none;
 margin: 5px;
-}
 
-#finish{
+
+    }
+
+    #finish{
     width: 92px;
 height: 40px;
 
@@ -58,55 +58,60 @@ background: #EEEEEE;
 border-radius: 5px;
 border: none;
 margin: 5px;
-}
+    }
 
-#logo{
+    #logo{
     border-top:10px;
     width: 111px;
     height: 40px;
     background-image:url('../../asset/img/logo.png');
     background-size: contain;
-}
+    position: absolute;
+    left: calc(50% - 111px/2 - 178.5px);
+    top: 44px;
+    }
 
-#secondBox{
+    #secondBox{
 
     position: absolute;
     top: 100px;
     width: 468px;
-    height: 7%;
+    height: 90px;
     display: flex;
+    justify-content: space-between;
     margin-bottom: 12px;
     align-items: center;
 
-}
-#date{
-width: auto;
-height: 18px;
-left: calc(50% - 87px/2 - 133.5px);
-top: 135px;
-font-family: 'Pretendard';
-font-style: normal;
-font-weight: 700;
-font-size: 16px;
-line-height: 18px;
+    }
+    #date{
+        
+    width: auto;
+    height: 18px;
+    left: calc(50% - 24px/2 - 222px);
+    top: 135px;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 18px;
 /* identical to box height, or 112% */
-display: flex;
-align-items: center;
+    display: flex;
+    align-items: center;
 
-margin-bottom: 10px;
-color: #000000;
-
-
-}
-#btnBox{
-   margin-left: 126px; 
-}
-#inputbox{
-    position: absolute;
+    margin-bottom: 10px;
+    color: #000000;
+    }
+    #btnBox{
+   margin-left: px; 
+   display: flex;
+   justify-content: space-around;
+    }
+    #inputbox{
+    
     top:75px;
     margin-top: 82px;
     width: 468px;
-    height: 72%;
+    height: 75%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -115,11 +120,13 @@ color: #000000;
     border-radius: 20px;
     border-bottom-left-radius:0 ;
     border-bottom-right-radius:0 ;
-}
+    }
 
-#loginput{
+    #loginput{
+        position: absolute;
+        top: 178px;
     width: 408px;
-    height: 76%;
+    height: auto;
     border: none;
     background-color:#F5F5F5 ;
     display: flex;
@@ -139,13 +146,13 @@ color: #000000;
 
 
 
-}
+    }
 
-#loginput::placeholder{
+    #loginput::placeholder{
     text-align:start;
    
 position: absolute;
-width: 153px;
+width: auto;
 height: 18px;
 
 
@@ -161,25 +168,26 @@ align-items: center;
 color: #878787;
 
     
-}
-#loginput:focus{
+    }
+    #loginput:focus{
     outline: none;
-}
+    }
 
-#counter{
+    #counter{
    
-    
+    position: absolute;
+    bottom: 96px;
     margin-right: 20px;
     margin-bottom: 10px;
     height: 34px;
     font-size: 14px;
     font-weight: normal;
     align-self: flex-end;
-}
+    }
 
 /** 네비게이터 **/
 
-#nevi{
+    #nevi{
     
     width: 500px;
     height: 96px;
@@ -193,33 +201,34 @@ color: #878787;
     background: #FCFCFC;
     /* 네비게이터 */
 
-position: absolute;
-width: 500px;
-height: 96px;
-left: calc(50% - 500px/2);
-bottom: 0px;
+    position: absolute;
+    width: 500px;
+    height: 96px;
+    left: calc(50% - 500px/2);
+    bottom: 0px;
 
 
 
 
 
-}
-#home{
+    }
+    #home{
     border: none;
     height: 52px;
     width: 52px;
     background-image: url('../../asset/img/home.png');
 
-}
-#diary{
+    }
+    #diary{
     border: none;
     height: 52px;
     width: 52px;
     background-image: url('../../asset/img/diary.png');
-}
-#my{
+    }
+    #my{
     border: none;
     height: 52px;
     width: 52px;
     background-image: url('../../asset/img/my.png');
+    }
 }

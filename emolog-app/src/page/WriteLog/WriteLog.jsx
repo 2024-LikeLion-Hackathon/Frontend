@@ -20,7 +20,7 @@ function WriteLog(){
     };
    
     return(
-        <div id="writelog">
+        <div class="writelog">
             <div id="logoBox">
                 <div id="logo"></div>
             </div>

@@ -4,7 +4,7 @@
   height: 1024px;
 
   background: #ffffff;
-}
+
 
 #back {
   position: absolute;
@@ -167,4 +167,5 @@ button {
   line-height: 22px;
   box-sizing: border-box;
   border: none;
+}
 }
