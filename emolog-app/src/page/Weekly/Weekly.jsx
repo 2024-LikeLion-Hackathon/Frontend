@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Weekly.css";
 
 // 기본 데이터 설정
@@ -79,6 +80,7 @@ const getWeekData = (weekNumber) => {
 };
 
 const Weekly = () => {
+  const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState(todayData);
   const [selectedWeek, setSelectedWeek] = useState(1);
 
@@ -102,13 +104,17 @@ const Weekly = () => {
         <header>
           <div id="logo"></div>
           <div className="tab">
-            <span id="month">Month</span><span id="bar"></span><span className="active" id="week">Week</span>
+            <span id="month" onClick={() => navigate('/monthly')}>Month</span>
+            <span id="bar"></span>
+            <span className="active" id="week" onClick={() => navigate('/weekly')}>
+              Week
+            </span>
           </div>
           <div className="week-navigation">
-              <button onClick={handlePreviousWeek}>&lt;</button>
-              <h3>{selectedWeek}주차</h3>
-              <button onClick={handleNextWeek}>&gt;</button>
-            </div>
+            <button onClick={handlePreviousWeek}>&lt;</button>
+            <h3>{selectedWeek}주차</h3>
+            <button onClick={handleNextWeek}>&gt;</button>
+          </div>
         </header>
 
         <div className="weekly-content">
@@ -116,7 +122,9 @@ const Weekly = () => {
             {weekData.map((day, index) => (
               <div
                 key={index}
-                className="color-circle"
+                className={`color-circle ${
+                  selectedDay.date === day.date ? "selected" : ""
+                }`}
                 style={{ backgroundColor: day.hexCode }}
                 onClick={() => setSelectedDay(day)}
                 aria-label={`Select ${day.date}`}
@@ -127,7 +135,7 @@ const Weekly = () => {
             <h2>{selectedDay.date}</h2>
             <img src={selectedDay.imageUrl} alt="Diary illustration" />
             <div className="emotions">
-                <p id="emotion_text">대표 감정</p>
+              <p id="emotion_text">대표 감정</p>
               {selectedDay.emotions.map((emotion, index) => (
                 <span key={index} className="emotion-tag">
                   {emotion}
@@ -138,7 +146,8 @@ const Weekly = () => {
             <p className="ai-message">{selectedDay.aiMessage}</p>
             <p id="diary_text">이 날의 일기</p>
             <p className="diary-entry">{selectedDay.diary}</p>
-            <button id="diary_button"
+            <button
+              id="diary_button"
               onClick={() =>
                 alert("일기 자세히 보기 기능은 추후 추가될 예정입니다.")
               }
@@ -149,10 +158,10 @@ const Weekly = () => {
         </div>
       </div>
       <div id="nevi">
-                <button id="home"></button>
-                <button id="diary"></button>
-                <button id="my"></button>
-            </div>
+        <button id="home"></button>
+        <button id="diary"></button>
+        <button id="my"></button>
+      </div>
     </div>
   );
 };
