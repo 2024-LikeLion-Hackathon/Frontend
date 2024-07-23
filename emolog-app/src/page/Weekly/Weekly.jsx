@@ -128,7 +128,7 @@ const Weekly = () => {
                 style={{ backgroundColor: day.hexCode }}
                 onClick={() => setSelectedDay(day)}
                 aria-label={`Select ${day.date}`}
-              ></div>
+              ><div className="color-circle-container"></div></div>
             ))}
           </div>
           <div className="diary-container">

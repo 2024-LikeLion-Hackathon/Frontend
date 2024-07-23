@@ -1,14 +1,15 @@
 .weekly-container {
-  * {
-    font-family: "Pretendard", sans-serif;
-  }
+  font-family: "Pretendard", sans-serif;
 
   #back {
-    position: absolute;
+    position: absolute; /* 화면 기준으로 위치를 설정 */
     width: 500px;
     height: 1024px;
-    left: calc(50% - 500px / 2);
-
+    left: 50%; /* 화면 중앙을 기준으로 설정 */
+    top: 0; /* 화면 상단에 고정 */
+    transform: translateX(
+      -50%
+    ); /* 중앙 정렬을 위해 요소의 너비의 절반만큼 왼쪽으로 이동 */
     background: #fcfcfc;
   }
 
@@ -112,43 +113,32 @@
     padding-bottom: 96px;
   }
 
+  .color-circle-container {
+    width: 68px;
+    height: 68px;
+    top: -1.5px;
+    left: -2px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    background: url("../../asset/img/weekly_circle.png");
+  }
+
   .color-circle {
-    width: 70px;
-    height: 70px;
-    top: 178px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     margin: 20px 0;
     cursor: pointer;
-    border: 0.2px solid #000;
   }
-
-  .color-circle.selected::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -10px;
-    transform: translateY(-50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    background-color: #f4f4f4; /* 직사각형의 배경색 */
-    z-index: -1; /* 직사각형이 원 뒤에 표시되도록 함 */
-  }
-
-  .color-circle:hover,
-  .color-circle:checked {
-  background-color: #f4f4f4; /* 호버 및 클릭 상태일 때 배경색 */
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2); /* 둥근 모서리의 직사각형 그림자 */
-  border-radius: 15px; /* 둥근 모서리 */
-}
 
   .diary-container {
     position: absolute;
-    width: 345px;
+    width: 335px;
     height: 718px;
     top: 20px;
     left: 139px;
-    
+
     padding-left: 20px;
 
     background: #f4f4f4;
@@ -172,7 +162,7 @@
 
   .emotions {
     justify-content: center;
-    width: 315px;
+    width: 350px;
   }
 
   .emotion-tag {
@@ -188,7 +178,7 @@
     background-color: #eee;
     border-radius: 15px;
     padding: 5px 10px;
-    margin-right: 5px;
+    margin-right: 7px;
 
     font-family: "Pretendard";
     font-style: normal;
@@ -214,7 +204,7 @@
   }
 
   .ai-message {
-    width: 315px;
+    width: 305px;
     height: 48px;
     display: flex;
     align-items: center;
@@ -225,7 +215,7 @@
     font-size: 14px;
 
     background-color: #eee;
-    border-radius: 10px;
+    border-radius: 5px;
 
     padding-left: 10px;
     margin: 10px 0;
@@ -260,9 +250,26 @@
     /* 네비게이터 */
 
     position: fixed;
-    width: 500px;
-    height: 96px;
     left: calc(50% - 500px / 2);
     bottom: 0px;
+  }
+
+  #home {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/home.png");
+  }
+  #diary {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/diary.png");
+  }
+  #my {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/my.png");
   }
 }
