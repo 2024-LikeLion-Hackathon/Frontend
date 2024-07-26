@@ -1,0 +1,275 @@
+.weekly-container {
+  font-family: "Pretendard", sans-serif;
+
+  #back {
+    position: absolute; /* 화면 기준으로 위치를 설정 */
+    width: 500px;
+    height: 1024px;
+    left: 50%; /* 화면 중앙을 기준으로 설정 */
+    top: 0; /* 화면 상단에 고정 */
+    transform: translateX(
+      -50%
+    ); /* 중앙 정렬을 위해 요소의 너비의 절반만큼 왼쪽으로 이동 */
+    background: #fcfcfc;
+  }
+
+  header {
+    display: flex;
+    top: 50px;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fcfcfc;
+  }
+
+  #logo {
+    position: absolute;
+    width: 111px;
+    height: 40px;
+    left: calc(50% - 111px / 2 - 178.5px);
+    top: 44px;
+
+    background: url("../../asset/img/logo.png");
+  }
+
+  #month {
+    position: absolute;
+    width: 55px;
+    height: 20px;
+    left: calc(50% - 55px / 2 + 144.5px);
+    top: 54px;
+
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+
+    color: #9c9c9c;
+  }
+
+  #bar {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    left: 428px;
+    top: 59px;
+
+    background: #000000;
+  }
+
+  #week {
+    position: absolute;
+    width: 48px;
+    height: 20px;
+    left: calc(50% - 48px / 2 + 210px);
+    top: 54px;
+
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+  }
+
+  .week-navigation {
+    display: flex;
+    position: absolute;
+    top: 146px;
+    left: 34px;
+  }
+
+  .week-navigation button {
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .weekly-content {
+    display: flex;
+    position: absolute;
+    top: 178px;
+  }
+
+  .color-circle-nav {
+    display: flex;
+    position: absolute;
+    top: 30px;
+    left: 32px;
+    flex-direction: column;
+    align-items: center;
+    width: 60px; /* 네비게이션 바의 너비 설정 */
+    background-color: #fcfcfc;
+    padding: 10px;
+    padding-bottom: 96px;
+  }
+
+  .color-circle-container {
+    width: 68px;
+    height: 68px;
+    top: -1.5px;
+    left: -2px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    background: url("../../asset/img/weekly_circle.png");
+  }
+
+  .color-circle {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 20px 0;
+    cursor: pointer;
+  }
+
+  .diary-container {
+    position: absolute;
+    width: 335px;
+    height: 718px;
+    top: 20px;
+    left: 139px;
+
+    padding-left: 20px;
+
+    background: #f4f4f4;
+    border-radius: 10px;
+  }
+
+  .diary-container img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #emotion_text {
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+
+    color: #000000;
+  }
+
+  .emotions {
+    justify-content: center;
+    width: 350px;
+  }
+
+  .emotion-tag {
+    width: 80px;
+    height: 48px;
+
+    display: inline-flex;
+
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+
+    background-color: #eee;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-right: 7px;
+
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+
+    color: #000000;
+  }
+
+  #ai_text,
+  #diary_text {
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+
+    display: flex;
+    align-items: center;
+
+    color: #000000;
+  }
+
+  .ai-message {
+    width: 305px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+
+    font-family: "Pretendard";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+
+    background-color: #eee;
+    border-radius: 5px;
+
+    padding-left: 10px;
+    margin: 10px 0;
+  }
+
+  .diary-entry {
+    margin: 10px 0;
+  }
+
+  #diary_button {
+    width: 315px;
+    height: 48px;
+    padding: 10px 20px;
+    background-color: #eee;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #nevi {
+    width: 500px;
+    height: 96px;
+    background-color: #fcfcfc;
+    border-top-left-radius: 46px;
+    border-top-right-radius: 46px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.05);
+    background: #fcfcfc;
+    /* 네비게이터 */
+
+    position: fixed;
+    left: calc(50% - 500px / 2);
+    bottom: 0px;
+  }
+
+  #home {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/home.png");
+  }
+  #diary {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/diary.png");
+  }
+  #my {
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url("../../asset/img/my.png");
+  }
+}

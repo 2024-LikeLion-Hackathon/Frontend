@@ -59,10 +59,12 @@ const Form = () => {
 
 const Userform = () => {
   return (
-    <div className="container">
-      <div id="back">
-        <Header />
-        <Form />
+    <div className="UserForm">
+      <div className="container">
+        <div id="back">
+          <Header />
+          <Form />
+        </div>
       </div>
     </div>
   );

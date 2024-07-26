@@ -1,0 +1,74 @@
+.SignUp {
+  #back {
+    position: absolute;
+    width: 500px;
+    height: 1024px;
+    left: calc(50% - 500px / 2);
+    top: calc(50% - 1024px / 2);
+
+    background: #fcfcfc;
+  }
+
+  #logo {
+    position: relative;
+    width: 312px;
+    height: 112px;
+    left: calc(50% - 312px / 2);
+    top: 184px;
+    object-fit: contain;
+
+    background: url("../../asset/img/emolog_logo.png");
+  }
+
+  #sign_message {
+    position: absolute;
+    width: 246px;
+    height: 22px;
+    left: calc(50% - 246px / 2);
+    top: 312px;
+
+    background: url("../../asset/img/signup_message.png");
+  }
+
+  #copyright {
+    position: absolute;
+    width: 300px;
+    height: 10.7px;
+    left: calc(50% - 300px / 2);
+    top: 971px;
+
+    background: url("../../asset/img/copyrigt_emo.png");
+  }
+
+.kakaoIdLogin button{
+
+    position: absolute;
+    width: 328px;
+    height: 54px;
+    left: calc(50% - 328px / 2);
+    top: 464px;
+    border: none;
+
+    background: url("../../asset/img/kakao.png");
+  }
+
+  #naver {
+    position: absolute;
+    width: 328px;
+    height: 54px;
+    left: calc(50% - 328px / 2);
+    top: 534px;
+
+    background: url("../../asset/img/naver.png");
+  }
+
+  #google {
+    position: absolute;
+    width: 328px;
+    height: 54px;
+    left: calc(50% - 328px / 2);
+    top: 604px;
+
+    background: url("../../asset/img/google.png");
+  }
+}
