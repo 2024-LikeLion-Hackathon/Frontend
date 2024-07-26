@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './WriteLog.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 
 function WriteLog(){
     let month =7;

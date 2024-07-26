@@ -5,12 +5,11 @@ import Message from './Message'; // Message 컴포넌트를 가져옵니다.
 
 const MessageList = ({ messages }) => {
   return (
-    <div className='messages' style={{ overflowY: 'scroll', maxHeight: '450px' }}>
+    <div className='messages' style={{ overflowY: 'scroll', maxHeight: '660px' }}>
       {messages.map((message, i) => (
         <Message
           key={i}
           text={message.text}
-          time={new Date(message.time).toLocaleTimeString()}
         />
       ))}
     </div>
@@ -24,7 +23,6 @@ const MessageForm = ({ onMessageSubmit }) => {
     e.preventDefault();
     const message = {
       text: text,
-      time: new Date().toISOString()
     };
     onMessageSubmit(message);
     setText('');
@@ -34,12 +32,12 @@ const MessageForm = ({ onMessageSubmit }) => {
     <div className='message_form'>
       <form id='messageinput' onSubmit={handleSubmit}>
         <input
-          placeholder='메시지 입력'
+          placeholder='텍스트를 입력하세요'
           className='textinput'
           onChange={(e) => setText(e.target.value)}
           value={text}
         />
-        <h3></h3>
+         <button id='submitbtn' type='submit'/>
       </form>
     </div>
   );
@@ -52,10 +50,10 @@ function Chat() {
   const [users, setUsers] = useState([]);
 
   const initialize = (data) => {
-    const { users, name, roomname } = data;
+    const { users, name,  } = data;
     setUsers(users);
     setUser(name);
-    setRoomName(roomname);
+    
   };
 
   const messageRecieve = (message) => {
@@ -86,16 +84,17 @@ function Chat() {
       <div id="secondBox">
         <div id="date">{month}월 {day}일의 대화</div>
         <div id="btnBox">
-          <button id="emobtn">감정 선택하러 가기</button>
+          <button id="emobtn"></button>
         </div>
       </div>
       <div id="inputbox">
         <div id="chatbox">
           <MessageList messages={messages} />
           <MessageForm onMessageSubmit={handleMessageSubmit} />
+         
         </div>
      </div>
-        <div>
+        <div id="nevi">
         <button id="home"></button>
         <button id="diary"></button>
         <button id="my"></button>
