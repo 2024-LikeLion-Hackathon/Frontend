@@ -4,6 +4,7 @@ import WriteLog from "./page/WriteLog/WriteLog";
 import Home from "./Home";
 import Signup from "./page/SignUp/SignUp";
 import Userform from "./page/UserForm/UserForm";
+import Chat from "./page/Chat/Chat";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/userform" element={<Userform />} />
           <Route path="/write" element={<WriteLog />} />
+          <Route path="/chat" element={<Chat/>}/>
         </Routes>
       </Router>
   );
