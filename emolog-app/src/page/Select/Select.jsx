@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import './Select.css';
+import { useNavigate } from "react-router-dom";
 
 function Select() {
+    const navigate = useNavigate(); 
     // 임시 감정 배열
     const emotions = ["가책", "간이 콩알만해지는", "머리칼이 곤두서는", "묘한", "몸 둘 바를 모르는", "손에 땀을 쥐는 듯한", "쓰러질 것 같은"];
     const [selectedEmotions, setSelectedEmotions] = useState([]);
@@ -52,9 +54,9 @@ function Select() {
                 </div>
             </div>
             <div id="nevi">
-                <button id="home"></button>
-                <button id="diary"></button>
-                <button id="my"></button>
+            <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
         </div>
     );
