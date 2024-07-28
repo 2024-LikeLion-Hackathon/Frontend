@@ -1,0 +1,285 @@
+
+#root{
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+.select{
+    width: 500px;
+    height: 97vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0;
+    
+
+    #logoBox{
+        width: 468px;
+        height:10% ;
+        display: flex;
+        align-items: center;
+
+    }
+    #cancel{
+  
+width: 92px;
+height: 40px;
+
+font-family: 'Pretendard';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+
+
+
+color: #000000;
+
+
+background: #EEEEEE;
+border-radius: 5px;
+border: none;
+margin: 5px;
+
+
+    }
+
+
+    #logo{
+    border-top:10px;
+    width: 111px;
+    height: 40px;
+    background-image:url('../../asset/img/logo.png');
+    background-size: contain;
+    position: absolute;
+    left: calc(50% - 111px/2 - 178.5px);
+    top: 44px;
+    }
+
+    #secondBox{
+
+    position: absolute;
+    top: 100px;
+    width: 468px;
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    align-items: center;
+
+    }
+    #date{
+        
+    width: auto;
+    height: 18px;
+    left: calc(50% - 24px/2 - 222px);
+    top: 135px;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 18px;
+/* identical to box height, or 112% */
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 10px;
+    color: #000000;
+    }
+    #btnBox{
+        margin-left: px; 
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #finishbtn{
+        /* 완료 비활성화 */
+
+
+        width: 92px;
+        height: 44px;
+        background-image: url('../../asset/img/fin_non.png');
+        border: none;
+        background-color: #ffffff;
+
+
+
+    }
+    #finishbtn.finish{
+        width: 92px;
+        height: 44px;
+        background-image: url('../../asset/img/fin_go.png');
+        border: none;
+        background-color: #ffffff;
+    }
+
+    #selectEmo{
+    
+            
+        top:75px;
+        margin-top: 60px;
+        width: 500px;
+        height: 79%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background-color:#ffffff ;
+        border-radius: 20px;
+        border-bottom-left-radius:0 ;
+        border-bottom-right-radius:0 ;
+        
+    }
+
+    #info{
+        /* 오늘의 감정과 가장 잘 어울리는 단어 3가지를 골라주세요 */
+
+        position: absolute;
+        width: auto;
+        height: 40px;
+        left: calc(50% - 355px/2 - 56.5px);
+        top: 200px;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 18px;
+        /* identical to box height, or 112% */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        color: #000000;
+
+
+    }
+
+    #modi{
+        margin-bottom: 5px;
+    }
+
+    #emos{
+        /* Frame 35 */
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: flex-start;
+        padding: 0px;
+        gap: 8px;
+
+        
+        width: 468px;
+        height: 640px;
+        position: absolute;
+        top: 257px;
+
+
+    }
+
+    .emotion_{
+            
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 14px 16px;
+        gap: 10px;
+
+        width: auto;
+        height: 46px;
+
+        background: #F1F1F1;
+        border-radius: 5px;
+
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+        border: none;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 550;
+        font-size: 16px;
+        line-height: 18px;
+        color: #000000;
+
+    }
+
+    .emotion_selected{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 14px 16px;
+        gap: 10px;
+
+        width: auto;
+        height: 46px;
+
+        background: #F1F1F1;
+        border-radius: 5px;
+
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+        border: 4px solid #FF649E;
+        border-radius: 5px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 550;
+        font-size: 16px;
+        line-height: 18px;
+        color: #000000;
+
+       
+
+
+    }
+ 
+
+/** 네비게이터 **/
+
+    #nevi{
+    
+    width: 500px;
+    height: 96px;
+    background-color: #FCFCFC;
+    border-top-left-radius: 46px;
+    border-top-right-radius: 46px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0px -1px 5px rgba(0, 0, 0, 0.05);
+    background: #FCFCFC;
+    position: absolute;
+    bottom: 0px;
+
+
+
+
+
+    }
+    #home{
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url('../../asset/img/home.png');
+
+    }
+    #diary{
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url('../../asset/img/diary.png');
+    }
+    #my{
+    border: none;
+    height: 52px;
+    width: 52px;
+    background-image: url('../../asset/img/my.png');
+    }
+}

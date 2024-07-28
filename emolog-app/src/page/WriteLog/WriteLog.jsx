@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './WriteLog.css';
+import axios from 'axios';
+
 
 function WriteLog(){
     let month =7;
     let day = 3;
-
-   
+    const navigate = useNavigate(); 
     const maxLength = 1500;
     const [text, setText] = useState('');
 
@@ -20,6 +21,17 @@ function WriteLog(){
         color: text.length >= maxLength ? 'red' : '#666',
     };
    
+    const handleCancel = () => {
+        axios.get('')
+    }
+
+    const handleSubmit = () =>{
+
+    }
+
+   
+   
+
     return(
         <div class="writelog">
             <div id="logoBox">
@@ -28,8 +40,9 @@ function WriteLog(){
             <div id="secondBox">
                 <div id="date"> {month}월{day}일 일기 작성하기</div>
                 <div id="btnBox">
-                    <button id="cancel">취소</button>
+                    <button id="cancel" onClick={() => handleCancel}>취소</button>
                     <button id="finish"
+                            onClick={() => handleSubmit}
                             type="submit">완료</button>
                 </div>
 
@@ -49,9 +62,9 @@ function WriteLog(){
             
                    
             <div id="nevi">
-                <button id="home"></button>
-                <button id="diary"></button>
-                <button id="my"></button>
+                <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
         </div>
     );
