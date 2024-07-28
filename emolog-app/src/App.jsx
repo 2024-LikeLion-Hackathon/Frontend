@@ -16,7 +16,6 @@ function App() {
   return (
     <Router>
         <Routes>
-          
           <Route path="/signup" element={<Signup />} />
           <Route path="/userform" element={<Userform />} />
           <Route path="/write" element={<WriteLog />} />
