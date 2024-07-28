@@ -1,19 +1,13 @@
 .UserForm {
-  .container {
-    position: relative;
-    width: 1920px;
-    height: 1024px;
-
-    background: #ffffff;
-  }
-
   #back {
-    position: absolute;
+    position: absolute; /* 화면 기준으로 위치를 설정 */
     width: 500px;
     height: 1024px;
-    left: calc(50% - 500px / 2 - 26px);
-    top: calc(50% - 1024px / 2);
-
+    left: 50%; /* 화면 중앙을 기준으로 설정 */
+    top: 0; /* 화면 상단에 고정 */
+    transform: translateX(
+      -50%
+    ); /* 중앙 정렬을 위해 요소의 너비의 절반만큼 왼쪽으로 이동 */
     background: #fcfcfc;
   }
 

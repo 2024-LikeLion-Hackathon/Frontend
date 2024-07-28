@@ -7,9 +7,7 @@
     height: 1024px;
     left: 50%; /* 화면 중앙을 기준으로 설정 */
     top: 0; /* 화면 상단에 고정 */
-    transform: translateX(
-      -50%
-    ); /* 중앙 정렬을 위해 요소의 너비의 절반만큼 왼쪽으로 이동 */
+    transform: translateX(-50%); /* 중앙 정렬을 위해 요소의 너비의 절반만큼 왼쪽으로 이동 */
     background: #fcfcfc;
   }
 
@@ -130,6 +128,8 @@
     border-radius: 50%;
     margin: 20px 0;
     cursor: pointer;
+    background: url("../../asset/img/weekly_circle.png"); /* 여기에 배경 이미지 추가 */
+    background-size: cover; /* 배경 이미지 크기 조절 */
   }
 
   .diary-container {
@@ -231,9 +231,27 @@
     padding: 10px 20px;
     background-color: #eee;
     color: rgb(0, 0, 0);
+    font-weight: 700;
     border: none;
-    border-radius: 5px;
+    border-radius: 5%;
     cursor: pointer;
+  }
+
+  #no-diary {
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: 700;
+  }
+
+  #empty-diary {
+    margin-left: 90px;
+    border: none;
+    height: 164px;
+    width: 164px;
+
+    background-image: url('../../asset/img/empty_diary.png');
   }
 
   #nevi {
@@ -260,12 +278,14 @@
     width: 52px;
     background-image: url("../../asset/img/home.png");
   }
+
   #diary {
     border: none;
     height: 52px;
     width: 52px;
     background-image: url("../../asset/img/diary.png");
   }
+
   #my {
     border: none;
     height: 52px;

@@ -15,7 +15,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
  */
 export const postDiary = async (diaryData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/diaries`, diaryData);
+    const response = await axios.post(`${BASE_URL}/diary`, diaryData);
     return response.data;
   } catch (error) {
     console.error('Error posting diary data:', error);
