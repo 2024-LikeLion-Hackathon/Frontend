@@ -8,6 +8,8 @@ import Weekly from "./page/Weekly/Weekly";
 import Monthly from "./page/Monthly/Monthly";
 import Select from "./page/Select/Select";
 import Result from "./page/Result/Result";
+import Mypage from "./page/Mypage/Mypage";
+import Modify from "./page/Modify/Modify";
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
           <Route path="/" element={<Monthly />} />
           <Route path="/select" element={<Select/>}/>
           <Route path="/result" element={<Result/>}/>
+          <Route path="/mypage" element={<Mypage/>}/>
+          <Route path="/modify"element={<Modify/>}/>
 
         </Routes>
       </Router>

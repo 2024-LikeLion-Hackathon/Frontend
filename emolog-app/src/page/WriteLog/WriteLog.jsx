@@ -21,12 +21,9 @@ function WriteLog(){
         color: text.length >= maxLength ? 'red' : '#666',
     };
    
-    const handleCancel = () => {
-        axios.get('')
-    }
-
+    
     const handleSubmit = () =>{
-
+        navigate('/chat');
     }
 
    
@@ -40,9 +37,10 @@ function WriteLog(){
             <div id="secondBox">
                 <div id="date"> {month}월{day}일 일기 작성하기</div>
                 <div id="btnBox">
-                    <button id="cancel" onClick={() => handleCancel}>취소</button>
+                    <button id="cancel" onClick={() => navigate('/')}>취소</button>
                     <button id="finish"
-                            onClick={() => handleSubmit}
+                            onClick={handleSubmit }
+                            
                             type="submit">완료</button>
                 </div>
 
