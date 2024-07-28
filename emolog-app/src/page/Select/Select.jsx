@@ -1,23 +1,39 @@
 import React, { useState } from "react";
 import './Select.css';
 import { useNavigate } from "react-router-dom";
+import Modal from 'react-modal';
 
 function Select() {
     const navigate = useNavigate(); 
     // 임시 감정 배열
     const emotions = ["가책", "간이 콩알만해지는", "머리칼이 곤두서는", "묘한", "몸 둘 바를 모르는", "손에 땀을 쥐는 듯한", "쓰러질 것 같은"];
     const [selectedEmotions, setSelectedEmotions] = useState([]);
-
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const emoClicked = (emotion) => {
         if (selectedEmotions.includes(emotion)) {
             setSelectedEmotions(selectedEmotions.filter((emo) => emo !== emotion));
         } else if (selectedEmotions.length < 3) { // 최대 3개의 감정 선택 가능
             setSelectedEmotions([...selectedEmotions, emotion]);
-        }
+        }    
     };
 
     let month = 7;
     let day = 3;
+    const openModal = () => {
+        setModalIsOpen(true);
+        setTimeout(() => {
+            closeModal();
+            navigate('/result');
+        }, 3000); // 2초 후에 페이지 이동
+    };
+    
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
+    
+    const handleSubmit = () => {
+        openModal();
+    };
 
     return (
         <div className="select">
@@ -31,6 +47,7 @@ function Select() {
                         id="finishbtn" 
                         className={selectedEmotions.length === 3 ? 'finish' : 'disabled'}
                         disabled={selectedEmotions.length !== 3}
+                        onClick={handleSubmit}
                     >
                         
                     </button>
@@ -58,6 +75,19 @@ function Select() {
                 <button id="diary" onClick={() => navigate('/write')}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Pop up Message"
+                ariaHideApp={false}
+                className="modal"
+                overlayClassName="overlay"
+            >
+                <img src="load2.gif" alt="Submitting" />
+                <div>MoDi가 오늘의 색을 만들고있어요</div>
+                <div>잠시만 기다려주세요</div>
+        </Modal>
         </div>
     );
 }
