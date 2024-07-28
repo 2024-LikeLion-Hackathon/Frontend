@@ -1,29 +1,49 @@
 import React, { useEffect } from "react";
+import { postKakaoUser } from '../../api//postKakaoUser'; 
 import "./SignUp.css";
 
 const KakaoLogin = () => {
   useEffect(() => {
-    // Kakao SDK 초기화
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init("process.env.KAKAO_SECRET");
-    }
+    const loadKakaoSdk = () => {
+      if (!window.Kakao) {
+        const script = document.createElement('script');
+        script.src = "https://developers.kakao.com/sdk/js/kakao.js";
+        script.onload = () => {
+          window.Kakao.init(process.env.REACT_APP_KAKAO_SECRET); 
+        };
+        document.head.appendChild(script);
+      } else if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(process.env.REACT_APP_KAKAO_SECRET);
+      }
+    };
+
+    loadKakaoSdk();
   }, []);
 
-  const handleKakaoLogin = () => {
+  const handleKakaoLogin = async () => {
+    if (!window.Kakao) {
+      console.error("Kakao SDK is not loaded.");
+      return;
+    }
+
     window.Kakao.Auth.login({
       scope: "profile_nickname",
-      success: function (authObj) {
-        console.log(authObj);
-        window.Kakao.API.request({
-          url: "/v2/user/me",
-          success: (res) => {
-            const { kakao_account } = res;
-            console.log(kakao_account);
-          },
-          fail: (error) => {
-            console.error("Failed to request Kakao API:", error);
-          },
-        });
+      success: async function (authObj) {
+        try {
+          const response = await window.Kakao.API.request({ url: "/v2/user/me" });
+          const { kakao_account } = response;
+          console.log(kakao_account);
+
+          // 사용자 정보를 서버로 전송
+          await postKakaoUser(
+            kakao_account.email || '',
+            kakao_account.profile.nickname || '',
+            authObj.access_token
+          );
+          console.log('User data successfully posted to server');
+        } catch (error) {
+          console.error('Error fetching Kakao user data or posting to server:', error);
+        }
       },
       fail: (error) => {
         console.error("Kakao login failed:", error);
@@ -33,9 +53,9 @@ const KakaoLogin = () => {
 
   return (
     <div className="kakaoIdLogin">
-      <button
-        onClick={handleKakaoLogin}
-      />
+      <button onClick={handleKakaoLogin}>
+        로그인 with Kakao
+      </button>
     </div>
   );
 };
