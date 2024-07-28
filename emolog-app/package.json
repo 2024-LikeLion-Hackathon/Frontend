@@ -7,10 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
-<<<<<<< HEAD
-=======
     "date-fns": "^3.6.0",
->>>>>>> f2b624cbbb96b697b099a6c078816dacf4924f13
     "dotenv": "^16.4.5",
     "jquery": "^3.7.1",
     "react": "^18.3.1",
