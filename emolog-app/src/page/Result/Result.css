@@ -253,7 +253,7 @@
         font-family: 'Pretendard';
         font-style: normal;
         font-weight: 600;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 18px;
         color: #000000;
 
@@ -440,7 +440,7 @@
 
         background: #EEEEEE;
         border-radius: 5px;
-        margin-bottom: 150px;
+       
         margin-top: 30px;
         border: none;
           
@@ -456,6 +456,34 @@
 
     }
 
+    #deletebtn{
+       
+        
+        
+        width: auto;
+        height: 16px;
+       
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 16px;
+        /* identical to box height, or 114% */
+        display: flex;
+        align-items: center;
+        text-align: center;
+        border: none;
+        background-color: #FCFCFC ;
+        letter-spacing: -0.6px;
+
+        color: #6E6E6E;
+        margin-bottom: 150px;
+        margin-top: 30px;
+
+
+    
+
+    }
 
 /** 네비게이터 **/
 
@@ -498,4 +526,6 @@
     width: 52px;
     background-image: url('../../asset/img/my.png');
     }
+
+
 }

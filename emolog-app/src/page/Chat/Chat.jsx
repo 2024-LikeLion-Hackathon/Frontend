@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import './Chat.css';
-import axios from "axios";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Modal from 'react-modal';
 import { useNavigate } from "react-router-dom";
-
+import { DiaryContext } from '../../context/DiaryContext';
+import axios from 'axios';
 
 
 function Chat() {
+  const { diary, updateDiary } = useContext(DiaryContext);
+  const navigate = useNavigate(); 
+  const [messages, setMessages] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const Message = ({id,text,sender}) => {
         
     const isOwnMessage = sender === 'ai';
@@ -67,35 +72,41 @@ function Chat() {
     );
   };
 
-  const data= {
-    date: "2024-07-21",
-    q_a: [
-      {id: 1, sender: 'ai', text: '텍스트텍스트텍스트텍스트텍ㅇ트'},
-      {id: 2, sender: 'user', text: '텍스트텍스트텍스트텍스트텍스트'},
-      {id: 3, sender: 'ai', text: '텍스트텍스트텍스트텍스트텍ㅇ트텍스트텍스트텟그트'},
-      {id: 4, sender: 'ai', text: '텍스트'},
-  ]
-  };
-  const navigate = useNavigate(); 
-  const [messages, setMessages] = useState([]);
-  const [sender, setSender] = useState('user');
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  
 
-  const handleMessageSubmit = (message) => {
+    const handleMessageSubmit = async (message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
 
-    // 서버에 메시지 전송
-    axios.post(`/api/chatroom/message`, { text: message.text, sender: 'user' })
-      .then(response => {
-        console.log('Message sent successfully');
-      })
-      .catch(error => {
-        console.error('Error sending message:', error);
-      });
+    if (message.sender === 'user') {
+      const newAnswers = diary.q_a.answer ? `${diary.q_a.answer},${message.text}` : message.text;
+      updateDiary({ q_a: { ...diary.q_a, answer: newAnswers } });
+      console.log("Diary Updated with User Message:", { q_a: { ...diary.q_a, answer: newAnswers } });
+    } else {
+      const newQuestions = diary.q_a.question ? `${diary.q_a.question},${message.text}` : message.text;
+      updateDiary({ q_a: { ...diary.q_a, question: newQuestions } });
+      console.log("Diary Updated with User Message:", { q_a: { ...diary.q_a, question: newQuestions } });
+    }
+    
+    // 서버에 메시지 전송 및 AI 응답 받기
+    try {
+      const response = await axios.post(`/api/chatroom/message`, { text: message.text, sender: message.sender });
+      const aiResponse = response.data; // AI 응답 데이터
+      
+      if (aiResponse) {
+        const aiMessage = {
+          text: aiResponse.text,
+          sender: 'ai'
+        };
+        handleMessageSubmit(aiMessage); // 재귀적으로 AI 응답 처리
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
-  const date = parseISO(data.date);
-  const month = format(date, 'M', { locale: ko });
-  const day = format(date, 'd', { locale: ko });
+
+  const date =  parseISO(diary.date) ;
+  const month = isNaN(date) ? '' : format(date, 'M', { locale: ko });
+  const day = isNaN(date) ? '' : format(date, 'd', { locale: ko });
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -111,6 +122,7 @@ const closeModal = () => {
 
 const handleSubmit = () => {
     openModal();
+    
 };
 
 

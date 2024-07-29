@@ -10,11 +10,14 @@ import Select from "./page/Select/Select";
 import Result from "./page/Result/Result";
 import Mypage from "./page/Mypage/Mypage";
 import Modify from "./page/Modify/Modify";
+import { DiaryProvider } from "./context/DiaryContext"; // DiaryProvider import
+
 
 
 function App() {
   return (
-    <Router>
+    <DiaryProvider>
+      <Router>
         <Routes>
           
           <Route path="/signup" element={<Signup />} />
@@ -30,6 +33,7 @@ function App() {
 
         </Routes>
       </Router>
+    </DiaryProvider>
   );
 }
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 /**
  * 일기 데이터를 서버로 전송하는 함수
@@ -15,7 +15,9 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
  */
 export const postDiary = async (diaryData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/diaries`, diaryData);
+    console.log('Sending diary data:', diaryData); // 디버깅용 로그
+    const response = await axios.post(`${BASE_URL}api/diary`, diaryData, {withCredentials: true,});
+    
     return response.data;
   } catch (error) {
     console.error('Error posting diary data:', error);
