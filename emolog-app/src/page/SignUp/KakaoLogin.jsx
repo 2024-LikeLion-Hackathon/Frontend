@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import { postKakaoUser } from '../../api//postKakaoUser'; 
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { postKakaoUser } from '../../api/postKakaoUser'; 
 import "./SignUp.css";
 
 const KakaoLogin = () => {
+  const navigate = useNavigate(); // Use the hook to get the navigate function
+
   useEffect(() => {
     const loadKakaoSdk = () => {
       if (!window.Kakao) {
@@ -41,6 +44,9 @@ const KakaoLogin = () => {
             authObj.access_token
           );
           console.log('User data successfully posted to server');
+
+          // Navigate to /userform on successful login
+          navigate('/userform');
         } catch (error) {
           console.error('Error fetching Kakao user data or posting to server:', error);
         }
@@ -54,7 +60,6 @@ const KakaoLogin = () => {
   return (
     <div className="kakaoIdLogin">
       <button onClick={handleKakaoLogin}>
-        로그인 with Kakao
       </button>
     </div>
   );
