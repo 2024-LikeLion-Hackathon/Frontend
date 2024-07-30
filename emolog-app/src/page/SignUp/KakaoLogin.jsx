@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { postKakaoUser } from '../../api/postKakaoUser'; 
 import "./SignUp.css";
 
 const KakaoLogin = () => {
-  const navigate = useNavigate(); // Use the hook to get the navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadKakaoSdk = () => {
@@ -25,34 +25,43 @@ const KakaoLogin = () => {
 
   const handleKakaoLogin = async () => {
     if (!window.Kakao) {
-      console.error("Kakao SDK is not loaded.");
+      console.error("Kakao SDK가 로드되지 않았습니다.");
       return;
     }
 
     window.Kakao.Auth.login({
-      scope: "profile_nickname",
+      scope: "profile_nickname,account_email",
       success: async function (authObj) {
         try {
           const response = await window.Kakao.API.request({ url: "/v2/user/me" });
-          const { kakao_account } = response;
-          console.log(kakao_account);
+          const kakaoAccount = response.kakao_account;
+          console.log(kakaoAccount);
 
           // 사용자 정보를 서버로 전송
-          await postKakaoUser(
-            kakao_account.email || '',
-            kakao_account.profile.nickname || '',
-            authObj.access_token
-          );
-          console.log('User data successfully posted to server');
+          await postKakaoUser({
+            id: response.id,
+            connected_at: response.connected_at,
+            profile: {
+              nickname: kakaoAccount.profile.nickname,
+              thumbnail_image_url: kakaoAccount.profile.thumbnail_image_url,
+              profile_image_url: kakaoAccount.profile.profile_image_url,
+              is_default_image: kakaoAccount.profile.is_default_image
+            },
+            email: kakaoAccount.email,
+            is_email_valid: kakaoAccount.is_email_valid,
+            is_email_verified: kakaoAccount.is_email_verified
+          }, authObj.access_token);
+          
+          console.log('사용자 데이터가 서버에 성공적으로 전송되었습니다.');
 
-          // Navigate to /userform on successful login
+          // 로그인 성공 후 /userform 페이지로 이동
           navigate('/userform');
         } catch (error) {
-          console.error('Error fetching Kakao user data or posting to server:', error);
+          console.error('카카오 사용자 데이터를 가져오거나 서버에 전송하는 중 오류가 발생했습니다:', error);
         }
       },
       fail: (error) => {
-        console.error("Kakao login failed:", error);
+        console.error("카카오 로그인 실패:", error);
       },
     });
   };
