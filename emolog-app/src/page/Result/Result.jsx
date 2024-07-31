@@ -3,61 +3,84 @@ import './Result.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { getDiaryId } from '../../api/getDiaryId'; // API 함수 import
+import { getDiaryId } from '../../api/getDiaryId';
 
 function Result() {
-    const [diary, setDiary] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
-    const date = location.state?.date || new Date().toISOString().split('T')[0]; // 기본값으로 오늘 날짜 사용
-    const today = new Date(date); // 날짜 객체 생성
+    const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
+    const [diary, setDiary] = useState({
+        diary: {
+            date: "",
+            dayOfWeek: "",
+            content: ""
+        },
+        color: {
+            hexa: "",
+            red: 147,
+            green: 134,
+            blue: 92
+        },
+        emotion: [],
+        comment: "",
+        q_a: {
+            question: "",
+            answer: ""
+        }
+    });
+    const [token, setToken] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchDiary = async () => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            console.log(storedToken);
+            setToken(storedToken);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+
+        // 마이페이지 정보를 가져오는 함수 호출
+        const fetchDiaryData = async () => {
             try {
-                const data = await getDiaryId(date);
-                setDiary(data);
-            } catch (err) {
-                setError(err);
+                setLoading(true);
+                const DiaryData = await getDiaryId(initialDate, token);
+                setDiary(DiaryData);
+            } catch (error) {
+                console.error('Error fetching mypage data:', error);
+                setError('Error fetching mypage data');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchDiary();
-    }, [date]);
+        fetchDiaryData();
+    }, [token]);
+
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading diary data.</div>;
-    if (!diary) return <div>No diary data found.</div>;
-
-    // 디스트럭처링
-    const { diary: diaryData, color, emotion, comment, q_a } = diary;
 
     // 날짜 포맷팅
-    const diaryDate = diaryData?.date ? parseISO(diaryData.date) : today;
+    const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
     const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
     const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
     const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
-
-    // 데이터 처리
-    const commentText = comment || "코멘트가 없습니다.";
-    const emotionsList = emotion || [];
-    const questions = parseArray(q_a?.question || '');
-    const answers = parseArray(q_a?.answer || '');
-    const messages = parseMessages(questions, answers);
 
     // 문자열을 배열로 변환
     const parseArray = (str) => {
         return str ? str.split(',').map(item => item.trim()).filter(item => item.length > 0) : [];
     };
 
-    // 질문과 답변을 메시지 형태로 변환
+    const emotions = parseArray(diary.emotion.join(','));
+
+    // 문자열을 메시지 배열로 변환
     const parseMessages = (questions, answers) => {
         const messages = [];
-        const qA = [...questions, ...answers];
+        const qA = [...parseArray(questions), ...parseArray(answers)];
         let id = 1;
 
         qA.forEach((item, index) => {
@@ -67,6 +90,8 @@ function Result() {
 
         return messages;
     };
+
+    const messages = parseMessages(diary.q_a.question, diary.q_a.answer);
 
     // 메시지 리스트 컴포넌트
     const MessageList = ({ messages }) => {
@@ -99,7 +124,6 @@ function Result() {
         );
     };
 
-    // 삭제 핸들러
     const deleteHandler = () => {
         if (window.confirm('삭제하시겠습니까?')) {
             // 삭제 로직을 여기에 추가하세요.
@@ -120,28 +144,28 @@ function Result() {
             </div>
             <div id="resultBox">
                 <div id="img"></div>
-                <div id="ment">{commentText}</div>
+                <div id="ment">{diary.comment}</div>
                 <div id="colorBox">
-                    <div id="color" style={{ backgroundColor: `#${color.hexa}` }}></div>
+                    <div id="color" style={{ backgroundColor: `#${diary.color.hexa}` }}></div>
                     <div className="color_container"></div>
                     <div id="rgb">
                         <div id="r" className="rgb_container">
                             <div className="rgbbox">R</div>
-                            <div id="r_value" className="rgb_value">{color.red}</div>
+                            <div id="r_value" className="rgb_value">{diary.color.red}</div>
                         </div>
                         <div id="g" className="rgb_container">
                             <div className="rgbbox">G</div>
-                            <div id="g_value" className="rgb_value">{color.green}</div>
+                            <div id="g_value" className="rgb_value">{diary.color.green}</div>
                         </div>
                         <div id="b" className="rgb_container">
                             <div className="rgbbox">B</div>
-                            <div id="b_value" className="rgb_value">{color.blue}</div>
+                            <div id="b_value" className="rgb_value">{diary.color.blue}</div>
                         </div>
                     </div>
                 </div>
-                <div id="color_hexa">#{color.hexa}</div>
+                <div id="color_hexa">#{diary.color.hexa}</div>
                 <div id="emotions">
-                    {emotionsList.map((emotion) => (
+                    {emotions.map((emotion) => (
                         <button
                             key={emotion}
                             className={`emotion`}
@@ -151,7 +175,7 @@ function Result() {
                     ))}
                 </div>
                 <div id="dt_container">
-                    <div id="diary_content">{diaryData.content}</div>
+                    <div id="diary_content">{diary.diary.content}</div>
                     <div id="text">
                         <div id="icon"></div>
                         <div id="chat_rep">MoDi와의 대화 다시보기</div>
