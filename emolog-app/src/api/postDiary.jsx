@@ -10,7 +10,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-nort
  */
 export const postDiary = async (diaryData, token) => {
   try {
-    console.log('Sending diary data:', diaryData); // 추가된 로그
+    console.log('Sending diary data:', diaryData, token); // 추가된 로그
     const response = await axios.post(`${BASE_URL}/api/diary`, diaryData, {
       headers: {
         'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가

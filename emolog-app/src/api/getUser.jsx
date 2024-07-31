@@ -7,7 +7,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-nort
  */
 export const getUser = async (token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/user`, {
+    const response = await axios.get(`${BASE_URL}/api/user`,{
       headers: {
         'Authorization': `Bearer ${token}`
       }

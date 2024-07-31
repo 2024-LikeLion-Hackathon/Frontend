@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import './Mypage.css';
 import { Navigate, useNavigate } from "react-router-dom";
 import { getMypage } from '../../api/getMypage';
+import { postLogout } from "../../api/postLogout";
 
 function Mypage() {
     const navigate = useNavigate();  
@@ -46,6 +47,17 @@ function Mypage() {
         fetchMypageData();
     }, [token]);
 
+    const logoutHandler = async (token) => {
+        try {
+            postLogout(token);
+            localStorage.removeItem('token');
+            navigate('/signup');
+            console.log('로그아웃 성공!');
+            
+        } catch (error) {
+            console.error('Error fetching emotions:', error);
+        }
+    };
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
@@ -70,7 +82,7 @@ function Mypage() {
             </div>
             <div id="thirdBox">
                 <button className="longBtn" id="modify" onClick={() => navigate('/modify')}><div id="modify.t">내 정보 수정하기</div><div id="a"></div></button>
-                <button className="longBtn" id="logout">로그아웃</button>
+                <button className="longBtn" id="logout" onClick={()=> logoutHandler(token)}>로그아웃</button>
             </div>
             <div id="copyR"></div>
             <div id="nevi">

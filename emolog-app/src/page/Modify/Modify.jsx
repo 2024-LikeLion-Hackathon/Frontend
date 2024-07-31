@@ -17,15 +17,15 @@ function Modify() {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
           setToken(storedToken);
-          console.log(storedToken);
       }
   }, []);
     useEffect(() => {
         const fetchUserData = async () => {
+            if (!token) return; 
             try {
+                console.log(token);
                 const data = await getUser(token);
-                setNickname(
-                   data.nickname);
+                setNickname(data.nickname);
                 setAge(data.age);
          
             } catch (err) {
@@ -35,7 +35,7 @@ function Modify() {
         };
 
         fetchUserData();
-    }, []);
+    }, [token]);
 
 
     const handleSubmit =async (event) => {

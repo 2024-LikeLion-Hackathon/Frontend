@@ -69,7 +69,7 @@ function Select() {
         };
         
         updateDiary(updatedDiary);
-        console.log('Updated diary data:', updatedDiary,token); // 추가된 로그
+        
 
         try {
             await postDiary(updatedDiary, token);
