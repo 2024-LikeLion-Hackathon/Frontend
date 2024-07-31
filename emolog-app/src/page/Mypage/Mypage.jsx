@@ -1,50 +1,84 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './Mypage.css';
 import { Navigate, useNavigate } from "react-router-dom";
+import { getMypage } from '../../api/getMypage';
 
-function Mypage(){
-    const navigate = useNavigate(); 
+function Mypage() {
+    const navigate = useNavigate();  
 
-    const data={
-        nickname: "프로도",
+    const [data, setData] = useState({
+        nickname: "",
         diaryCount: 0,
         colorCount: 0
-    }
+    });
+    const [token, setToken] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    return(
+    useEffect(() => {
+        // 로컬 스토리지에서 토큰 읽어오기
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken);
+        } else {
+            setError('No token found');
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+
+        // 마이페이지 정보를 가져오는 함수 호출
+        const fetchMypageData = async () => {
+            try {
+                setLoading(true);
+                const mypageData = await getMypage(token);
+                setData(mypageData);
+            } catch (error) {
+                console.error('Error fetching mypage data:', error);
+                setError('Error fetching mypage data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMypageData();
+    }, [token]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
+
+    return (
         <div className="Mypage">
-        <div id="logoBox">
-            <div id="logo"></div>
+            <div id="logoBox">
+                <div id="logo"></div>
+            </div>
+            <div id="welcome">{data.nickname}님 반가워요!</div>
+            <div id="secondBox">
+                <div className="btnCont" id="d_count">
+                    <div className="info">이번 달 쓴 일기</div>
+                    <div id="d_img"></div>
+                    <div className="count">{data.diaryCount}회</div>
+                </div>
+                <div className="btnCont" id="c_count">
+                    <div className="info">내 감정 팔레트는</div>
+                    <div id="c_img"></div>
+                    <div className="count">{data.colorCount}회</div>
+                </div>
+                <button className="btnCont" id="goWrite" onClick={() => navigate('/write')}></button>
+            </div>
+            <div id="thirdBox">
+                <button className="longBtn" id="modify" onClick={() => navigate('/modify')}><div id="modify.t">내 정보 수정하기</div><div id="a"></div></button>
+                <button className="longBtn" id="logout">로그아웃</button>
+            </div>
+            <div id="copyR"></div>
+            <div id="nevi">
+                <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="my" onClick={() => navigate('/mypage')}></button>
+            </div>
         </div>
-        <div id="welcome">{data.nickname}님 반가워요!</div>
-        <div id="secondBox">
-           <div className="btnCont" id="d_count">
-                <div className="info">이번 달 쓴 일기</div>
-                <div id="d_img"></div>
-                <div className="count">{data.diaryCount}회</div>
-           </div>
-           <div className="btnCont" id="c_count">
-                <div className="info">내 감정 팔레트는</div>
-                <div id="c_img"></div>
-                <div className="count">{data.colorCount}회</div>
-           </div>
-           <button className="btnCont" id="goWrite" onClick={()=> navigate('/write')}></button>
-        </div>
-        <div id="thirdBox">
-            <button className="longBtn" id="modify" onClick={() => navigate('/modify')}><div id="modify.t">내 정보 수정하기</div><div id="a"></div></button>
-            <button className="longBtn" id="logout">로그아웃</button>
-        </div>
-        <div id="copyR">
-
-        </div>
-
-       
-        <div id="nevi">
-        <button id="home" onClick={() => navigate('/')} ></button>
-            <button id="diary" onClick={() => navigate('/write')}></button>
-            <button id="my" onClick={() => navigate('/mypage')}></button>
-        </div>
-    </div>
     );
 }
 

@@ -1,30 +1,59 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || '';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
 
 /**
  * 카카오 사용자 정보를 서버로 전송하는 함수
- * @param {string} email - 사용자의 이메일
- * @param {string} name - 사용자의 이름
+ * @param {Object} kakaoAccount - 카카오 계정 정보 객체
  * @param {string} accessToken - 사용자에게 발급된 액세스 토큰
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const postKakaoUser = async (email, name, accessToken) => {
+export const postKakaoUser = async (kakaoAccount, accessToken) => {
   try {
-    const response = await axios.post(`${BASE_URL}/kakao-user`, {
-      email,
-      name,
+    const { profile, email } = kakaoAccount;
+
+    const payload = {
+      id: kakaoAccount.id,
+      connected_at: kakaoAccount.connected_at,
+      kakao_account: {
+        profile_needs_agreement: kakaoAccount.profile_needs_agreement,
+        profile: {
+          nickname: profile.nickname,
+          thumbnail_image_url: profile.thumbnail_image_url,
+          profile_image_url: profile.profile_image_url,
+          is_default_image: profile.is_default_image
+        },
+        email_needs_agreement: kakaoAccount.email_needs_agreement,
+        is_email_valid: kakaoAccount.is_email_valid,
+        is_email_verified: kakaoAccount.is_email_verified,
+        email,
+      },
+      properties: {
+        nickname: profile.nickname
+      },
       accessToken
-    });
+    };
+
+    // 전송할 데이터 콘솔 출력
+    console.log('전송할 데이터:', payload);
+
+    const response = await axios.post(`${BASE_URL}/api/kakao/login`, payload);
+
+ 
+    console.log('1',response.data);
     return response.data;
+    
   } catch (error) {
     if (error.response) {
       // 서버에서 응답을 받았지만 상태 코드가 2xx 범위에 있지 않을 경우
       const { status, data } = error.response;
+      console.log('errorresponse',error.response);
       switch (status) {
         case 400:
           if (data.error === 'User-101') {
             console.error('이미 존재하는 회원입니다.');
+            console.log(data);
+            return { existingUser: true, token: data.token }; // Return the token for existing users
           } else if (data.error === 'User-103' || data.error === 'Token-102') {
             console.error('잘못된 요청입니다. 요청 형식을 확인해주세요.');
           }

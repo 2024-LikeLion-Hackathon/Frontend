@@ -1,34 +1,60 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import './Result.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { DiaryContext } from '../../context/DiaryContext'; // DiaryContext import
+import { getDiaryId } from '../../api/getDiaryId'; // API 함수 import
 
 function Result() {
-    const navigate = useNavigate(); 
-    const { diary } = useContext(DiaryContext); // DiaryContext에서 diary 데이터 가져오기
+    const [diary, setDiary] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const date = location.state?.date || new Date().toISOString().split('T')[0]; // 기본값으로 오늘 날짜 사용
+    const today = new Date(date); // 날짜 객체 생성
 
-    const date = diary.date ? parseISO(diary.date) : new Date();
-    const month = isNaN(date) ? '' : format(date, 'M', { locale: ko });
-    const day = isNaN(date) ? '' : format(date, 'd', { locale: ko });
-    const dayOfWeek = isNaN(date) ? '' : format(date, 'EEEE', { locale: ko });
-    const comment = diary.comment || "코멘트가 없습니다.";
-    const color = {
-        "hexa": "93865c",
-        "red": 147,
-        "green": 134,
-        "blue": 92
-    } ;
+    useEffect(() => {
+        const fetchDiary = async () => {
+            try {
+                const data = await getDiaryId(date);
+                setDiary(data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-     // 문자열을 배열로 변환
-     const parseArray = (str) => {
+        fetchDiary();
+    }, [date]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading diary data.</div>;
+    if (!diary) return <div>No diary data found.</div>;
+
+    // 디스트럭처링
+    const { diary: diaryData, color, emotion, comment, q_a } = diary;
+
+    // 날짜 포맷팅
+    const diaryDate = diaryData?.date ? parseISO(diaryData.date) : today;
+    const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
+    const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
+    const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
+
+    // 데이터 처리
+    const commentText = comment || "코멘트가 없습니다.";
+    const emotionsList = emotion || [];
+    const questions = parseArray(q_a?.question || '');
+    const answers = parseArray(q_a?.answer || '');
+    const messages = parseMessages(questions, answers);
+
+    // 문자열을 배열로 변환
+    const parseArray = (str) => {
         return str ? str.split(',').map(item => item.trim()).filter(item => item.length > 0) : [];
     };
 
-    const emotions = parseArray(diary.emotion || ''); // diary.emotion을 배열로 변환
-
-    // 문자열을 메시지 배열로 변환
+    // 질문과 답변을 메시지 형태로 변환
     const parseMessages = (questions, answers) => {
         const messages = [];
         const qA = [...questions, ...answers];
@@ -42,13 +68,8 @@ function Result() {
         return messages;
     };
 
-    // 예시로 제공된 질문과 답변 데이터. 실제 데이터는 diary.q_a.question과 diary.q_a.answer에서 가져옵니다.
-    const questions = parseArray(diary.q_a.question || '');
-    const answers = parseArray(diary.q_a.answer || '');
-    const messages = parseMessages(questions, answers);
-
+    // 메시지 리스트 컴포넌트
     const MessageList = ({ messages }) => {
-        // messages가 배열인지 확인하고, 아니면 빈 배열로 설정
         const validMessages = Array.isArray(messages) ? messages : [];
         return (
             <div className='messages'>
@@ -62,6 +83,8 @@ function Result() {
             </div>
         );
     };
+
+    // 개별 메시지 컴포넌트
     const Message = ({ text, sender }) => {
         const isOwnMessage = sender === 'ai';
         const messageClass = isOwnMessage ? 'message-right' : 'message-left';
@@ -75,9 +98,13 @@ function Result() {
             </div>
         );
     };
-    
-    const deletehandler = () =>{
-        alert('삭제하시겠습니까?');
+
+    // 삭제 핸들러
+    const deleteHandler = () => {
+        if (window.confirm('삭제하시겠습니까?')) {
+            // 삭제 로직을 여기에 추가하세요.
+            console.log('삭제되었습니다.');
+        }
     };
 
     return (
@@ -93,9 +120,8 @@ function Result() {
             </div>
             <div id="resultBox">
                 <div id="img"></div>
-                <div id="ment">{comment}</div>
+                <div id="ment">{commentText}</div>
                 <div id="colorBox">
-                    {/* 백엔드 연결되면 색 앞에 diary. 붙이기 */}
                     <div id="color" style={{ backgroundColor: `#${color.hexa}` }}></div>
                     <div className="color_container"></div>
                     <div id="rgb">
@@ -115,7 +141,7 @@ function Result() {
                 </div>
                 <div id="color_hexa">#{color.hexa}</div>
                 <div id="emotions">
-                    {emotions.map((emotion) => (
+                    {emotionsList.map((emotion) => (
                         <button
                             key={emotion}
                             className={`emotion`}
@@ -125,16 +151,16 @@ function Result() {
                     ))}
                 </div>
                 <div id="dt_container">
-                    <div id="diary_content">{diary.content}</div>
+                    <div id="diary_content">{diaryData.content}</div>
                     <div id="text">
                         <div id="icon"></div>
                         <div id="chat_rep">MoDi와의 대화 다시보기</div>
                     </div>
                     <div id="chat">
-                        <MessageList messages={diary.q_a || []} />
+                        <MessageList messages={messages} />
                     </div>
                     <button id="lastbtn" onClick={() => navigate('/')}>확인</button>
-                    <button id="deletebtn" onClick={deletehandler}>삭제하기</button>
+                    <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
                 </div>
             </div>
             <div id="nevi">

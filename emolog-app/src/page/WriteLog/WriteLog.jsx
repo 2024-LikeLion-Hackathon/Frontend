@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
@@ -10,10 +10,12 @@ Modal.setAppElement('#root'); // 접근성 설정
 function WriteLog() {
     const { updateDiary } = useContext(DiaryContext);
     const navigate = useNavigate(); 
+    const location = useLocation();
     const maxLength = 1500;
     const [text, setText] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const today = new Date();
+    const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
+    const today = new Date(initialDate);
     const date = today.toISOString().split('T')[0];
     const month = today.getMonth() + 1;
     const day = today.getDate();
