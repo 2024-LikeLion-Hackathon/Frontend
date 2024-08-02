@@ -8,7 +8,7 @@ const BASE_URL = 'http://43.202.44.75:8000'; // 수정된 BASE_URL
  * @param {string} chatting - 사용자의 채팅
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const postContent = async (id, chatting) => {
+export const postChat = async (id, chatting) => {
   try {
     console.log("전송 데이터",id,chatting);
     const response = await axios.post(`${BASE_URL}/api/ai/chat`, {

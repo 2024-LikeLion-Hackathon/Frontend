@@ -11,10 +11,23 @@ export const DiaryProvider = ({ children }) => {
     });
 
     const updateDiary = (newData) => {
-        setDiary((prevDiary) => ({
-            ...prevDiary,
-            ...newData,
-        }));
+        setDiary((prevDiary) => {
+            // q_a 병합 로직 추가
+            const updatedQA = {
+                question: newData.q_a?.question !== undefined 
+                    ? `${prevDiary.q_a.question}${newData.q_a.question ? `, ${newData.q_a.question}` : ''}`
+                    : prevDiary.q_a.question,
+                answer: newData.q_a?.answer !== undefined 
+                    ? `${prevDiary.q_a.answer}${newData.q_a.answer ? `, ${newData.q_a.answer}` : ''}`
+                    : prevDiary.q_a.answer,
+            };
+
+            return {
+                ...prevDiary,
+                ...newData,
+                q_a: updatedQA,
+            };
+        });
     };
 
     return (

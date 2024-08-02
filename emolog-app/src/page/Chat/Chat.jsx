@@ -5,7 +5,7 @@ import { ko } from 'date-fns/locale';
 import Modal from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import { DiaryContext } from '../../context/DiaryContext';
-import { postContent } from '../../api/postChat';
+import { postChat } from '../../api/postChat';
 
 function Chat() {
   const { diary, updateDiary } = useContext(DiaryContext);
@@ -13,6 +13,7 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,28 +22,69 @@ function Chat() {
     }
   };
 
-  useEffect(() => {
-    const fetchInitialMessage = async () => {
-      try {
-        const response = await postContent("3", "");
-        if (response) {
-          const aiMessage = {
-            text: response.chat,
-            sender: 'ai'
-          };
-          setMessages((prevMessages) => [...prevMessages, aiMessage]);
-        }
-      } catch (error) {
-        console.error('Error fetching initial message:', error);
+  const initializeChat = async () => {
+    try {
+      const initialResponse = await postChat("25", "");
+      if (initialResponse) {
+        const aiMessage = {
+          text: initialResponse.chat,
+          sender: 'ai'
+        };
+        setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        updateDiaryWithAIMessage(initialResponse.chat);
+        setIsInitialized(true);
       }
-    };
+    } catch (error) {
+      console.error('Error initializing chat:', error);
+    }
+  };
 
-    fetchInitialMessage();
-  }, []);
+  useEffect(() => {
+    if (!isInitialized) {
+      initializeChat();
+    }
+  }, [isInitialized]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    // This effect runs whenever `diary` changes
+    console.log("Diary state updated:", diary);
+  }, [diary]);
+
+  const updateDiaryWithUserMessage = async (message) => {
+    const currentAnswers = diary.q_a?.answer || '';
+    const newAnswers = currentAnswers
+      ? `${currentAnswers}, ${message}`
+      : message;
+      
+    await updateDiary({
+      ...diary,
+      q_a: {
+        ...diary.q_a,
+        answer: newAnswers
+      }
+    });
+    console.log("Diary Updated with User Message:", { q_a: { question: diary.q_a?.question, answer: newAnswers } });
+  };
+
+  const updateDiaryWithAIMessage = async (message) => {
+    const currentQuestions = diary.q_a?.question || '';
+    const newQuestions = currentQuestions
+      ? `${currentQuestions}, ${message}`
+      : message;
+      
+    await updateDiary({
+      ...diary,
+      q_a: {
+        ...diary.q_a,
+        question: newQuestions
+      }
+    });
+    console.log("Diary Updated with AI Message:", { q_a: { question: newQuestions, answer: diary.q_a?.answer } });
+  };
 
   const Message = ({ id, text, sender }) => {
     const isOwnMessage = sender === 'ai';
@@ -102,21 +144,13 @@ function Chat() {
 
   const handleMessageSubmit = async (message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
-      
+
     if (message.sender === 'user') {
-      const newAnswers = diary.q_a.answer ? `${diary.q_a.answer},${message.text}` : message.text;
-      updateDiary({ q_a: { ...diary.q_a, answer: newAnswers } });
-      console.log("Diary Updated with User Message:", { q_a: { ...diary.q_a, answer: newAnswers } });
-    } else {
-      const newQuestions = diary.q_a.question ? `${diary.q_a.question},${message.text}` : message.text;
-      updateDiary({ q_a: { ...diary.q_a, question: newQuestions } });
-      console.log("Diary Updated with AI Message:", { q_a: { ...diary.q_a, question: newQuestions } });
+      await updateDiaryWithUserMessage(message.text);
     }
-    
-    // 서버에 메시지 전송 및 AI 응답 받기
+
     try {
-      console.log(message.text);
-      const response = await postContent("3", message.text);
+      const response = await postChat("25", message.text);
       
       if (response) {
         const aiMessage = {
@@ -124,6 +158,7 @@ function Chat() {
           sender: 'ai'
         };
         setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        await updateDiaryWithAIMessage(response.chat);
         if (response.endpoint === "True") {
           setIsChatEnded(true);
           console.log("Chatting session ended");
