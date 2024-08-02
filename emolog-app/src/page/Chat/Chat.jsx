@@ -24,7 +24,7 @@ function Chat() {
 
   const initializeChat = async () => {
     try {
-      const initialResponse = await postChat("25", "");
+      const initialResponse = await postChat("26", "");
       if (initialResponse) {
         const aiMessage = {
           text: initialResponse.chat,
@@ -63,11 +63,10 @@ function Chat() {
     await updateDiary({
       ...diary,
       q_a: {
-        ...diary.q_a,
         answer: newAnswers
       }
     });
-    console.log("Diary Updated with User Message:", { q_a: { question: diary.q_a?.question, answer: newAnswers } });
+    console.log("Diary Updated with User Message:", { q_a: { answer: newAnswers } });
   };
 
   const updateDiaryWithAIMessage = async (message) => {
@@ -79,11 +78,10 @@ function Chat() {
     await updateDiary({
       ...diary,
       q_a: {
-        ...diary.q_a,
         question: newQuestions
       }
     });
-    console.log("Diary Updated with AI Message:", { q_a: { question: newQuestions, answer: diary.q_a?.answer } });
+    console.log("Diary Updated with AI Message:", { q_a: { question: newQuestions } });
   };
 
   const Message = ({ id, text, sender }) => {
@@ -150,7 +148,7 @@ function Chat() {
     }
 
     try {
-      const response = await postChat("25", message.text);
+      const response = await postChat("26", message.text);
       
       if (response) {
         const aiMessage = {

@@ -34,7 +34,7 @@ function WriteLog() {
             setText(event.target.value);
         }
     };
-    const id="25";
+    const id="26";
 
     const textStyle = {
         color: text.length >= maxLength ? 'red' : '#666',
