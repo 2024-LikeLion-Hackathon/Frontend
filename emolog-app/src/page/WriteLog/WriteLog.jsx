@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
+import { postAiDiary } from "../../api/postAiDiary";
 
 
 Modal.setAppElement('#root'); // 접근성 설정
@@ -12,18 +13,28 @@ function WriteLog() {
     const navigate = useNavigate(); 
     const location = useLocation();
     const maxLength = 1500;
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
     const today = new Date(initialDate);
     const date = today.toISOString().split('T')[0];
     const month = today.getMonth() + 1;
     const day = today.getDate();
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken)
+        }
+    }, []);
+
     const handleChange = (event) => {
         if (event.target.value.length <= maxLength) {
             setText(event.target.value);
         }
     };
+    const id="3";
 
     const textStyle = {
         color: text.length >= maxLength ? 'red' : '#666',
@@ -41,11 +52,20 @@ function WriteLog() {
         setModalIsOpen(false);
     };
 
-    const handleSubmit = () => {
-        openModal();
+    const handleSubmit = async () => {
+        try {
+            openModal();
         
         updateDiary({ date, content: text });
         console.log("Diary Updated:", { date, content: text }); //확인용 로그
+        console.log(id,text);
+        const result = postAiDiary(id, text);
+        console.log('ai서버응답:',result);
+
+        } catch (error) {
+            console.error('Error fetching emotions:', error);
+        }
+        
     };
 
     return (

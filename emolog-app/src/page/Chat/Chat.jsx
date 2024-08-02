@@ -5,13 +5,14 @@ import { ko } from 'date-fns/locale';
 import Modal from 'react-modal';
 import { useNavigate } from "react-router-dom";
 import { DiaryContext } from '../../context/DiaryContext';
-import axios from 'axios';
+import { postContent } from '../../api/postChat';
 
 function Chat() {
   const { diary, updateDiary } = useContext(DiaryContext);
   const navigate = useNavigate(); 
   const [messages, setMessages] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isChatEnded, setIsChatEnded] = useState(false);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,15 +22,34 @@ function Chat() {
   };
 
   useEffect(() => {
+    const fetchInitialMessage = async () => {
+      try {
+        const response = await postContent("3", "");
+        if (response) {
+          const aiMessage = {
+            text: response.chat,
+            sender: 'ai'
+          };
+          setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        }
+      } catch (error) {
+        console.error('Error fetching initial message:', error);
+      }
+    };
+
+    fetchInitialMessage();
+  }, []);
+
+  useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const Message = ({id, text, sender}) => {
+  const Message = ({ id, text, sender }) => {
     const isOwnMessage = sender === 'ai';
     const messageClass = isOwnMessage ? 'message-right' : 'message-left';
     return (
       <div className={messageClass}>
-        {isOwnMessage && <div className="modi"/>}
+        {isOwnMessage && <div className="modi" />}
         <div id={id} className={`message_${messageClass}`}>
           <div className="message-text">{text}</div>
         </div>
@@ -74,7 +94,7 @@ function Chat() {
             onChange={(e) => setText(e.target.value)}
             value={text}
           />
-          <button id='submitbtn' type='submit'/>
+          <button id='submitbtn' type='submit' />
         </form>
       </div>
     );
@@ -90,20 +110,24 @@ function Chat() {
     } else {
       const newQuestions = diary.q_a.question ? `${diary.q_a.question},${message.text}` : message.text;
       updateDiary({ q_a: { ...diary.q_a, question: newQuestions } });
-      console.log("Diary Updated with User Message:", { q_a: { ...diary.q_a, question: newQuestions } });
+      console.log("Diary Updated with AI Message:", { q_a: { ...diary.q_a, question: newQuestions } });
     }
     
     // 서버에 메시지 전송 및 AI 응답 받기
     try {
-      const response = await axios.post(`/api/chatroom/message`, { text: message.text, sender: message.sender });
-      const aiResponse = response.data; // AI 응답 데이터
+      console.log(message.text);
+      const response = await postContent("3", message.text);
       
-      if (aiResponse) {
+      if (response) {
         const aiMessage = {
-          text: aiResponse.text,
+          text: response.chat,
           sender: 'ai'
         };
-        handleMessageSubmit(aiMessage); // 재귀적으로 AI 응답 처리
+        setMessages((prevMessages) => [...prevMessages, aiMessage]);
+        if (response.endpoint === "True") {
+          setIsChatEnded(true);
+          console.log("Chatting session ended");
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -138,13 +162,12 @@ function Chat() {
       <div id="secondBox">
         <div id="date">{month}월 {day}일의 대화</div>
         <div id="btnBox">
-          <button id="emobtn" onClick={handleSubmit}></button>
+          <button id="emobtn" className={isChatEnded ? 'emotion_selected' : 'emotion_default'} onClick={handleSubmit}></button>
         </div>
       </div>
       <div id="inputbox">
         <div id="chatbox">
           <MessageList messages={messages} />
-         
         </div> 
         <MessageForm onMessageSubmit={handleMessageSubmit} />
       </div>

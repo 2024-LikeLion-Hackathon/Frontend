@@ -26,7 +26,7 @@ function Select() {
     useEffect(() => {
         const fetchEmotions = async () => {
             try {
-                const content = diary.content || '';
+                const content = diary.content || " ";
                 const response = await postContent(content);
                 if (response.emotion_list) {
                     setEmotions(response.emotion_list);

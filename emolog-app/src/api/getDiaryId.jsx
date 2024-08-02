@@ -12,6 +12,7 @@ export const getDiaryId = async (date, token) => {
     const response = await axios.get(`${BASE_URL}/api/diary/${date}`, {
       headers: {
         'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가
+        
        
       },
     });
