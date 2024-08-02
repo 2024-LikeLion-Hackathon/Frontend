@@ -24,7 +24,7 @@ function Chat() {
 
   const initializeChat = async () => {
     try {
-      const initialResponse = await postChat("26", "");
+      const initialResponse = await postChat("30", "");
       if (initialResponse) {
         const aiMessage = {
           text: initialResponse.chat,
@@ -55,9 +55,9 @@ function Chat() {
   }, [diary]);
 
   const updateDiaryWithUserMessage = async (message) => {
-    const currentAnswers = diary.q_a?.answer || '';
+    const currentAnswers = diary.q_a?.answer || "";
     const newAnswers = currentAnswers
-      ? `${currentAnswers}, ${message}`
+      ? `${currentAnswers}/ ${message}`
       : message;
       
     await updateDiary({
@@ -70,9 +70,9 @@ function Chat() {
   };
 
   const updateDiaryWithAIMessage = async (message) => {
-    const currentQuestions = diary.q_a?.question || '';
+    const currentQuestions = diary.q_a?.question || "";
     const newQuestions = currentQuestions
-      ? `${currentQuestions}, ${message}`
+      ? `${currentQuestions}/ ${message}`
       : message;
       
     await updateDiary({
@@ -113,7 +113,7 @@ function Chat() {
   };
 
   const MessageForm = ({ onMessageSubmit }) => {
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -148,7 +148,7 @@ function Chat() {
     }
 
     try {
-      const response = await postChat("26", message.text);
+      const response = await postChat("30", message.text);
       
       if (response) {
         const aiMessage = {

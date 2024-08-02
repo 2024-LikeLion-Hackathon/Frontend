@@ -65,7 +65,7 @@ function Select() {
     const handleSubmit = async () => {
         const updatedDiary = {
             ...diary,
-            emotion: selectedEmotions.join(',')
+            emotion: selectedEmotions.join('/')
         };
         
         updateDiary(updatedDiary);

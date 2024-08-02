@@ -15,11 +15,11 @@ export const DiaryProvider = ({ children }) => {
             // q_a 병합 로직 추가
             const updatedQA = {
                 question: newData.q_a?.question !== undefined 
-                    ? newData.q_a.question
-                    : prevDiary.q_a.question,
+                    ? `${newData.q_a.question}`
+                    : `${prevDiary.q_a.question}`,
                 answer: newData.q_a?.answer !== undefined 
-                    ? newData.q_a.answer
-                    : prevDiary.q_a.answer,
+                    ? `${newData.q_a.answer}`
+                    : `${prevDiary.q_a.answer}`,
             };
             
           
@@ -27,7 +27,7 @@ export const DiaryProvider = ({ children }) => {
             return {
                 ...prevDiary,
                 ...newData,
-                q_a: updatedQA,
+                q_a: updatedQA
             };
         });
     };

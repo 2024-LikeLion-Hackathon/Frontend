@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { getDiaryId } from '../../api/getDiaryId';
+import { deleteDiary } from "../../api/deleteDiary";
 
 function Result() {
     const navigate = useNavigate();
@@ -72,21 +73,28 @@ function Result() {
 
     // 문자열을 배열로 변환
     const parseArray = (str) => {
-        return str ? str.split(',').map(item => item.trim()).filter(item => item.length > 0) : [];
+        return str ? str.split('/').map(item => item.trim()).filter(item => item.length > 0) : [];
     };
 
-    const emotions = parseArray(diary.emotion.join(','));
+    const emotions = parseArray(diary.emotion.join('/'));
 
-    // 문자열을 메시지 배열로 변환
+    // 문자열을 메시지 배열로 변환 (질문과 답변을 따로 파싱하고 순서대로 합침)
     const parseMessages = (questions, answers) => {
         const messages = [];
-        const qA = [...parseArray(questions), ...parseArray(answers)];
+        const qArray = parseArray(questions);
+        const aArray = parseArray(answers);
+        const maxLength = Math.max(qArray.length, aArray.length);
+
         let id = 1;
 
-        qA.forEach((item, index) => {
-            const sender = index % 2 === 0 ? 'user' : 'ai';
-            messages.push({ id: id++, sender: sender, text: item });
-        });
+        for (let i = 0; i < maxLength; i++) {
+            if (i < qArray.length) {
+                messages.push({ id: id++, sender: 'ai', text: qArray[i] });
+            }
+            if (i < aArray.length) {
+                messages.push({ id: id++, sender: 'user', text: aArray[i] });
+            }
+        }
 
         return messages;
     };
@@ -124,10 +132,16 @@ function Result() {
         );
     };
 
-    const deleteHandler = () => {
+    const deleteHandler = async () => {
         if (window.confirm('삭제하시겠습니까?')) {
-            // 삭제 로직을 여기에 추가하세요.
-            console.log('삭제되었습니다.');
+            try {
+                await deleteDiary(diary.diary.id, token);
+                console.log('삭제되었습니다.');
+                navigate('/'); // 삭제 후 메인 페이지로 이동
+            } catch (error) {
+                console.error('Error deleting diary:', error);
+                setError('Error deleting diary');
+            }
         }
     };
 
@@ -146,7 +160,8 @@ function Result() {
                 <div id="img"></div>
                 <div id="ment">{diary.comment}</div>
                 <div id="colorBox">
-                    <div id="color" style={{ backgroundColor: `#${diary.color.hexa}` }}></div>
+                    <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
+
                     <div className="color_container"></div>
                     <div id="rgb">
                         <div id="r" className="rgb_container">
@@ -188,7 +203,7 @@ function Result() {
                 </div>
             </div>
             <div id="nevi">
-                <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="home" onClick={() => navigate('/')}></button>
                 <button id="diary" onClick={() => navigate('/write')}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
