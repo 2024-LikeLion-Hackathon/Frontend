@@ -20,7 +20,7 @@ function WriteLog() {
     const date = today.toISOString().split('T')[0];
     const month = today.getMonth() + 1;
     const day = today.getDate();
-    const [token, setToken] = useState('');
+    // const [token, setToken] = useState('');
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');

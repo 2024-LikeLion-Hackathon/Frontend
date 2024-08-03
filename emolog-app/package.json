@@ -41,6 +41,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://emolog-server.ap-northeast-2.elasticbeanstalk.com"
-
+  "proxy": "http://emolog-server.ap-northeast-2.elasticbeanstalk.com",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
 }
