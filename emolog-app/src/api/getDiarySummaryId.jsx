@@ -8,7 +8,7 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-nort
  * @param {string} token - 사용자 토큰
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const getDiarySummaryId = async (date,token) => {
+export const getDiarySummaries = async (date,token) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/diary/summary/${date}`,{
       headers: {

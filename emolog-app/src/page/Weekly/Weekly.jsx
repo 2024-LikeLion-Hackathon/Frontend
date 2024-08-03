@@ -1,12 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getDiarySummaryId } from "../../api/getDiarySummaryId";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getDiaryId } from "../../api/getDiaryId";
+import { fetchColorData } from "../../api/color";
+import { format, parseISO } from "date-fns";
+import { ko } from "date-fns/locale";
+import axios from "axios";
 import "./Weekly.css";
 
 const Weekly = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const today = new Date();
+  const [diary, setDiary] = useState({
+    diary: {
+      date: "",
+      dayOfWeek: "",
+      content: "",
+    },
+    color: {
+      hexa: "",
+      red: 147,
+      green: 134,
+      blue: 92,
+    },
+    emotion: [],
+    comment: "",
+    q_a: {
+      question: "",
+      answer: "",
+    },
+    summary: "",
+    url: "",
+  });
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedWeek, setSelectedWeek] = useState(
     Math.ceil(today.getDate() / 7)
@@ -16,23 +41,44 @@ const Weekly = () => {
   const [diarySummaries, setDiarySummaries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [token, setToken] = useState("");
+  const initialDate =
+    location.state?.date || new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    const fetchDiarySummaries = async () => {
-      setLoading(true);
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+
+    const fetchDiaryData = async () => {
       try {
-        const summaries = await getDiarySummaryId(currentYear, currentMonth);
-        setDiarySummaries(summaries);
-        setSelectedDay(summaries.length ? summaries[0] : null);
-      } catch (err) {
-        setError("Failed to fetch diary summaries");
+        setLoading(true);
+
+        // 주별 색상 데이터를 가져옵니다.
+        const response = await axios.get(
+          `/api/color?month=${currentMonth}&week=${selectedWeek}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setDiarySummaries(response.data);
+
+        const DiaryData = await getDiaryId(initialDate, token);
+        setDiary(DiaryData);
+      } catch (error) {
+        console.error("Error fetching diary data:", error);
+        setError("Error fetching diary data");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDiarySummaries();
-  }, [currentYear, currentMonth]);
+    fetchDiaryData();
+  }, [token, currentMonth, selectedWeek, initialDate]);
 
   const handleNextWeek = () => {
     const totalWeeks = Math.ceil(
@@ -82,7 +128,7 @@ const Weekly = () => {
       const summary = diarySummaries.find(
         (summary) => summary.date === dateStr
       );
-      weekData.push(summary || { date: dateStr, color: { hexa: "#d9d9d9" } });
+      weekData.push(summary || { date: dateStr, color: { hexa: "d9d9d9" } });
     }
     return weekData;
   };
@@ -90,17 +136,33 @@ const Weekly = () => {
   const weekData = getWeekData(selectedWeek);
 
   const handleDayClick = async (day) => {
-    if (!day) return;
+    const selectedDate = `${currentYear}-${String(currentMonth).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
+
     try {
-      const diary = await getDiaryId(day.id);
-      setSelectedDay(diary || day);
+      setLoading(true);
+      const response = await getDiaryId(selectedDate, token);
+      setDiary(response);
+      setSelectedDay(response.diary.date === selectedDate ? response : null);
     } catch (err) {
-      console.error("Failed to fetch diary details", err);
+      setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleWriteDiary = () => {
-    navigate("/write");
+    navigate("/write", { state: { date: selectedDay?.date } });
+  };
+
+  const handleResultDiary = () => {
+    if (selectedDay?.diary.date) {
+      navigate("/result", { state: { date: selectedDay.diary.date } });
+    } else {
+      alert("No diary entry selected");
+    }
   };
 
   return (
@@ -136,16 +198,20 @@ const Weekly = () => {
               <div
                 key={index}
                 className={`color-circle-container ${
-                  selectedDay?.date === day.date ? "selected" : ""
+                  selectedDay?.diary.date === day.date ? "selected" : ""
                 }`}
               >
                 <div
                   className={`color-circle ${
                     selectedDay?.date === day.date ? "selected" : ""
                   }`}
-                  style={{ backgroundColor: day ? day.color.hexa : "#d9d9d9" }}
                   onClick={() => handleDayClick(day)}
-                  aria-label={`Select ${day?.date}`}
+                  style={{
+                    backgroundColor:
+                      diary.color && diary.color.hexa
+                        ? `#${diary.color.hexa}`
+                        : `#d9d9d9`,
+                  }}
                 ></div>
               </div>
             ))}
@@ -156,28 +222,19 @@ const Weekly = () => {
               {selectedDay.imageUrl && (
                 <img src={selectedDay.imageUrl} alt="Diary illustration" />
               )}
+              <p id="emotion_text">대표 감정</p>
               <div className="emotions">
-                <p id="emotion_text">대표 감정</p>
-                {selectedDay.emotions?.map((emotion, index) => (
-                  <span key={index} className="emotion-tag">
+                {diary.emotion.map((emotion, index) => (
+                  <button key={index} className="emotion">
                     {emotion}
-                  </span>
-                )) || <p>감정 정보가 없습니다.</p>}
+                  </button>
+                ))}
               </div>
               <p id="ai_text">모디의 한 마디</p>
-              <p className="ai-message">
-                {selectedDay.aiMessage || "AI 메시지가 없습니다."}
-              </p>
+              <p className="ai-message">{diary.comment}</p>
               <p id="diary_text">이 날의 일기</p>
-              <p className="diary-entry">
-                {selectedDay.diary || "일기 내용이 없습니다."}
-              </p>
-              <button
-                id="diary_button"
-                onClick={() =>
-                  alert("일기 자세히 보기 기능은 추후 추가될 예정입니다.")
-                }
-              >
+              <p className="diary-entry">{diary.diary.content}</p>
+              <button id="diary_button" onClick={handleResultDiary}>
                 일기 자세히 보기
               </button>
             </div>

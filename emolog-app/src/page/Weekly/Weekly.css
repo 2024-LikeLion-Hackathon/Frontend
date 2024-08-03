@@ -118,9 +118,6 @@
   align-items: center;
 }
 
-.color-circle.selected .color-circle-container{
-  background-image: url('../../asset/img/hover.png');
-}
 
 .color-circle-container:hover, 
 .color-circle-container.selected {
