@@ -17,15 +17,15 @@ const Weekly = () => {
 
   useEffect(() => {
     const fetchDiarySummaries = async () => {
-      setLoading(true);
+      // setLoading(true);
       try {
         const summaries = await getDiarySummaryId(currentYear, currentMonth);
         setDiarySummaries(summaries);
         setSelectedDay(summaries.length ? summaries[0] : null);
       } catch (err) {
-        setError('Failed to fetch diary summaries');
+        // setError('Failed to fetch diary summaries');
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
