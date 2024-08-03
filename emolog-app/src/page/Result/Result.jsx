@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './Result.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { getDiaryId } from '../../api/getDiaryId';
 import { deleteDiary } from "../../api/deleteDiary";
+import { DiaryContext } from "../../context/DiaryContext";
 
 function Result() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { resetDiary } = useContext(DiaryContext);
     const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
+    const diary_id = location.state.id;
     const [diary, setDiary] = useState({
         diary: {
             date: "",
@@ -32,35 +35,39 @@ function Result() {
     const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [diaryId, setDiaryId] = useState('');
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            console.log(storedToken);
             setToken(storedToken);
+            console.log(location.state);
         }
     }, []);
 
     useEffect(() => {
-        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+        if (!token) return;
 
-        // 마이페이지 정보를 가져오는 함수 호출
         const fetchDiaryData = async () => {
             try {
                 setLoading(true);
+                const storedDiaryId = localStorage.getItem(initialDate);
+                if (!storedDiaryId) {
+                    throw new Error('Diary ID not found in local storage');
+                }
+                setDiaryId(storedDiaryId); // 상태에 ID 저장
                 const DiaryData = await getDiaryId(initialDate, token);
                 setDiary(DiaryData);
             } catch (error) {
-                console.error('Error fetching mypage data:', error);
-                setError('Error fetching mypage data');
+                console.error('Error fetching diary data:', error);
+                setError('Error fetching diary data');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchDiaryData();
-    }, [token]);
-
+    }, [token, initialDate]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading diary data.</div>;
@@ -133,9 +140,11 @@ function Result() {
     };
 
     const deleteHandler = async () => {
+        console.log("1",diaryId);
         if (window.confirm('삭제하시겠습니까?')) {
             try {
-                await deleteDiary(diary.diary.id, token);
+                
+                await deleteDiary(diaryId ,token);
                 console.log('삭제되었습니다.');
                 navigate('/'); // 삭제 후 메인 페이지로 이동
             } catch (error) {
@@ -143,6 +152,11 @@ function Result() {
                 setError('Error deleting diary');
             }
         }
+    };
+
+    const handleFinish = () => {
+        resetDiary(); // DiaryContext 초기화
+        navigate('/'); // 메인 페이지로 이동
     };
 
     return (
@@ -153,7 +167,7 @@ function Result() {
             <div id="secondBox">
                 <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
                 <div id="btnBox">
-                    <button id="finishbtn"></button>
+                    <button id="finishbtn" onClick={handleFinish}></button>
                 </div>
             </div>
             <div id="resultBox">
@@ -198,7 +212,7 @@ function Result() {
                     <div id="chat">
                         <MessageList messages={messages} />
                     </div>
-                    <button id="lastbtn" onClick={() => navigate('/')}>확인</button>
+                    <button id="lastbtn" onClick={handleFinish}>확인</button>
                     <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
                 </div>
             </div>

@@ -73,7 +73,7 @@ const Weekly = () => {
         console.error("Error fetching diary data:", error);
         setError("Error fetching diary data");
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 

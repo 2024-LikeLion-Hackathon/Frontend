@@ -31,7 +31,7 @@ function Chat() {
           sender: 'ai'
         };
         setMessages((prevMessages) => [...prevMessages, aiMessage]);
-        updateDiaryWithAIMessage(initialResponse.chat);
+        await updateDiaryWithAIMessage(initialResponse.chat);
         setIsInitialized(true);
       }
     } catch (error) {
@@ -43,7 +43,8 @@ function Chat() {
     if (!isInitialized) {
       initializeChat();
     }
-  }, [isInitialized]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized,"30", ""]);
 
   useEffect(() => {
     scrollToBottom();

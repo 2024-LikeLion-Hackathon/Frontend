@@ -15,7 +15,7 @@ function Select() {
     const [selectedEmotions, setSelectedEmotions] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [token, setToken] = useState('');
-
+   
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
@@ -55,6 +55,7 @@ function Select() {
         setTimeout(() => {
             closeModal();
             navigate('/result', { state: { date: diary.date } });
+           
         }, 3000);
     };
     
@@ -72,8 +73,12 @@ function Select() {
         
 
         try {
-            await postDiary(updatedDiary, token);
+            const backres = await postDiary(updatedDiary, token);
             console.log('Diary data posted successfully');
+             // 로컬 스토리지에 날짜와 ID 매핑 저장
+            const diaryDate = diary.date;
+            const diaryId = backres.id;
+            localStorage.setItem(diaryDate, diaryId);
             openModal();
         } catch (error) {
             console.error('Error posting diary data:', error);
