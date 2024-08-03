@@ -43,7 +43,8 @@ function Chat() {
     if (!isInitialized) {
       initializeChat();
     }
-  }, [isInitialized]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isInitialized,"30", ""]);
 
   useEffect(() => {
     scrollToBottom();
