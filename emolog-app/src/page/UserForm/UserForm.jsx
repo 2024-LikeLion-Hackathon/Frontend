@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { getUser } from "../../api/getUser"; 
-import { postUser } from "../../api/postUser";
+import { putUser } from "../../api/putUser";
+import { useNavigate } from "react-router-dom";
 import "./UserForm.css";
 
 const Header = () => {
@@ -19,7 +19,8 @@ const Header = () => {
   );
 };
 
-const Form = ({ userId }) => {
+const Form = ({ token }) => {
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState("");
   const [age, setAge] = useState("");
 
@@ -31,9 +32,16 @@ const Form = ({ userId }) => {
       alert("닉네임과 나이를 모두 입력해주세요.");
       return;
     }
+
+    console.log({ nickname, age }, token);
+
+    // 수정할 데이터 콘솔 출력
+    console.log('수정할 데이터:', { nickname, age });
+
     try {
-      await postUser(userId, { nickname, age });
+      await putUser({ nickname, age }, token);
       alert("사용자 정보가 저장되었습니다.");
+      navigate('/');
     } catch (error) {
       alert("사용자 정보를 저장하는 중 오류가 발생했습니다.");
     }
@@ -83,27 +91,20 @@ const Form = ({ userId }) => {
 };
 
 const UserForm = () => {
-  const [userId, setUserId] = useState(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUser();
-        setUserId(userData.id); // 서버에서 유저 ID를 가져오는 것으로 가정
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const [token, setToken] = useState('');
+  
+   useEffect(() => {
+     // 로컬 스토리지에서 토큰 읽어오기
+     const storedToken = localStorage.getItem('token');
+     setToken(storedToken);
+   }, []);
 
   return (
     <div className="UserForm">
       <div className="container">
         <div id="back">
           <Header />
-          {userId ? <Form userId={userId} /> : <p>Loading...</p>}
+          <Form token={token} />
         </div>
       </div>
     </div>

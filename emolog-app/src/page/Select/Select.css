@@ -120,6 +120,7 @@ margin: 5px;
         margin-top: 60px;
         width: 500px;
         height: 79%;
+       
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -172,7 +173,8 @@ margin: 5px;
 
         
         width: 468px;
-        height: 640px;
+        max-height: 640px;
+        overflow-y: scroll;
         position: absolute;
         top: 257px;
 

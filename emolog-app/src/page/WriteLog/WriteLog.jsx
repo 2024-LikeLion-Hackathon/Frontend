@@ -1,71 +1,117 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext, useEffect} from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
-import axios from 'axios';
+import Modal from 'react-modal';
+import { DiaryContext } from '../../context/DiaryContext';
+import { postAiDiary } from "../../api/postAiDiary";
 
 
-function WriteLog(){
-    let month =7;
-    let day = 3;
+Modal.setAppElement('#root'); // 접근성 설정
+
+function WriteLog() {
+    const { updateDiary } = useContext(DiaryContext);
     const navigate = useNavigate(); 
+    const location = useLocation();
     const maxLength = 1500;
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
+    const today = new Date(initialDate);
+    const date = today.toISOString().split('T')[0];
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken)
+        }
+    }, []);
 
     const handleChange = (event) => {
         if (event.target.value.length <= maxLength) {
             setText(event.target.value);
         }
     };
+    const id="30";
 
     const textStyle = {
         color: text.length >= maxLength ? 'red' : '#666',
     };
    
-    const handleCancel = () => {
-        axios.get('')
-    }
+    const openModal = () => {
+        setModalIsOpen(true);
+        setTimeout(() => {
+            closeModal();
+            navigate('/chat');
+        }, 3000); // 2초 후에 페이지 이동
+    };
+    
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
 
-    const handleSubmit = () =>{
+    const handleSubmit = async () => {
+        try {
+            openModal();
+        
+        updateDiary({ date, content: text });
+        console.log("Diary Updated:", { date, content: text }); //확인용 로그
+        console.log(id,text);
+        const result = postAiDiary(id, text);
+        console.log('ai서버응답:',result);
 
-    }
+        } catch (error) {
+            console.error('Error fetching emotions:', error);
+        }
+        
+    };
 
-   
-   
-
-    return(
-        <div class="writelog">
+    return (
+        <div className="writelog">
             <div id="logoBox">
                 <div id="logo"></div>
             </div>
             <div id="secondBox">
-                <div id="date"> {month}월{day}일 일기 작성하기</div>
+                <div id="date">{month}월 {day}일 일기 작성하기</div>
                 <div id="btnBox">
-                    <button id="cancel" onClick={() => handleCancel}>취소</button>
+                    <button id="cancel" onClick={() => navigate('/')}>취소</button>
                     <button id="finish"
-                            onClick={() => handleSubmit}
+                            onClick={handleSubmit}
                             type="submit">완료</button>
                 </div>
-
             </div>
             <div id="inputbox">
                 <textarea type="text"
-                       id = "loginput"
-                       maxLength={maxLength}
-                       value={text}
-                       onChange={handleChange}
-                       placeholder="오늘의 일기를 작성해보세요">
-                       </textarea>
-                   <div id="counter" style={textStyle}> 
-                {text.length}/{maxLength}
+                          id="loginput"
+                          maxLength={maxLength}
+                          value={text}
+                          onChange={handleChange}
+                          placeholder="오늘의 일기를 작성해보세요">
+                </textarea>
+                <div id="counter" style={textStyle}> 
+                    {text.length}/{maxLength}
                 </div>
             </div> 
-            
-                   
             <div id="nevi">
-                <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="home" onClick={() => navigate('/')}></button>
                 <button id="diary" onClick={() => navigate('/write')}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Pop up Message"
+                ariaHideApp={false}
+                className="modal"
+                overlayClassName="overlay"
+            >
+                <img src="load1.gif" alt="Submitting" />
+                <div>MoDi가 일기를 읽어보고 있어요</div>
+                <div>잠시만 기다려주세요</div>
+            </Modal>
         </div>
     );
 }

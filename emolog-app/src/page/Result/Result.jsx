@@ -1,119 +1,186 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import './Result.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { getDiaryId } from '../../api/getDiaryId';
+import { deleteDiary } from "../../api/deleteDiary";
 
-
-function Result(){
-    const navigate = useNavigate(); 
-
-    const data = {
+function Result() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
+    const [diary, setDiary] = useState({
         diary: {
-            date: "2024-07-21",
-            dayOfWeek: "월",
-            content: "오늘 아침, 창밖을 보니 비가 부슬부슬 내리고 있었다. 이런 날씨에 집에서 나가기 싫었지만, 출근을 위해 어쩔 수 없이 버스를 타야 했다.우산을 챙겨들고 정류장에 서서 버스를 기다리며, 습기 찬 공기를 들이마셨다. 버스에 올라 자리를 잡고 앉으니, 창문 너머로 빗방울이 흐르는 모습이 보였다. 비 오는 날의 버스 안은 유난히 조용하고 차분하다. 출근길의 무료함을 달래기 위해 이어폰을 꺼내어 좋아하는 노래를 틀었다. 잔잔한 멜로디가 귀에 울리자, 마음이 한결 편안해졌다. 버스가 목적지에 가까워질 때쯤, 주머니 속에서 츄파춥스를 하나 꺼내어 입에 물었다. 달콤한 맛이 피곤함을 조금이나마 덜어주는 것 같았다. 하루 일과를 마치고 집에 돌아와 따뜻한 샤워를 마친 뒤, 침대에 누웠다. 창밖에서는 여전히 비가 내리고 있었다. 빗소리를 자장가 삼아, 서서히 잠에 빠져들었다. "
+            date: "",
+            dayOfWeek: "",
+            content: ""
         },
         color: {
-            hexa: "93465c",
+            hexa: "",
             red: 147,
             green: 134,
             blue: 92
         },
-        emotion: [
-            "가책",
-            "손에 땀을 쥐게 하는",
-            "달달"
-        ],
-        comment: "많이 힘들었겠지, 고생했어",
-        q_a: [
-            {id: 1, sender: 'ai', text: '텍스트텍스트텍스트텍스트텍ㅇ트'},
-            {id: 2, sender: 'user', text: '텍스트텍스트텍스트텍스트텍스트'},
-            {id: 3, sender: 'ai', text: '텍스트텍스트텍스트텍스트텍ㅇ트텍스트텍스트텟그트'},
-            {id: 4, sender: 'ai', text: '텍스트'},
-        ]
-    }
+        emotion: [],
+        comment: "",
+        q_a: {
+            question: "",
+            answer: ""
+        }
+    });
+    const [token, setToken] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const date = parseISO(data.diary.date);
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            console.log(storedToken);
+            setToken(storedToken);
+        }
+    }, []);
 
-    const month = format(date, 'M', { locale: ko });
-    const day = format(date, 'd', { locale: ko });
-    const dayOfWeek = format(date, 'EEEE', { locale: ko });
-    const emotions = [...data.emotion];
+    useEffect(() => {
+        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+
+        // 마이페이지 정보를 가져오는 함수 호출
+        const fetchDiaryData = async () => {
+            try {
+                setLoading(true);
+                const DiaryData = await getDiaryId(initialDate, token);
+                setDiary(DiaryData);
+            } catch (error) {
+                console.error('Error fetching mypage data:', error);
+                setError('Error fetching mypage data');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDiaryData();
+    }, [token]);
 
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading diary data.</div>;
+
+    // 날짜 포맷팅
+    const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
+    const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
+    const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
+    const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
+
+    // 문자열을 배열로 변환
+    const parseArray = (str) => {
+        return str ? str.split('/').map(item => item.trim()).filter(item => item.length > 0) : [];
+    };
+
+    const emotions = parseArray(diary.emotion.join('/'));
+
+    // 문자열을 메시지 배열로 변환 (질문과 답변을 따로 파싱하고 순서대로 합침)
+    const parseMessages = (questions, answers) => {
+        const messages = [];
+        const qArray = parseArray(questions);
+        const aArray = parseArray(answers);
+        const maxLength = Math.max(qArray.length, aArray.length);
+
+        let id = 1;
+
+        for (let i = 0; i < maxLength; i++) {
+            if (i < qArray.length) {
+                messages.push({ id: id++, sender: 'ai', text: qArray[i] });
+            }
+            if (i < aArray.length) {
+                messages.push({ id: id++, sender: 'user', text: aArray[i] });
+            }
+        }
+
+        return messages;
+    };
+
+    const messages = parseMessages(diary.q_a.question, diary.q_a.answer);
+
+    // 메시지 리스트 컴포넌트
     const MessageList = ({ messages }) => {
+        const validMessages = Array.isArray(messages) ? messages : [];
         return (
-          <div className='messages' >
-            {messages.map((message, i) => (
-              <Message
-                key={i}
-                text={message.text}
-                sender={message.sender}
-              />
-            ))}
-          </div>
+            <div className='messages'>
+                {validMessages.map((message) => (
+                    <Message
+                        key={message.id}
+                        text={message.text}
+                        sender={message.sender}
+                    />
+                ))}
+            </div>
         );
-      };
+    };
 
-      const Message = ({id,text,sender}) => {
-        
+    // 개별 메시지 컴포넌트
+    const Message = ({ text, sender }) => {
         const isOwnMessage = sender === 'ai';
         const messageClass = isOwnMessage ? 'message-right' : 'message-left';
-      
-        return (
-            <div className={messageClass}> {isOwnMessage && <div className="modi"/>}
-          <div id={id} className={`message_${messageClass}`}>
-            
-            <div className="message-text">{text}</div>
-          </div>
-          </div>
-        );
-      };
 
-    return(
-        <div className="result">
-        <div id="logoBox">
-            <div id="logo"></div>
-        </div>
-        <div id="secondBox">
-            <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
-            <div id="btnBox">
-                <button 
-                    id="finishbtn" 
-                    
-                >
-                    
-                </button>
+        return (
+            <div className={messageClass}>
+                {isOwnMessage && <div className="modi"/>}
+                <div className={`message_${messageClass}`}>
+                    <div className="message-text">{text}</div>
+                </div>
             </div>
-        </div>
-        <div id="resultBox">
-            <div id="img"></div>
-            <div id="ment">{data.comment}</div>
-            <div id="colorBox">
-            
-                <div id="color" style={{ backgroundColor: `#${data.color.hexa}` }}></div>
-                <div className="color_container"></div>
-                
-                <div id="rgb">
-                    <div id="r" className="rgb_container">
-                        <div className="rgbbox">R</div>
-                        <div id="r_value" className="rgb_value">{data.color.red}</div>
+        );
+    };
+
+    const deleteHandler = async () => {
+        if (window.confirm('삭제하시겠습니까?')) {
+            try {
+                await deleteDiary(diary.diary.id, token);
+                console.log('삭제되었습니다.');
+                navigate('/'); // 삭제 후 메인 페이지로 이동
+            } catch (error) {
+                console.error('Error deleting diary:', error);
+                setError('Error deleting diary');
+            }
+        }
+    };
+
+    return (
+        <div className="result">
+            <div id="logoBox">
+                <div id="logo"></div>
+            </div>
+            <div id="secondBox">
+                <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
+                <div id="btnBox">
+                    <button id="finishbtn"></button>
+                </div>
+            </div>
+            <div id="resultBox">
+                <div id="img"></div>
+                <div id="ment">{diary.comment}</div>
+                <div id="colorBox">
+                    <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
+
+                    <div className="color_container"></div>
+                    <div id="rgb">
+                        <div id="r" className="rgb_container">
+                            <div className="rgbbox">R</div>
+                            <div id="r_value" className="rgb_value">{diary.color.red}</div>
                         </div>
-                    <div id="g"  className="rgb_container">
-                        <div className="rgbbox">G</div>
-                        <div id="g_value" className="rgb_value">{data.color.blue}</div>
-                    </div>
-                    <div id="b"  className="rgb_container">
-                        <div className="rgbbox">B</div>
-                        <div id="b_value" className="rgb_value">{data.color.green}</div>
+                        <div id="g" className="rgb_container">
+                            <div className="rgbbox">G</div>
+                            <div id="g_value" className="rgb_value">{diary.color.green}</div>
+                        </div>
+                        <div id="b" className="rgb_container">
+                            <div className="rgbbox">B</div>
+                            <div id="b_value" className="rgb_value">{diary.color.blue}</div>
+                        </div>
                     </div>
                 </div>
-                
-            </div>
-            <div id="color_hexa">#{data.color.hexa}</div>
-            <div id="emotions">
-            {emotions.map((emotion) => (
+                <div id="color_hexa">#{diary.color.hexa}</div>
+                <div id="emotions">
+                    {emotions.map((emotion) => (
                         <button
                             key={emotion}
                             className={`emotion`}
@@ -121,30 +188,27 @@ function Result(){
                             {emotion}
                         </button>
                     ))}
+                </div>
+                <div id="dt_container">
+                    <div id="diary_content">{diary.diary.content}</div>
+                    <div id="text">
+                        <div id="icon"></div>
+                        <div id="chat_rep">MoDi와의 대화 다시보기</div>
+                    </div>
+                    <div id="chat">
+                        <MessageList messages={messages} />
+                    </div>
+                    <button id="lastbtn" onClick={() => navigate('/')}>확인</button>
+                    <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
+                </div>
             </div>
-            <div id="dt_container">
-                <div id="diary_content">{data.diary.content}</div>
-                <div id="text">
-                    <div id="icon"></div>
-                    <div id="chat_rep">MoDi와의 대화 다시보기</div>
-                </div>
-            
-            <div id="chat">
-                <MessageList messages={data.q_a} />
-             </div>
-            <button id="lastbtn">확인</button>
-                </div>
-            
-            
-           
+            <div id="nevi">
+                <button id="home" onClick={() => navigate('/')}></button>
+                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="my" onClick={() => navigate('/mypage')}></button>
+            </div>
         </div>
-        <div id="nevi">
-            <button id="home" onClick={() => navigate('/')} ></button>
-            <button id="diary" onClick={() => navigate('/write')}></button>
-            <button id="my" onClick={() => navigate('/mypage')}></button>
-        </div>
-    </div>
-    )
+    );
 }
 
 export default Result;

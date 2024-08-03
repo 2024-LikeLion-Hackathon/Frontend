@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com/';
+const BASE_URL = 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
 
 /**
  * 사용자 정보를 저장하는 함수

@@ -1,0 +1,238 @@
+.modify{
+    width: 500px;
+    height: 97vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 0;
+    background-color: #FCFCFC;
+
+    #logoBox{
+        width: 468px;
+        height:10% ;
+        display: flex;
+        align-items: center;
+
+    }
+    
+
+
+    #logo{
+    border-top:10px;
+    width: 111px;
+    height: 40px;
+    background-image:url('../../asset/img/logo.png');
+    background-size: contain;
+    position: absolute;
+    left: calc(50% - 111px/2 - 178.5px);
+    top: 44px;
+    }
+
+    #secondBox{
+
+    
+    width: 468px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    }
+
+    #titlebtn{
+        padding-left: 0;
+        margin-top: 44px;
+        height: 42px;
+        width: 468px;
+        border: none;
+        background-color: #FCFCFC;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+       
+    }
+
+    #go_icon{
+      
+
+        background-image: url('../../asset/img/point_icon.png');
+        background-repeat: no-repeat;
+        width: 22px;
+        height: 22px;
+        margin-right:5px;
+        transform: rotate(180deg);
+
+    }
+    #title{
+            
+        width: auto;
+        height: 26px;
+        
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 26px;
+        letter-spacing: -0.6px;
+        
+        color: #000000;
+
+
+    }
+
+    #info{
+        letter-spacing: -0.6px;
+        width: auto;
+        height: 18px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 18px;
+        /* identical to box height, or 112% */
+        display: flex;
+        align-items: center;
+        margin-top: 40px;
+        color: #000000;
+
+
+    }
+    #formbox{
+        display:flex ;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 40px;
+    }
+    #nicknamebox{
+        display: flex;
+        flex-direction: column;
+    }
+    #label_nickname{
+        /* 닉네임 변경하기 */
+
+      
+        width: auto;
+        height: 18px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: -0.6px;
+
+        color: #000000;
+
+
+    }
+    #nickname{
+                /* 닉네임 입력란 */
+
+       
+        width: 468px;
+        height: 46px;
+        margin-top: 8px;
+        background: #F1F1F1;
+        border-radius: 5px;
+        border: none;
+        padding-left: 9px;
+        
+    }
+    #nickname-message{
+        /* 닉네임은 2~8자, 영문 혹은 한글로 작성해주세요 */
+
+        margin-top: 8px;
+        width: auto;
+        height: 16px;
+        letter-spacing: -0.6px;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17px;
+        /* identical to box height */
+
+        color: #FF2E00;
+
+
+    }
+
+    #agebox{
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    #label_age{
+        width: auto;
+        height: 18px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 18px;
+        letter-spacing: -0.6px;
+
+        color: #000000;
+        margin-top: 48px;
+    }
+
+    #age{
+        /* 나이 */
+
+        
+        width: 468px;
+        height: 46px;
+        margin-top: 8px;
+        background: #F1F1F1;
+        border-radius: 5px;
+        border: none;
+        padding: 8px;
+            
+    }
+
+    button{
+        /* 확인 */
+
+        width: 470px;
+        height: 54px;
+
+        background: #F1F1F1;
+        border-radius: 5px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 550;
+        font-size: 18px;
+        line-height: 22px;
+        margin-top: 70px;
+        letter-spacing: -1px;
+        color: #000000;
+        text-align: center;
+        border: none;
+
+    }
+
+    #copyR{
+        justify-content: flex-end;
+        margin-bottom: 30px;
+        width: 300px;
+        height: 10.7px;
+        background-image: url('../../asset/img/copyrigt_emo.png');
+
+    }
+
+    #container{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 90%;
+        align-items: center;
+    }
+
+}

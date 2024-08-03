@@ -7,9 +7,9 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-nort
  * @param {} date - 가져올 일기의 ID
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const getDiaryId = async (date, token) => {
+export const deleteDiary= async (id, token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/diary/${date}`, {
+    const response = await axios.delete(`${BASE_URL}/api/diary/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가
         

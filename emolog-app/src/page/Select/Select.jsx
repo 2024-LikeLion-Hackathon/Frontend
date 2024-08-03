@@ -1,23 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './Select.css';
 import { useNavigate } from "react-router-dom";
+import Modal from 'react-modal';
+import { format, parseISO } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { DiaryContext } from '../../context/DiaryContext';
+import { postDiary } from "../../api/postDiary";
+import { postContent } from "../../api/postContent";
 
 function Select() {
     const navigate = useNavigate(); 
-    // 임시 감정 배열
-    const emotions = ["가책", "간이 콩알만해지는", "머리칼이 곤두서는", "묘한", "몸 둘 바를 모르는", "손에 땀을 쥐는 듯한", "쓰러질 것 같은"];
+    const { diary, updateDiary } = useContext(DiaryContext);
+    const [emotions, setEmotions] = useState([]);
     const [selectedEmotions, setSelectedEmotions] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken)
+        }
+    }, []);
+
+    useEffect(() => {
+        const fetchEmotions = async () => {
+            try {
+                const content = diary.content || " ";
+                const response = await postContent(content);
+                if (response.emotion_list) {
+                    setEmotions(response.emotion_list);
+                }
+            } catch (error) {
+                console.error('Error fetching emotions:', error);
+            }
+        };
+        fetchEmotions();
+    }, [diary.content]);
+
+    const date = diary.date ? parseISO(diary.date) : new Date();
+    const month = isNaN(date) ? '' : format(date, 'M', { locale: ko });
+    const day = isNaN(date) ? '' : format(date, 'd', { locale: ko });
 
     const emoClicked = (emotion) => {
         if (selectedEmotions.includes(emotion)) {
             setSelectedEmotions(selectedEmotions.filter((emo) => emo !== emotion));
-        } else if (selectedEmotions.length < 3) { // 최대 3개의 감정 선택 가능
+        } else if (selectedEmotions.length < 3) {
             setSelectedEmotions([...selectedEmotions, emotion]);
-        }
+        }    
     };
 
-    let month = 7;
-    let day = 3;
+    const openModal = () => {
+        setModalIsOpen(true);
+        setTimeout(() => {
+            closeModal();
+            navigate('/result', { state: { date: diary.date } });
+        }, 3000);
+    };
+    
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
+    
+    const handleSubmit = async () => {
+        const updatedDiary = {
+            ...diary,
+            emotion: selectedEmotions.join('/')
+        };
+        
+        updateDiary(updatedDiary);
+        
+
+        try {
+            await postDiary(updatedDiary, token);
+            console.log('Diary data posted successfully');
+            openModal();
+        } catch (error) {
+            console.error('Error posting diary data:', error);
+        }
+    };
 
     return (
         <div className="select">
@@ -31,6 +92,7 @@ function Select() {
                         id="finishbtn" 
                         className={selectedEmotions.length === 3 ? 'finish' : 'disabled'}
                         disabled={selectedEmotions.length !== 3}
+                        onClick={handleSubmit}
                     >
                         
                     </button>
@@ -54,10 +116,23 @@ function Select() {
                 </div>
             </div>
             <div id="nevi">
-            <button id="home" onClick={() => navigate('/')} ></button>
+                <button id="home" onClick={() => navigate('/')} ></button>
                 <button id="diary" onClick={() => navigate('/write')}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
+
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Pop up Message"
+                ariaHideApp={false}
+                className="modal"
+                overlayClassName="overlay"
+            >
+                <img src="load2.gif" alt="Submitting" />
+                <div>MoDi가 오늘의 색을 만들고있어요</div>
+                <div>잠시만 기다려주세요</div>
+            </Modal>
         </div>
     );
 }
