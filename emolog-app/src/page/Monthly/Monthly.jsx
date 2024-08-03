@@ -3,20 +3,20 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./Monthly.css";
 
-const months = [
-  "1월",
-  "2월",
-  "3월",
-  "4월",
-  "5월",
-  "6월",
-  "7월",
-  "8월",
-  "9월",
-  "10월",
-  "11월",
-  "12월",
-];
+// const months = [
+//   "1월",
+//   "2월",
+//   "3월",
+//   "4월",
+//   "5월",
+//   "6월",
+//   "7월",
+//   "8월",
+//   "9월",
+//   "10월",
+//   "11월",
+//   "12월",
+// ];
 
 const generateCalendar = (daysInMonth, firstDayIndex) => {
   const calendar = [];
@@ -57,7 +57,7 @@ const Monthly = () => {
   }, []);
 
   const currentYear = today.getFullYear();
-  const todayString = `${currentYear}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  // const todayString = `${currentYear}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   useEffect(() => {
     const fetchDiarySummaries = async () => {
