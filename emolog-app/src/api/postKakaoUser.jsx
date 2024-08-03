@@ -15,24 +15,6 @@ export const postKakaoUser = async (kakaoAccount, accessToken) => {
     const payload = {
       id: kakaoAccount.id,
       connected_at: kakaoAccount.connected_at,
-<<<<<<< HEAD
-      kakao_account:{
-        profile_needs_agreement: kakaoAccount.profile_needs_agreement,
-      profile: {
-        nickname: profile.nickname,
-        thumbnail_image_url: profile.thumbnail_image_url,
-        profile_image_url: profile.profile_image_url,
-        is_default_image: profile.is_default_image
-      },
-      email_needs_agreement: kakaoAccount.email_needs_agreement,
-      is_email_valid: kakaoAccount.is_email_valid,
-      is_email_verified: kakaoAccount.is_email_verified,
-      email,
-    },
-    properties:{
-      nickname: profile.nickname
-    },
-=======
       kakao_account: {
         profile_needs_agreement: kakaoAccount.profile_needs_agreement,
         profile: {
@@ -49,7 +31,6 @@ export const postKakaoUser = async (kakaoAccount, accessToken) => {
       properties: {
         nickname: profile.nickname
       },
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
       accessToken
     };
 
@@ -57,12 +38,9 @@ export const postKakaoUser = async (kakaoAccount, accessToken) => {
     console.log('전송할 데이터:', payload);
 
     const response = await axios.post(`${BASE_URL}/api/kakao/login`, payload);
-<<<<<<< HEAD
-=======
 
  
     console.log('1',response.data);
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
     return response.data;
     
   } catch (error) {

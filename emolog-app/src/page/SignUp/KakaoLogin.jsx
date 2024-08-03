@@ -38,11 +38,7 @@ const KakaoLogin = () => {
           console.log(kakaoAccount);
 
           // 사용자 정보를 서버로 전송
-<<<<<<< HEAD
-          await postKakaoUser({
-=======
           const result = await postKakaoUser({
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
             id: response.id,
             connected_at: response.connected_at,
             profile: {
@@ -55,11 +51,6 @@ const KakaoLogin = () => {
             is_email_valid: kakaoAccount.is_email_valid,
             is_email_verified: kakaoAccount.is_email_verified
           }, authObj.access_token);
-<<<<<<< HEAD
-          
-          console.log('사용자 데이터가 서버에 성공적으로 전송되었습니다.');
-
-=======
 
           console.log('사용자 데이터가 서버에 성공적으로 전송되었습니다.');
           console.log('서버 응답:', result);
@@ -72,7 +63,6 @@ const KakaoLogin = () => {
             console.error('서버 응답에 토큰이 없습니다.');
           }
 
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
           // 로그인 성공 후 /userform 페이지로 이동
           navigate('/userform');
         } catch (error) {
@@ -88,7 +78,6 @@ const KakaoLogin = () => {
   return (
     <div className="kakaoIdLogin">
       <button onClick={handleKakaoLogin}>
-        카카오 로그인
       </button>
     </div>
   );

@@ -1,26 +1,11 @@
 import axios from 'axios';
 
-<<<<<<< HEAD
-const BASE_URL = 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com/' || 'localhost:3000';
-
-=======
 const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com'; // 기본 URL 설정
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
 /**
  * 사용자 정보를 가져오는 함수
  * @returns {Promise<Object>} 사용자 정보
  * @param {string} accessToken
  */
-<<<<<<< HEAD
-export const getUser = async (accessToken) => {
-  const response = await axios.get(`${BASE_URL}/api/user`, {
-    headers: {
-      'Authorization': `Bearer ${accessToken}` // 인증 헤더에 임시 토큰 추가
-    }
-  });
-  try {
-    const response = await axios.get(`${BASE_URL}api/user`);
-=======
 export const getUser = async (token) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/user`,{
@@ -29,7 +14,6 @@ export const getUser = async (token) => {
       }
     });
     console.log(response.data);
->>>>>>> 3c224261b6d475f7015df867e0f0d61f7a27891c
     return response.data;
   } catch (error) {
     if (error.response) {

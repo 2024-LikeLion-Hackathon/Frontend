@@ -3,21 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./Monthly.css";
 
-const months = [
-  "1월",
-  "2월",
-  "3월",
-  "4월",
-  "5월",
-  "6월",
-  "7월",
-  "8월",
-  "9월",
-  "10월",
-  "11월",
-  "12월",
-];
-
 const generateCalendar = (daysInMonth, firstDayIndex) => {
   const calendar = [];
   let day = 1;
@@ -146,7 +131,7 @@ const Monthly = () => {
             <span
               className="active"
               id="month"
-              onClick={() => navigate("/monthly")}
+              onClick={() => navigate("/")}
             >
               Month
             </span>
