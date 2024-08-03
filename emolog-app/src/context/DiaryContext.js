@@ -32,8 +32,17 @@ export const DiaryProvider = ({ children }) => {
         });
     };
 
+    const resetDiary = () => {
+        setDiary({
+            date: '',
+            content: '',
+            q_a: { question: '', answer: '' },
+            emotion: '',
+        });
+    };
+
     return (
-        <DiaryContext.Provider value={{ diary, updateDiary }}>
+        <DiaryContext.Provider value={{ diary, updateDiary, resetDiary }}>
             {children}
         </DiaryContext.Provider>
     );
