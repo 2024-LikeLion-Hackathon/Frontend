@@ -31,7 +31,7 @@ function Chat() {
           sender: 'ai'
         };
         setMessages((prevMessages) => [...prevMessages, aiMessage]);
-        updateDiaryWithAIMessage(initialResponse.chat);
+        await updateDiaryWithAIMessage(initialResponse.chat);
         setIsInitialized(true);
       }
     } catch (error) {

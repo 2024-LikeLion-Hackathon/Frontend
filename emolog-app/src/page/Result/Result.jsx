@@ -36,31 +36,28 @@ function Result() {
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            console.log(storedToken);
             setToken(storedToken);
         }
     }, []);
 
     useEffect(() => {
-        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+        if (!token) return;
 
-        // 마이페이지 정보를 가져오는 함수 호출
         const fetchDiaryData = async () => {
             try {
                 setLoading(true);
                 const DiaryData = await getDiaryId(initialDate, token);
                 setDiary(DiaryData);
             } catch (error) {
-                console.error('Error fetching mypage data:', error);
-                setError('Error fetching mypage data');
+                console.error('Error fetching diary data:', error);
+                setError('Error fetching diary data');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchDiaryData();
-    }, [token]);
-
+    }, [token, initialDate]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading diary data.</div>;

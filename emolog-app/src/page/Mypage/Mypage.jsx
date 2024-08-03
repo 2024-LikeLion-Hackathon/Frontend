@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './Mypage.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { getMypage } from '../../api/getMypage';
 import { postLogout } from "../../api/postLogout";
 
