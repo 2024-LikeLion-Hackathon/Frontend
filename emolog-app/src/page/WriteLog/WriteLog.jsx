@@ -1,9 +1,11 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
 import { postAiDiary } from "../../api/postAiDiary";
+import { fetchUrl } from "../../api/fetch-url";
+
 
 
 Modal.setAppElement('#root'); // 접근성 설정
@@ -20,7 +22,15 @@ function WriteLog() {
     const date = today.toISOString().split('T')[0];
     const month = today.getMonth() + 1;
     const day = today.getDate();
+    const [token, setToken] = useState('');
   
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken)
+        }
+    }, []);
 
     const handleChange = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -53,6 +63,8 @@ function WriteLog() {
             console.log(text);
         const result = postAiDiary( text);
         console.log('ai서버응답:',result);
+        const backres = fetchUrl(text, date, token);
+        console.log('백엔드서버응답:',backres);
 
         } catch (error) {
             console.error('Error fetching emotions:', error);
