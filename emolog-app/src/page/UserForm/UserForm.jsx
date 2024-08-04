@@ -85,7 +85,7 @@ const Form = ({ token }) => {
           </select>
         </div>
       </div>
-      <button type="submit">확인</button>
+      <button type="submit" onClick={handleSubmit}>확인</button>
     </form>
   );
 };

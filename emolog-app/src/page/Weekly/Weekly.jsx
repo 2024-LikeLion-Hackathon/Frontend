@@ -214,7 +214,7 @@ const Weekly = () => {
 
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
-
+  
     try {
       setLoading(true);
       const response = await axios.get(
@@ -224,13 +224,16 @@ const Weekly = () => {
         }
       );
       setDiary(response.data);
-      setSelectedDay(response.data.diary.date === selectedDate ? response.data : null);
+      setSelectedDay(response.data.diary.date === selectedDate ? response.data : { diary: { date: selectedDate } });
     } catch (err) {
+      console.error('Error fetching diary details:', err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
+      setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleWriteDiary = () => {
     navigate("/write", { state: { date: selectedDay?.diary.date } });
@@ -270,7 +273,7 @@ const Weekly = () => {
             <button onClick={handleNextWeek}>&gt;</button>
           </div>
         </header>
-
+  
         <div className="weekly-content">
           <div className="color-circle-nav">
             {weekData.map((day, index) => (
@@ -282,7 +285,7 @@ const Weekly = () => {
               >
                 <div
                   className={`color-circle ${
-                    selectedDay?.date === day.date ? "selected" : ""
+                    selectedDay?.diary.date === day.date ? "selected" : ""
                   }`}
                   onClick={() => handleDayClick(day)}
                   style={{
@@ -295,7 +298,9 @@ const Weekly = () => {
               </div>
             ))}
           </div>
-          {selectedDay ? (
+          {loading ? (
+            <div id="loading">Loading...</div>
+          ) : selectedDay?.diary ? (
             <div className="diary-container">
               <h2>{selectedDay.diary.date}</h2>
               <p id="emotion_text">대표 감정</p>
@@ -325,7 +330,7 @@ const Weekly = () => {
           )}
         </div>
       </div>
-
+  
       <div id="nevi">
         <button id="home" onClick={() => navigate("/")}></button>
         <button id="diary" onClick={() => navigate("/write")}></button>
@@ -333,6 +338,7 @@ const Weekly = () => {
       </div>
     </div>
   );
+  
 };
 
 export default Weekly;
