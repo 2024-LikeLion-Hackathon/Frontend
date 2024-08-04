@@ -5,7 +5,6 @@ export const DiaryContext = createContext();
 export const DiaryProvider = ({ children }) => {
     const [diary, setDiary] = useState({
         date: '',
-        content: '',
         q_a: { question: '', answer: '' },
         emotion: '',
     });
@@ -35,7 +34,6 @@ export const DiaryProvider = ({ children }) => {
     const resetDiary = () => {
         setDiary({
             date: '',
-            content: '',
             q_a: { question: '', answer: '' },
             emotion: '',
         });

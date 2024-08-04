@@ -62,9 +62,10 @@ const KakaoLogin = () => {
           } else {
             console.error('서버 응답에 토큰이 없습니다.');
           }
-
-          // 로그인 성공 후 /userform 페이지로 이동
-          navigate('/userform');
+            if(!result.new){ navigate('/');}
+            else{navigate('/userform');}
+          
+         
         } catch (error) {
           console.error('카카오 사용자 데이터를 가져오거나 서버에 전송하는 중 오류가 발생했습니다:', error);
         }

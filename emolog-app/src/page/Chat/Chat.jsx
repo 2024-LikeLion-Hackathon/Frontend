@@ -3,18 +3,21 @@ import './Chat.css';
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import Modal from 'react-modal';
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation} from "react-router-dom";
 import { DiaryContext } from '../../context/DiaryContext';
 import { postChat } from '../../api/postChat';
 
 function Chat() {
   const { diary, updateDiary } = useContext(DiaryContext);
   const navigate = useNavigate(); 
+  const location = useLocation();
   const [messages, setMessages] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isChatEnded, setIsChatEnded] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const messagesEndRef = useRef(null);
+  const content =location.state.content;
+  
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -24,7 +27,8 @@ function Chat() {
 
   const initializeChat = async () => {
     try {
-      const initialResponse = await postChat("30", "");
+      console.log(content);
+      const initialResponse = await postChat(content, "");
       if (initialResponse) {
         const aiMessage = {
           text: initialResponse.chat,
@@ -44,7 +48,7 @@ function Chat() {
       initializeChat();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInitialized,"30", ""]);
+  }, [isInitialized,content, ""]);
 
   useEffect(() => {
     scrollToBottom();
@@ -149,7 +153,7 @@ function Chat() {
     }
 
     try {
-      const response = await postChat("30", message.text);
+      const response = await postChat(content, message.text);
       
       if (response) {
         const aiMessage = {

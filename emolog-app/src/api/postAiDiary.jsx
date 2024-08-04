@@ -4,15 +4,13 @@ const BASE_URL = 'http://43.202.44.75:8000'; // 수정된 BASE_URL
 
 /**
  * 감정 데이터를 가져오는 함수
- * @param {string} id - 다이어리아이디
  * @param {string} content - 일기 내용
  * @param {string} token
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const postAiDiary = async (id, content) => {
+export const postAiDiary = async (content) => {
   try {
-    const response = await axios.post(`${BASE_URL}/api/ai/diary`, {
-      diary_id: id,
+    const response = await axios.post(`${BASE_URL}/api/ai/image`, {
       content: content
     });
     console.log(response.data);
