@@ -1,14 +1,15 @@
-import React, { useState} from "react";
+import React, { useState, useContext} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
+import { DiaryContext } from '../../context/DiaryContext';
 import { postAiDiary } from "../../api/postAiDiary";
 
 
 Modal.setAppElement('#root'); // 접근성 설정
 
 function WriteLog() {
-
+    const { updateDiary } = useContext(DiaryContext);
     const navigate = useNavigate(); 
     const location = useLocation();
     const maxLength = 1500;
@@ -47,10 +48,11 @@ function WriteLog() {
     const handleSubmit = async () => {
         try {
             openModal();
-        
-        console.log(text);
-       // const result = postAiDiary( text);
-       // console.log('ai서버응답:',result);
+            updateDiary({ date });
+            console.log("Diary Updated:", { date }); //확인용 로그
+            console.log(text);
+        const result = postAiDiary( text);
+        console.log('ai서버응답:',result);
 
         } catch (error) {
             console.error('Error fetching emotions:', error);

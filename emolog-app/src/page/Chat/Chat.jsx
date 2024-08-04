@@ -27,7 +27,7 @@ function Chat() {
 
   const initializeChat = async () => {
     try {
-      console.log(content);
+      console.log('1',content);
       const initialResponse = await postChat(content, "");
       if (initialResponse) {
         const aiMessage = {
@@ -180,7 +180,7 @@ function Chat() {
     setModalIsOpen(true);
     setTimeout(() => {
       closeModal();
-      navigate('/select');
+      navigate('/select',{ state: { content: content }});
     }, 3000); // 3초 후에 페이지 이동
   };
 
@@ -203,7 +203,7 @@ function Chat() {
           <button id="emobtn" 
           className={isChatEnded ? 'emotion_selected' : 'emotion_default'} 
           onClick={handleSubmit}
-          disabled={!isChatEnded}>
+         >
 
           </button>
         </div>

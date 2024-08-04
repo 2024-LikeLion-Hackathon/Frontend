@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import './Select.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Modal from 'react-modal';
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -10,11 +10,13 @@ import { postContent } from "../../api/postContent";
 
 function Select() {
     const navigate = useNavigate(); 
+    const location = useLocation();
     const { diary, updateDiary } = useContext(DiaryContext);
     const [emotions, setEmotions] = useState([]);
     const [selectedEmotions, setSelectedEmotions] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [token, setToken] = useState('');
+    const content = location.state.content;
    
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
@@ -26,7 +28,7 @@ function Select() {
     useEffect(() => {
         const fetchEmotions = async () => {
             try {
-                const content = diary.content || " ";
+                
                 const response = await postContent(content);
                 if (response.emotion_list) {
                     setEmotions(response.emotion_list);

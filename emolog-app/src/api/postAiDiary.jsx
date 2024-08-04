@@ -13,7 +13,7 @@ export const postAiDiary = async (content) => {
     const response = await axios.post(`${BASE_URL}/api/ai/image`, {
       content: content
     });
-    console.log(response.data);
+    console.log("반환값",response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
