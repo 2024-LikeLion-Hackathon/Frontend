@@ -172,7 +172,7 @@ function Result() {
                 </div>
             </div>
             <div id="resultBox">
-                <div id="img" style={{ backgroundImage: diary.url }}></div>
+                <div id="img" style={{ backgroundImage:`url(${diary.url})` }}></div>
                 <div id="ment">{diary.comment}</div>
                 <div id="colorBox">
                     <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
