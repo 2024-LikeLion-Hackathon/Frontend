@@ -59,12 +59,16 @@ const KakaoLogin = () => {
             // 응답에 토큰이 있는 경우 저장
             console.log('토큰:', result.accessToken);
             localStorage.setItem('token', result.accessToken);
+
+            // 기존 사용자와 신규 사용자를 구분하여 리디렉션
+            if (result.isNew) {
+              navigate('/userform');
+            } else {
+              navigate('/');
+            }
           } else {
             console.error('서버 응답에 토큰이 없습니다.');
           }
-
-          // 로그인 성공 후 /userform 페이지로 이동
-          navigate('/userform');
         } catch (error) {
           console.error('카카오 사용자 데이터를 가져오거나 서버에 전송하는 중 오류가 발생했습니다:', error);
         }

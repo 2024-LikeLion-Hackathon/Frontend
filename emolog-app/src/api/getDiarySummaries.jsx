@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { refreshAccessToken } from './refreshToken'; // 경로를 실제 파일 위치에 맞게 조정
+import { refreshToken } from './refreshToken'; // 경로를 실제 파일 위치에 맞게 조정
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
 
@@ -22,7 +22,7 @@ export const getDiarySummaries = async (date, token) => {
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken) {
         try {
-          const { accessToken } = await refreshAccessToken(refreshToken);
+          const { accessToken } = await refreshToken(refreshToken);
           localStorage.setItem('token', accessToken); // 새로운 accessToken 저장
           // 갱신된 accessToken으로 요청 다시 시도
           const retryResponse = await axios.get(`${BASE_URL}/api/diary/summary/${date}`, {
