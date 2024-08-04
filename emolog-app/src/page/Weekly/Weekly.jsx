@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+<<<<<<< HEAD
+=======
+import { fetchColorData } from '../../api/color';
+import { format, parseISO } from "date-fns";
+import { ko } from "date-fns/locale";
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 import "./Weekly.css";
 
 const Weekly = () => {
@@ -22,7 +28,11 @@ const Weekly = () => {
     emotion: [],
     comment: "",
   });
+<<<<<<< HEAD
   const [selectedDay, setSelectedDay] = useState(null);
+=======
+  const [selectedDay, setSelectedDay] = useState({ diary: { date: "", emotion: [], comment: "", content: "" } });
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
   const [selectedWeek, setSelectedWeek] = useState(Math.ceil(today.getDate() / 7));
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
@@ -42,13 +52,18 @@ const Weekly = () => {
   useEffect(() => {
     if (!token) return;
     fetchDiaryData();
+<<<<<<< HEAD
   }, [token, selectedWeek, currentMonth]); // token, selectedWeek, currentMonth가 변경될 때마다 호출됨
+=======
+  }, [token, selectedWeek, currentMonth]);
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 
   const fetchDiaryData = async () => {
     try {
       setLoading(true);
 
       // 색상 데이터 요청
+<<<<<<< HEAD
       const colorResponse = await axios.get(
         `/api/color?month=${currentMonth}&week=${selectedWeek}`,
         {
@@ -56,6 +71,10 @@ const Weekly = () => {
         }
       );
       setDiarySummaries(colorResponse.data);
+=======
+      const colorData = await fetchColorData(currentMonth, selectedWeek);
+      setDiarySummaries(colorData);
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 
       // 다이어리 요약 데이터 요청
       const diaryDataResponse = await axios.get(
@@ -76,6 +95,7 @@ const Weekly = () => {
     if (error.response) {
       switch (error.response.status) {
         case 400:
+<<<<<<< HEAD
           switch (error.response.data.error) {
             case "User-101":
               setError("이미 존재하는 회원입니다.");
@@ -153,14 +173,32 @@ const Weekly = () => {
       setError("서버로부터 응답을 받지 못했습니다.");
     } else {
       console.error("Error setting up request:", error.message);
+=======
+          setError(`클라이언트 오류: ${error.response.data.error}`);
+          break;
+        case 401:
+          setError("인증 오류가 발생했습니다.");
+          break;
+        case 404:
+          setError("리소스를 찾을 수 없습니다.");
+          break;
+        case 500:
+          setError("서버 내부 오류가 발생했습니다.");
+          break;
+        default:
+          setError("알 수 없는 오류가 발생했습니다.");
+          break;
+      }
+    } else if (error.request) {
+      setError("서버로부터 응답을 받지 못했습니다.");
+    } else {
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
       setError("요청을 설정하는 중에 오류가 발생했습니다.");
     }
   };
 
   const handleNextWeek = () => {
-    const totalWeeks = Math.ceil(
-      new Date(currentYear, currentMonth, 0).getDate() / 7
-    );
+    const totalWeeks = Math.ceil(new Date(currentYear, currentMonth, 0).getDate() / 7);
     if (selectedWeek < totalWeeks) {
       setSelectedWeek(selectedWeek + 1);
     } else {
@@ -184,9 +222,7 @@ const Weekly = () => {
       } else {
         setCurrentMonth(currentMonth - 1);
       }
-      const totalWeeks = Math.ceil(
-        new Date(currentYear, currentMonth - 1, 0).getDate() / 7
-      );
+      const totalWeeks = Math.ceil(new Date(currentYear, currentMonth - 1, 0).getDate() / 7);
       setSelectedWeek(totalWeeks);
     }
   };
@@ -198,13 +234,8 @@ const Weekly = () => {
 
     const weekData = [];
     for (let day = startDay; day <= endDay && day <= daysInMonth; day++) {
-      const dateStr = `${currentYear}-${String(currentMonth).padStart(
-        2,
-        "0"
-      )}-${String(day).padStart(2, "0")}`;
-      const summary = diarySummaries.find(
-        (summary) => summary.date === dateStr
-      );
+      const dateStr = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const summary = diarySummaries.find(summary => summary.date === dateStr);
       weekData.push(summary || { date: dateStr, color: { hexa: "d9d9d9" } });
     }
     return weekData;
@@ -214,7 +245,11 @@ const Weekly = () => {
 
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
     try {
       setLoading(true);
       const response = await axios.get(
@@ -224,16 +259,33 @@ const Weekly = () => {
         }
       );
       setDiary(response.data);
+<<<<<<< HEAD
       setSelectedDay(response.data.diary.date === selectedDate ? response.data : { diary: { date: selectedDate } });
     } catch (err) {
       console.error('Error fetching diary details:', err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
       setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
+=======
+      setSelectedDay(response.data.diary.date === selectedDate ? response.data : { diary: { date: selectedDate, emotion: [], comment: "" } });
+    } catch (err) {
+      console.error('Error fetching diary details:', err);
+      setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
+      setSelectedDay({ diary: { date: selectedDate, emotion: [], comment: "" } });
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
     } finally {
       setLoading(false);
     }
   };
   
+
+  // 날짜 포맷팅 함수
+const formatDate = (dateStr) => {
+  const date = parseISO(dateStr);
+  return format(date, 'M월 d일 EEEE', { locale: ko });
+};
+
+const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
+
 
   const handleWriteDiary = () => {
     navigate("/write", { state: { date: selectedDay?.diary.date } });
@@ -257,11 +309,7 @@ const Weekly = () => {
               Month
             </span>
             <span id="bar"></span>
-            <span
-              className="active"
-              id="week"
-              onClick={() => navigate("/weekly")}
-            >
+            <span className="active" id="week" onClick={() => navigate("/weekly")}>
               Week
             </span>
           </div>
@@ -279,11 +327,10 @@ const Weekly = () => {
             {weekData.map((day, index) => (
               <div
                 key={index}
-                className={`color-circle-container ${
-                  selectedDay?.diary.date === day.date ? "selected" : ""
-                }`}
+                className={`color-circle-container ${selectedDay?.diary.date === day.date ? "selected" : ""}`}
               >
                 <div
+<<<<<<< HEAD
                   className={`color-circle ${
                     selectedDay?.diary.date === day.date ? "selected" : ""
                   }`}
@@ -293,6 +340,12 @@ const Weekly = () => {
                       day.color && day.color.hexa
                         ? `#${day.color.hexa}`
                         : `#d9d9d9`,
+=======
+                  className={`color-circle ${selectedDay?.diary.date === day.date ? "selected" : ""}`}
+                  onClick={() => handleDayClick(day)}
+                  style={{
+                    backgroundColor: day.color && day.color.hexa ? `#${day.color.hexa}` : `#d9d9d9`,
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
                   }}
                 ></div>
               </div>
@@ -302,10 +355,17 @@ const Weekly = () => {
             <div id="loading">Loading...</div>
           ) : selectedDay?.diary ? (
             <div className="diary-container">
+<<<<<<< HEAD
               <h2>{selectedDay.diary.date}</h2>
               <p id="emotion_text">대표 감정</p>
               <div className="emotions">
                 {selectedDay.emotion.map((emotion, index) => (
+=======
+              <h2>{formattedDate}</h2>
+              <p id="emotion_text">대표 감정</p>
+              <div className="emotions">
+                {selectedDay.diary.emotion.map((emotion, index) => (
+>>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
                   <button key={index} className="emotion">
                     {emotion}
                   </button>

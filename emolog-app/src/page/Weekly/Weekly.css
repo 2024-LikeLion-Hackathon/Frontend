@@ -111,7 +111,7 @@
 }
 
 .color-circle-container {
-  width: 123px;
+  width: 122px;
   height: 94px;
   display: flex;
   justify-content: center;
@@ -132,6 +132,7 @@
   background: #f4f4f4;
   border-radius: 10px;
   margin-bottom: 120px;
+ 
 }
 
 .diary-container img {
