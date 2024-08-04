@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getDiaryId } from "../../api/getDiaryId";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import "./Monthly.css";
@@ -25,6 +25,20 @@ const generateCalendar = (daysInMonth, firstDayIndex) => {
   }
 
   return calendar;
+};
+
+const fetchColors = async (month, token) => {
+  const response = await fetch(`/api/color?month=${month}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch color data");
+  }
+
+  return response.json();
 };
 
 const Monthly = () => {
@@ -53,17 +67,20 @@ const Monthly = () => {
   });
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState(null);
-  const [diaryColors, setDiaryColors] = useState({}); // 날짜별 색상 상태 추가
+  const [diaryColors, setDiaryColors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
   const location = useLocation();
   const initialDate =
     location.state?.date || new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
+    const storedRefreshToken = localStorage.getItem("refreshToken");
     setToken(storedToken);
+    setRefreshToken(storedRefreshToken);
   }, []);
 
   useEffect(() => {
@@ -72,29 +89,16 @@ const Monthly = () => {
     const fetchDiaryData = async () => {
       try {
         setLoading(true);
-        
-        // 현재 달의 모든 날짜를 검사하여 색상을 초기화합니다.
-        const allDaysInMonth = generateCalendar(
-          new Date(today.getFullYear(), currentMonth + 1, 0).getDate(),
-          (new Date(today.getFullYear(), currentMonth, 1).getDay() + 6) % 7
-        ).flat().filter(Boolean); // 현재 달의 모든 날짜
 
-        // 모든 날짜에 대해 색상을 가져옵니다.
-        const colorMap = {};
-        await Promise.all(allDaysInMonth.map(async (day) => {
-          const date = `${today.getFullYear()}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-          try {
-            const response = await getDiaryId(date, token);
-            colorMap[date] = response.color.hexa || "#d9d9d9";
-          } catch {
-            colorMap[date] = "#d9d9d9"; // 실패할 경우 기본 색상 설정
-          }
-        }));
+        const colorData = await fetchColors(currentMonth + 1, token);
+        const colorMap = colorData.reduce((acc, entry) => {
+          acc[entry.date] = `#${entry.hexa}`;
+          return acc;
+        }, {});
 
         setDiaryColors(colorMap);
 
-        // 선택된 날짜의 다이어리 데이터 가져오기
-        const DiaryData = await getDiaryId(initialDate, token);
+        const DiaryData = await getDiarySummaries(initialDate, token);
         setDiary(DiaryData);
         setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : null);
       } catch (error) {
@@ -116,7 +120,7 @@ const Monthly = () => {
 
     try {
       setLoading(true);
-      const response = await getDiaryId(selectedDate, token);
+      const response = await getDiarySummaries(selectedDate, token);
       setDiary(response);
       setSelectedDay(response.diary.date === selectedDate ? response : null);
     } catch (err) {
@@ -156,7 +160,6 @@ const Monthly = () => {
     }
   };
 
-  // 날짜 포맷팅
   const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
   const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
   const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
