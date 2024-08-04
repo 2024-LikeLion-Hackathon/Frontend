@@ -196,7 +196,12 @@ function Chat() {
       <div id="secondBox">
         <div id="date">{month}월 {day}일의 대화</div>
         <div id="btnBox">
-          <button id="emobtn" className={isChatEnded ? 'emotion_selected' : 'emotion_default'} onClick={handleSubmit}></button>
+          <button id="emobtn" 
+          className={isChatEnded ? 'emotion_selected' : 'emotion_default'} 
+          onClick={handleSubmit}
+          disabled={!isChatEnded}>
+
+          </button>
         </div>
       </div>
       <div id="inputbox">
