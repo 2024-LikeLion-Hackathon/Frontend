@@ -42,20 +42,22 @@ function WriteLog() {
    
 
   
-    const handleSubmit = async () => {
-        try {
-            navigate('/chat', { state: { content: text }});
-
-            updateDiary({ date });
-            console.log("Diary Updated:", { date }); //확인용 로그
-            console.log(text);
-        const backres = fetchUrl(text, date, token);
-        console.log('백엔드서버응답:',backres);
-
-        } catch (error) {
+    const handleSubmit = () => {
+        navigate('/chat', { state: { content: text } });
+    
+        updateDiary({ date });
+        console.log("Diary Updated:", { date }); // 확인용 로그
+        console.log(text);
+    
+        fetchUrl(text, date, token)
+          .then((res) => {
+            updateDiary({ url: res.url });
+          })
+          .catch((error) => {
             console.error('Error in handleSubmit:', error);
-        } 
-    };
+          });
+      };
+
     const handleDiaryButtonClick = async () => {
         const todayDate = new Date().toISOString().split('T')[0];
         try {
