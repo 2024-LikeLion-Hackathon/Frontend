@@ -54,11 +54,15 @@ function Result() {
                 setLoading(true);
                 const storedDiaryId = localStorage.getItem(initialDate);
                 if (!storedDiaryId) {
-                    throw new Error('Diary ID not found in local storage');
+                    
+                    const DiaryData = await getDiaryId(initialDate, token);
+                     setDiary(DiaryData);
+                     return; // Diary ID가 없으면 함수 종료
                 }
+                else{
                 setDiaryId(storedDiaryId); // 상태에 ID 저장
                 const DiaryData = await getDiaryId(initialDate, token);
-                setDiary(DiaryData);
+                setDiary(DiaryData);}
             } catch (error) {
                 console.error('Error fetching diary data:', error);
                 setError('Error fetching diary data');
@@ -66,6 +70,7 @@ function Result() {
                 setLoading(false);
             }
         };
+        
 
         fetchDiaryData();
     }, [token, initialDate]);
