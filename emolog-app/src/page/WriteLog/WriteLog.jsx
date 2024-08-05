@@ -64,14 +64,8 @@ function WriteLog() {
         console.log('백엔드서버응답:',backres);
 
         } catch (error) {
-<<<<<<< HEAD
             console.error('Error in handleSubmit:', error);
         } 
-=======
-            console.error('Error fetching emotions:', error);
-        }
-        
->>>>>>> origin/main
     };
 
     return (
