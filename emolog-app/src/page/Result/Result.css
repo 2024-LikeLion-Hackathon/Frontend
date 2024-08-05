@@ -1,12 +1,14 @@
-.result{
-    width: 500px;
-    height: 97vh;
+.common-flex {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
+    height: 97vh;
+    justify-content: flex-start;
     margin: 0;
-    
+    width: 500px;
+}
+
+.result{
 
     #logoBox{
         width: 468px;
@@ -17,14 +19,14 @@
     }
 
     #logo{
-        border-top:10px;
-        width: 111px;
-        height: 40px;
-        background-image:url('../../asset/img/logo.png');
-        background-size: contain;
-        position: absolute;
-        left: calc(50% - 111px/2 - 178.5px);
-        top: 44px;
+    border-top:10px;
+    width: 111px;
+    height: 40px;
+    background-image:url('../../asset/img/logo.png');
+    background-size: contain;
+    position: absolute;
+    left: calc(50% - 111px/2 - 178.5px);
+    top: 44px;
     }
 
     #secondBox{
