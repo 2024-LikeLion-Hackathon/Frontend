@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import { useNavigate,useLocation} from "react-router-dom";
 import { DiaryContext } from '../../context/DiaryContext';
 import { postChat } from '../../api/postChat';
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 function Chat() {
   const { diary, updateDiary } = useContext(DiaryContext);
@@ -17,14 +18,20 @@ function Chat() {
   const [isInitialized, setIsInitialized] = useState(false);
   const messagesEndRef = useRef(null);
   const content =location.state.content;
-  
+  const [token, setToken] = useState('');
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
-
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+        setToken(storedToken);
+        console.log(location.state);
+    }
+}, []);
   const initializeChat = async () => {
     try {
       console.log('1',content);
@@ -46,6 +53,7 @@ function Chat() {
   useEffect(() => {
     if (!isInitialized) {
       initializeChat();
+      openModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInitialized,content, ""]);
@@ -73,7 +81,20 @@ function Chat() {
     });
     console.log("Diary Updated with User Message:", { q_a: { answer: newAnswers } });
   };
-
+  const handleDiaryButtonClick = async () => {
+    const todayDate = new Date().toISOString().split('T')[0];
+    try {
+      const response = await getDiarySummaries(todayDate, token);
+      if (response && response.diary && response.diary.date) {
+        navigate('/result', { state: { date: todayDate } });
+      } else {
+        navigate('/write');
+      }
+    } catch (error) {
+      console.error("Error fetching today's diary:", error);
+      navigate('/write');
+    }
+  };
   const updateDiaryWithAIMessage = async (message) => {
     const currentQuestions = diary.q_a?.question || "";
     const newQuestions = currentQuestions
@@ -179,9 +200,8 @@ function Chat() {
   const openModal = () => {
     setModalIsOpen(true);
     setTimeout(() => {
-      closeModal();
-      navigate('/select',{ state: { content: content }});
-    }, 3000); // 3초 후에 페이지 이동
+      closeModal();    
+    }, 5000); 
   };
 
   const closeModal = () => {
@@ -189,7 +209,7 @@ function Chat() {
   };
 
   const handleSubmit = () => {
-    openModal();
+    navigate('/select',{ state: { content: content }});
   };
 
   return (
@@ -216,21 +236,22 @@ function Chat() {
       </div>
       <div id="nevi">
         <button id="home" onClick={() => navigate('/')}></button>
-        <button id="diary" onClick={() => navigate('/write')}></button>
+        <button id="diary" onClick={handleDiaryButtonClick}></button>
         <button id="my" onClick={() => navigate('/mypage')}></button>
       </div>
+    
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Pop up Message"
-        ariaHideApp={false}
-        className="modal"
-        overlayClassName="overlay"
-      >
-        <img src="load1.gif" alt="Submitting" />
-        <div>MoDi가 오늘의 감정을 고르고 있어요</div>
-        <div>잠시만 기다려주세요</div>
-      </Modal>
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="Pop up Message"
+                ariaHideApp={false}
+                className="modal"
+                overlayClassName="overlay"
+            >
+                <img src="load1.gif" alt="Submitting" />
+                <div>MoDi가 일기를 읽어보고 있어요</div>
+                <div>잠시만 기다려주세요</div>
+            </Modal>
     </div>
   );
 }

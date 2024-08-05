@@ -1,13 +1,12 @@
 import React, { useState, useContext, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
-import Modal from 'react-modal';
+
 import { DiaryContext } from '../../context/DiaryContext';
 import { fetchUrl } from "../../api/fetch-url";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 
-
-Modal.setAppElement('#root'); // 접근성 설정
 
 function WriteLog() {
     const { updateDiary } = useContext(DiaryContext);
@@ -15,7 +14,6 @@ function WriteLog() {
     const location = useLocation();
     const maxLength = 1500;
     const [text, setText] = useState("");
-    const [modalIsOpen, setModalIsOpen] = useState(false);
     const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
     const today = new Date(initialDate);
     const date = today.toISOString().split('T')[0];
@@ -42,21 +40,12 @@ function WriteLog() {
         color: text.length >= maxLength ? 'red' : '#666',
     };
    
-    const openModal = () => {
-        setModalIsOpen(true);
-        setTimeout(() => {
-            closeModal();
-            navigate('/chat', { state: { content: text }});
-        }, 3000); // 3초 후에 페이지 이동
-    };
-    
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
 
+  
     const handleSubmit = async () => {
         try {
-            openModal();
+            navigate('/chat', { state: { content: text }});
+
             updateDiary({ date });
             console.log("Diary Updated:", { date }); //확인용 로그
             console.log(text);
@@ -67,7 +56,20 @@ function WriteLog() {
             console.error('Error in handleSubmit:', error);
         } 
     };
-
+    const handleDiaryButtonClick = async () => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        try {
+          const response = await getDiarySummaries(todayDate, token);
+          if (response && response.diary && response.diary.date) {
+            navigate('/result', { state: { date: todayDate } });
+          } else {
+            navigate('/write');
+          }
+        } catch (error) {
+          console.error("Error fetching today's diary:", error);
+          navigate('/write');
+        }
+      };
     return (
         <div className="cont">
         <div className="writelog">
@@ -97,22 +99,11 @@ function WriteLog() {
             </div> 
             <div id="nevi">
                 <button id="home" onClick={() => navigate('/')}></button>
-                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="diary" onClick={handleDiaryButtonClick}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
 
-            <Modal
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Pop up Message"
-                ariaHideApp={false}
-                className="modal"
-                overlayClassName="overlay"
-            >
-                <img src="load1.gif" alt="Submitting" />
-                <div>MoDi가 일기를 읽어보고 있어요</div>
-                <div>잠시만 기다려주세요</div>
-            </Modal>
+           
         </div>
     </div>
     );

@@ -124,20 +124,30 @@
   background-image: url('../../asset/img/hover.png');
 }
 
+#daily{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-left: 15px;
+  margin-bottom: 48px;
+  width: 90%;
+}
+
 .diary-container {
   width: 345px;
-  height: 718px;
+  max-height: 1024px;
   top: 20px;
   left: 130px;
   background: #f4f4f4;
   border-radius: 10px;
-  margin-bottom: 120px;
- 
+  margin-bottom: 80px;
 }
 
 .diary-container img {
   max-width: 100%;
   height: auto;
+  margin-left: 10px;
 }
 
 #emotion_text {
@@ -147,30 +157,37 @@
   font-size: 14px;
   line-height: 16px;
   color: #000000;
+  margin-left: 10px;
 }
 
 .emotions {
-  justify-content: center;
-  width: 350px;
+  display: flex;
+  justify-content: space-around; 
+  width: 90%;
+  margin: 0 auto; 
 }
 
-.emotion-tag {
-  width: 80px;
+button.emotion{
+  padding: 15px 19px;
+  gap: 10px;
+
+  width: auto;
   height: 48px;
-  display: inline-flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  background-color: #eee;
-  border-radius: 15px;
-  padding: 5px 10px;
-  margin-right: 7px;
-  font-family: "Pretendard";
+
+  background: #EEEEEE;
+  border-radius: 5px;
+  border: none;
+
+  font-family: 'Pretendard';
   font-style: normal;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 18px;
   color: #000000;
+}
+#aiimage{
+  width: 314px;
+  height: 204px;
 }
 
 #ai_text,
@@ -182,6 +199,7 @@
   line-height: 16px;
   display: flex;
   align-items: center;
+  margin-left: 10px;
   color: #000000;
 }
 
@@ -198,10 +216,12 @@
   border-radius: 5px;
   padding-left: 10px;
   margin: 10px 0;
+  margin-left: 10px;
 }
 
 .diary-entry {
   margin: 10px 0;
+  margin-left: 10px;
 }
 
 #diary_button {
@@ -213,6 +233,7 @@
   border: none;
   border-radius: 5%;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 #no-diary {

@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { fetchColor } from "../../api/color";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import "./Weekly.css";
 
 const Weekly = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const today = new Date();
   const [diary, setDiary] = useState({
     diary: {
@@ -24,6 +24,12 @@ const Weekly = () => {
     },
     emotion: [],
     comment: "",
+    q_a: {
+      question: "",
+      answer: "",
+    },
+    summary: "",
+    url: "",
   });
   const [selectedDay, setSelectedDay] = useState({
     diary: { date: "", emotion: [], comment: "", content: "" },
@@ -38,7 +44,8 @@ const Weekly = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
-  const [weekData, setWeekData] = useState([]); // 초기 상태를 빈 배열로 설정
+  const [weekData, setWeekData] = useState([]);
+  const location = useLocation();
   const initialDate =
     location.state?.date || new Date().toISOString().split("T")[0];
 
@@ -53,35 +60,32 @@ const Weekly = () => {
   // 데이터 가져오기
   useEffect(() => {
     if (!token) return;
+
+    const fetchDiaryData = async () => {
+      try {
+        setLoading(true);
+
+        const colorData = await fetchColor(token, currentMonth, selectedWeek);
+        const colorArray = colorData.map((entry) => ({
+          date: entry.date,
+          color: `#${entry.hexa}`,
+        }));
+
+        setDiarySummaries(colorArray); // 배열로 설정
+
+        // 다이어리 요약 데이터 요청
+        const DiaryData = await getDiarySummaries(initialDate, token);
+        setDiary(DiaryData);
+        setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : null);
+      } catch (error) {
+        console.error("Error fetching diary data:", error);
+        setError("Error fetching diary data");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchDiaryData();
   }, [token, selectedWeek, currentMonth]);
-
-  const fetchDiaryData = async () => {
-    try {
-      setLoading(true);
-
-      const colorData = await fetchColor(token, currentMonth, selectedWeek);
-      const colorArray = colorData.map(entry => ({
-        date: entry.date,
-        color: `#${entry.hexa}`,
-      }));
-
-      setDiarySummaries(colorArray);
-
-      // 다이어리 요약 데이터 요청
-      const diaryDataResponse = await axios.get(
-        `/api/diary/summary/${initialDate}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setDiary(diaryDataResponse.data);
-    } catch (error) {
-      handleErrors(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleErrors = (error) => {
     if (error.response) {
@@ -132,13 +136,23 @@ const Weekly = () => {
       );
       weekData.push(summary || { date: dateStr, color: "#d9d9d9" });
     }
+    console.log(weekData);
     return weekData;
   };
-
-  const parseArray = (str) => {
-    return str ? str.split('/').map(item => item.trim()).filter(item => item.length > 0) : [];
+  const handleDiaryButtonClick = async () => {
+    const todayDate = new Date().toISOString().split('T')[0];
+    try {
+      const response = await getDiarySummaries(todayDate, token);
+      if (response && response.diary && response.diary.date) {
+        navigate('/result', { state: { date: todayDate } });
+      } else {
+        navigate('/write');
+      }
+    } catch (error) {
+      console.error("Error fetching today's diary:", error);
+      navigate('/write');
+    }
   };
-
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
     try {
@@ -146,12 +160,10 @@ const Weekly = () => {
       const response = await axios.get(`/api/diary/summary/${selectedDate}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const diaryData = response.data;
-      diaryData.diary.emotion = parseArray(diaryData.diary.emotion.join('/'));
-      setDiary(diaryData);
+      setDiary(response.data);
       setSelectedDay(
-        diaryData.diary.date === selectedDate
-          ? diaryData
+        response.data.diary.date === selectedDate
+          ? response.data
           : { diary: { date: selectedDate, emotion: [], comment: "" } }
       );
     } catch (err) {
@@ -264,9 +276,7 @@ const Weekly = () => {
                   }`}
                   onClick={() => handleDayClick(day)}
                   style={{
-                    backgroundColor: day.color
-                      ? day.color
-                      : `#d9d9d9`,
+                    backgroundColor: day.color ? day.color : `#d9d9d9`,
                   }}
                 ></div>
               </div>
@@ -276,17 +286,19 @@ const Weekly = () => {
             <div id="loading">Loading...</div>
           ) : selectedDay?.diary ? (
             <div className="diary-container">
-              <h2 id="daily">{formattedDate}</h2>
+              <h2 id="daily">
+                {formattedDate}
+                {selectedDay.diary.content && (
+                  <span className="hex-code">#{diary.color?.hexa}</span>
+                )}
+              </h2>
               {selectedDay.diary.content ? (
                 <div className="diary-content">
                   <img id="aiimage" src={diary.url} alt="Diary illustration" />
+                  <p id="emotion_text">대표 감정</p>
                   <div className="emotions">
-                    <p id="emotion_text">대표 감정</p>
-                    {selectedDay.diary.emotion.map((emotion) => (
-                      <button
-                        key={emotion}
-                        className={`emotion`}
-                      >
+                    {diary.emotion.map((emotion, index) => (
+                      <button key={index} className="emotion">
                         {emotion}
                       </button>
                     ))}
@@ -325,7 +337,7 @@ const Weekly = () => {
       </div>
       <div id="nevi">
         <button id="home" onClick={() => navigate("/")}></button>
-        <button id="diary" onClick={() => navigate("/write")}></button>
+        <button id="diary" onClick={handleDiaryButtonClick}></button>
         <button id="my" onClick={() => navigate("/mypage")}></button>
       </div>
     </div>
