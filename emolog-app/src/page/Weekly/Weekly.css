@@ -125,7 +125,13 @@
 }
 
 #daily{
-  margin-left: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  margin-left: 15px;
+  margin-bottom: 48px;
+  width: 90%;
 }
 
 .diary-container {
@@ -151,33 +157,34 @@
   font-size: 14px;
   line-height: 16px;
   color: #000000;
-}
-
-.emotions {
-  justify-content: center;
-  width: 350px;
   margin-left: 10px;
 }
 
-.emotion-tag {
-  width: 80px;
+.emotions {
+  display: flex;
+  justify-content: space-around; 
+  width: 90%;
+  margin: 0 auto; 
+}
+
+button.emotion{
+  padding: 15px 19px;
+  gap: 10px;
+
+  width: auto;
   height: 48px;
-  display: inline-flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  background-color: #eee;
-  border-radius: 15px;
-  padding: 5px 10px;
-  margin-right: 7px;
-  font-family: "Pretendard";
+
+  background: #EEEEEE;
+  border-radius: 5px;
+  border: none;
+
+  font-family: 'Pretendard';
   font-style: normal;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 18px;
   color: #000000;
 }
-
 #aiimage{
   width: 314px;
   height: 204px;

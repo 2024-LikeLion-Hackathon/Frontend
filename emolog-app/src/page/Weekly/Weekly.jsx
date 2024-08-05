@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { fetchColor } from "../../api/color";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import "./Weekly.css";
 
 const Weekly = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const today = new Date();
   const [diary, setDiary] = useState({
     diary: {
@@ -18,12 +18,18 @@ const Weekly = () => {
     },
     color: {
       hexa: "",
-      red: 147,
-      green: 134,
-      blue: 92,
+      red: "",
+      green: "",
+      blue: "",
     },
     emotion: [],
     comment: "",
+    q_a: {
+      question: "",
+      answer: "",
+    },
+    summary: "",
+    url: "",
   });
   const [selectedDay, setSelectedDay] = useState({
     diary: { date: "", emotion: [], comment: "", content: "" },
@@ -38,6 +44,8 @@ const Weekly = () => {
   const [error, setError] = useState(null);
   const [token, setToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
+  const [weekData, setWeekData] = useState([]);
+  const location = useLocation();
   const initialDate =
     location.state?.date || new Date().toISOString().split("T")[0];
 
@@ -52,35 +60,32 @@ const Weekly = () => {
   // 데이터 가져오기
   useEffect(() => {
     if (!token) return;
+
+    const fetchDiaryData = async () => {
+      try {
+        setLoading(true);
+
+        const colorData = await fetchColor(token, currentMonth, selectedWeek);
+        const colorArray = colorData.map((entry) => ({
+          date: entry.date,
+          color: `#${entry.hexa}`,
+        }));
+
+        setDiarySummaries(colorArray); // 배열로 설정
+
+        // 다이어리 요약 데이터 요청
+        const DiaryData = await getDiarySummaries(initialDate, token);
+        setDiary(DiaryData);
+        setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : null);
+      } catch (error) {
+        console.error("Error fetching diary data:", error);
+        setError("Error fetching diary data");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchDiaryData();
   }, [token, selectedWeek, currentMonth]);
-
-  const fetchDiaryData = async () => {
-    try {
-      setLoading(true);
-
-      const colorData = await fetchColor(currentMonth, selectedWeek);
-      const colorMap = colorData.reduce((acc, entry) => {
-        acc[entry.date] = `#${entry.hexa}`;
-        return acc;
-      }, {});
-
-      setDiarySummaries(colorMap);
-
-      // 다이어리 요약 데이터 요청
-      const diaryDataResponse = await axios.get(
-        `/api/diary/summary/${initialDate}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setDiary(diaryDataResponse.data);
-    } catch (error) {
-      handleErrors(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleErrors = (error) => {
     if (error.response) {
@@ -108,39 +113,12 @@ const Weekly = () => {
     }
   };
 
-  const handleNextWeek = () => {
-    const totalWeeks = Math.ceil(
-      new Date(currentYear, currentMonth, 0).getDate() / 7
-    );
-    if (selectedWeek < totalWeeks) {
-      setSelectedWeek(selectedWeek + 1);
-    } else {
-      if (currentMonth === 12) {
-        setCurrentMonth(1);
-        setCurrentYear(currentYear + 1);
-      } else {
-        setCurrentMonth(currentMonth + 1);
-      }
-      setSelectedWeek(1);
+  // 날짜가 변경될 때 주간 데이터를 업데이트
+  useEffect(() => {
+    if (diarySummaries.length > 0) {
+      setWeekData(getWeekData(selectedWeek));
     }
-  };
-
-  const handlePreviousWeek = () => {
-    if (selectedWeek > 1) {
-      setSelectedWeek(selectedWeek - 1);
-    } else {
-      if (currentMonth === 1) {
-        setCurrentMonth(12);
-        setCurrentYear(currentYear - 1);
-      } else {
-        setCurrentMonth(currentMonth - 1);
-      }
-      const totalWeeks = Math.ceil(
-        new Date(currentYear, currentMonth - 1, 0).getDate() / 7
-      );
-      setSelectedWeek(totalWeeks);
-    }
-  };
+  }, [diarySummaries, selectedWeek, currentMonth, currentYear]);
 
   const getWeekData = (weekNumber) => {
     const startDay = (weekNumber - 1) * 7 + 1;
@@ -156,12 +134,11 @@ const Weekly = () => {
       const summary = diarySummaries.find(
         (summary) => summary.date === dateStr
       );
-      weekData.push(summary || { date: dateStr, color: { hexa: "d9d9d9" } });
+      weekData.push(summary || { date: dateStr, color: "#d9d9d9" });
     }
+    console.log(weekData);
     return weekData;
   };
-
-  const weekData = getWeekData(selectedWeek);
 
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
@@ -209,6 +186,40 @@ const Weekly = () => {
     }
   };
 
+  const handleNextWeek = () => {
+    const totalWeeks = Math.ceil(
+      new Date(currentYear, currentMonth, 0).getDate() / 7
+    );
+    if (selectedWeek < totalWeeks) {
+      setSelectedWeek(selectedWeek + 1);
+    } else {
+      if (currentMonth === 12) {
+        setCurrentMonth(1);
+        setCurrentYear(currentYear + 1);
+      } else {
+        setCurrentMonth(currentMonth + 1);
+      }
+      setSelectedWeek(1);
+    }
+  };
+
+  const handlePreviousWeek = () => {
+    if (selectedWeek > 1) {
+      setSelectedWeek(selectedWeek - 1);
+    } else {
+      if (currentMonth === 1) {
+        setCurrentMonth(12);
+        setCurrentYear(currentYear - 1);
+      } else {
+        setCurrentMonth(currentMonth - 1);
+      }
+      const totalWeeks = Math.ceil(
+        new Date(currentYear, currentMonth - 1, 0).getDate() / 7
+      );
+      setSelectedWeek(totalWeeks);
+    }
+  };
+
   return (
     <div className="weekly-container">
       <div id="back">
@@ -244,16 +255,15 @@ const Weekly = () => {
                 className={`color-circle-container ${
                   selectedDay?.diary.date === day.date ? "selected" : ""
                 }`}
-              ><div id="weekly_circle"></div>
+              >
+                <div id="weekly_circle"></div>
                 <div
                   className={`color-circle ${
                     selectedDay?.diary.date === day.date ? "selected" : ""
                   }`}
                   onClick={() => handleDayClick(day)}
                   style={{
-                    backgroundColor: day.color?.hexa
-                      ? `#${diary.color.hexa}`
-                      : `#d9d9d9`,
+                    backgroundColor: day.color ? day.color : `#d9d9d9`,
                   }}
                 ></div>
               </div>
@@ -263,21 +273,22 @@ const Weekly = () => {
             <div id="loading">Loading...</div>
           ) : selectedDay?.diary ? (
             <div className="diary-container">
-              <h2 id="daily">{formattedDate}</h2>
+              <h2 id="daily">
+                {formattedDate}
+                {selectedDay.diary.content && (
+                  <span className="hex-code">#{diary.color?.hexa}</span>
+                )}
+              </h2>
               {selectedDay.diary.content ? (
                 <div className="diary-content">
                   <img id="aiimage" src={diary.url} alt="Diary illustration" />
+                  <p id="emotion_text">대표 감정</p>
                   <div className="emotions">
-                    <p id="emotion_text">대표 감정</p>
-                    {selectedDay.diary.emotion ? (
-                      selectedDay.diary.emotion.map((emotion, index) => (
-                        <button key={index} className="emotion">
-                          {emotion}
-                        </button>
-                      ))
-                    ) : (
-                      <p>웩</p>
-                    )}
+                    {diary.emotion.map((emotion, index) => (
+                      <button key={index} className="emotion">
+                        {emotion}
+                      </button>
+                    ))}
                   </div>
                   <p id="ai_text">모디의 한 마디</p>
                   <p className="ai-message">{selectedDay.comment}</p>
@@ -312,11 +323,12 @@ const Weekly = () => {
         </div>
       </div>
       <div id="nevi">
-          <button id="home" onClick={() => navigate("/")}></button>
-          <button id="diary" onClick={() => navigate("/write")}></button>
-          <button id="my" onClick={() => navigate("/mypage")}></button>
-        </div>
+        <button id="home" onClick={() => navigate("/")}></button>
+        <button id="diary" onClick={() => navigate("/write")}></button>
+        <button id="my" onClick={() => navigate("/mypage")}></button>
+      </div>
     </div>
   );
 };
+
 export default Weekly;
