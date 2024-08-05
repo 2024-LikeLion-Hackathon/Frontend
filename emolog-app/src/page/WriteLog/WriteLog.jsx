@@ -47,7 +47,7 @@ function WriteLog() {
         setTimeout(() => {
             closeModal();
             navigate('/chat', { state: { content: text }});
-        }, 10000); // 3초 후에 페이지 이동
+        }, 3000); // 3초 후에 페이지 이동
     };
     
     const closeModal = () => {
@@ -69,6 +69,7 @@ function WriteLog() {
     };
 
     return (
+        <div className="cont">
         <div className="writelog">
             <div id="logoBox">
                 <div id="logo"></div>
@@ -113,6 +114,7 @@ function WriteLog() {
                 <div>잠시만 기다려주세요</div>
             </Modal>
         </div>
+    </div>
     );
 }
 

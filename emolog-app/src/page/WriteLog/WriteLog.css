@@ -22,24 +22,24 @@
 
     }
     #cancel{
-  
-width: 92px;
-height: 40px;
+        
+        width: 92px;
+        height: 40px;
 
-font-family: 'Pretendard';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-
-
-
-color: #000000;
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
 
 
-background: #EEEEEE;
-border-radius: 5px;
-border: none;
-margin: 5px;
+
+        color: #000000;
+
+
+        background: #EEEEEE;
+        border-radius: 5px;
+        border: none;
+        margin: 5px;
 
 
     }

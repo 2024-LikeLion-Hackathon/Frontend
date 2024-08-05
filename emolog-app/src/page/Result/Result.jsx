@@ -161,66 +161,68 @@ function Result() {
     };
 
     return (
-        <div className="result">
-            <div id="logoBox">
-                <div id="logo"></div>
-            </div>
-            <div id="secondBox">
-                <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
-                <div id="btnBox">
-                    <button id="finishbtn" onClick={handleFinish}></button>
+        <div className="cont">
+            <div className="result">
+                <div id="logoBox">
+                    <div id="logo"></div>
                 </div>
-            </div>
-            <div id="resultBox">
-                <div id="img" style={{ backgroundImage:`url(${diary.url})` }}></div>
-                <div id="ment">{diary.comment}</div>
-                <div id="colorBox">
-                    <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
+                <div id="secondBox">
+                    <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
+                    <div id="btnBox">
+                        <button id="finishbtn" onClick={handleFinish}></button>
+                    </div>
+                </div>
+                <div id="resultBox">
+                    <div id="img" style={{ backgroundImage:`url(${diary.url})` }}></div>
+                    <div id="ment">{diary.comment}</div>
+                    <div id="colorBox">
+                        <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
 
-                    <div className="color_container"></div>
-                    <div id="rgb">
-                        <div id="r" className="rgb_container">
-                            <div className="rgbbox">R</div>
-                            <div id="r_value" className="rgb_value">{diary.color.red}</div>
-                        </div>
-                        <div id="g" className="rgb_container">
-                            <div className="rgbbox">G</div>
-                            <div id="g_value" className="rgb_value">{diary.color.green}</div>
-                        </div>
-                        <div id="b" className="rgb_container">
-                            <div className="rgbbox">B</div>
-                            <div id="b_value" className="rgb_value">{diary.color.blue}</div>
+                        <div className="color_container"></div>
+                        <div id="rgb">
+                            <div id="r" className="rgb_container">
+                                <div className="rgbbox">R</div>
+                                <div id="r_value" className="rgb_value">{diary.color.red}</div>
+                            </div>
+                            <div id="g" className="rgb_container">
+                                <div className="rgbbox">G</div>
+                                <div id="g_value" className="rgb_value">{diary.color.green}</div>
+                            </div>
+                            <div id="b" className="rgb_container">
+                                <div className="rgbbox">B</div>
+                                <div id="b_value" className="rgb_value">{diary.color.blue}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="color_hexa">#{diary.color.hexa}</div>
-                <div id="emotions">
-                    {emotions.map((emotion) => (
-                        <button
-                            key={emotion}
-                            className={`emotion`}
-                        >
-                            {emotion}
-                        </button>
-                    ))}
-                </div>
-                <div id="dt_container">
-                    <div id="diary_content">{diary.diary.content}</div>
-                    <div id="text">
-                        <div id="icon"></div>
-                        <div id="chat_rep">MoDi와의 대화 다시보기</div>
+                    <div id="color_hexa">#{diary.color.hexa}</div>
+                    <div id="emotions">
+                        {emotions.map((emotion) => (
+                            <button
+                                key={emotion}
+                                className={`emotion`}
+                            >
+                                {emotion}
+                            </button>
+                        ))}
                     </div>
-                    <div id="chat">
-                        <MessageList messages={messages} />
+                    <div id="dt_container">
+                        <div id="diary_content">{diary.diary.content}</div>
+                        <div id="text">
+                            <div id="icon"></div>
+                            <div id="chat_rep">MoDi와의 대화 다시보기</div>
+                        </div>
+                        <div id="chat">
+                            <MessageList messages={messages} />
+                        </div>
+                        <button id="lastbtn" onClick={handleFinish}>확인</button>
+                        <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
                     </div>
-                    <button id="lastbtn" onClick={handleFinish}>확인</button>
-                    <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
                 </div>
-            </div>
-            <div id="nevi">
-                <button id="home" onClick={() => navigate('/')}></button>
-                <button id="diary" onClick={() => navigate('/write')}></button>
-                <button id="my" onClick={() => navigate('/mypage')}></button>
+                <div id="nevi">
+                    <button id="home" onClick={() => navigate('/')}></button>
+                    <button id="diary" onClick={() => navigate('/write')}></button>
+                    <button id="my" onClick={() => navigate('/mypage')}></button>
+                </div>
             </div>
         </div>
     );
