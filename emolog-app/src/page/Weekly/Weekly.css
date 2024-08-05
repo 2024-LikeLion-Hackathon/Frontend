@@ -124,20 +124,24 @@
   background-image: url('../../asset/img/hover.png');
 }
 
+#daily{
+  margin-left: 10px;
+}
+
 .diary-container {
   width: 345px;
-  height: 718px;
+  max-height: 1024px;
   top: 20px;
   left: 130px;
   background: #f4f4f4;
   border-radius: 10px;
-  margin-bottom: 120px;
- 
+  margin-bottom: 80px;
 }
 
 .diary-container img {
   max-width: 100%;
   height: auto;
+  margin-left: 10px;
 }
 
 #emotion_text {
@@ -152,6 +156,7 @@
 .emotions {
   justify-content: center;
   width: 350px;
+  margin-left: 10px;
 }
 
 .emotion-tag {
@@ -173,6 +178,11 @@
   color: #000000;
 }
 
+#aiimage{
+  width: 314px;
+  height: 204px;
+}
+
 #ai_text,
 #diary_text {
   font-family: "Pretendard";
@@ -182,6 +192,7 @@
   line-height: 16px;
   display: flex;
   align-items: center;
+  margin-left: 10px;
   color: #000000;
 }
 
@@ -198,10 +209,12 @@
   border-radius: 5px;
   padding-left: 10px;
   margin: 10px 0;
+  margin-left: 10px;
 }
 
 .diary-entry {
   margin: 10px 0;
+  margin-left: 10px;
 }
 
 #diary_button {
@@ -213,6 +226,7 @@
   border: none;
   border-radius: 5%;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 #no-diary {

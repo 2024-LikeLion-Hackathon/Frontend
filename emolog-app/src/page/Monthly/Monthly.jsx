@@ -113,25 +113,27 @@ const Monthly = () => {
   }, [token, currentMonth]);
 
   const handleDayClick = async (day) => {
-    const selectedDate = `${today.getFullYear()}-${String(currentMonth + 1).padStart(
-      2,
-      "0"
-    )}-${String(day).padStart(2, "0")}`;
-  
+    const selectedDate = `${today.getFullYear()}-${String(
+      currentMonth + 1
+    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
     try {
       setLoading(true);
       const response = await getDiarySummaries(selectedDate, token);
       setDiary(response);
-      setSelectedDay(response.diary.date === selectedDate ? response : { diary: { date: selectedDate } });
+      setSelectedDay(
+        response.diary.date === selectedDate
+          ? response
+          : { diary: { date: selectedDate } }
+      );
     } catch (err) {
-      console.error('Error fetching diary details:', err);
+      console.error("Error fetching diary details:", err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
       setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
     } finally {
       setLoading(false);
     }
   };
-  
 
   const handlePreviousMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1));
@@ -157,16 +159,18 @@ const Monthly = () => {
 
   const handleResultDiary = () => {
     if (selectedDay?.diary.date) {
-      navigate('/result', { state: { date:selectedDay.diary.date } });
+      navigate("/result", { state: { date: selectedDay.diary.date } });
     } else {
       alert("No diary entry selected");
     }
   };
 
   const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
-  const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
-  const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
-  const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
+  const month = isNaN(diaryDate) ? "" : format(diaryDate, "M", { locale: ko });
+  const day = isNaN(diaryDate) ? "" : format(diaryDate, "d", { locale: ko });
+  const dayOfWeek = isNaN(diaryDate)
+    ? ""
+    : format(diaryDate, "EEEE", { locale: ko });
 
   return (
     <div className="monthly-container">
@@ -215,7 +219,8 @@ const Monthly = () => {
                       const selectedDate = `${today.getFullYear()}-${String(
                         currentMonth + 1
                       ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                      const backgroundColor = diaryColors[selectedDate] || "#d9d9d9";
+                      const backgroundColor =
+                        diaryColors[selectedDate] || "#d9d9d9";
                       return (
                         <div
                           key={dayIndex}
@@ -253,62 +258,56 @@ const Monthly = () => {
           </div>
 
           <div className="diary-section">
-  {loading ? (
-    <div id="no-diary">
-      <h2>{month}월 {day}일 {dayOfWeek}</h2>
-      <div id="empty-diary"></div>
-      <p>이 날의 일기가 없어요</p>
-      <button id="diary_button" onClick={handleWriteDiary}>
-        일기 쓰러 가기
-      </button>
-    </div>
-  ) : error ? (
-    <div id="no-diary">
-      <h2>{month}월 {day}일 {dayOfWeek}</h2>
-      <div id="empty-diary"></div>
-      <p>이 날의 일기가 없어요</p>
-      <button id="diary_button" onClick={handleWriteDiary}>
-        일기 쓰러 가기
-      </button>
-    </div>
-  ) : selectedDay?.diary ? (
-    <>
-      <h2>
-        {month}월 {day}일 {dayOfWeek}
-        <span className="hex-code">#{diary.color?.hexa}</span>
-      </h2>
-      <img src={diary.url} alt="Diary illustration" />
-      <p id="emotion_text">대표 감정</p>
-      <div className="emotions">
-        {diary.emotion.map((emotion, index) => (
-          <button key={index} className="emotion">
-            {emotion}
-          </button>
-        ))}
-      </div>
-      <p id="ai_text">모디의 한 마디</p>
-      <p className="ai-message">{diary.comment}</p>
-      <p id="diary_text">이 날의 일기</p>
-      <p className="diary-entry">{diary.diary.content}</p>
-      <button
-        id="diary_button"
-        onClick={handleResultDiary}
-      >
-        일기 자세히 보기
-      </button>
-    </>
-  ) : (
-    <div id="no-diary">
-      <h2>{month}월 {day}일 {dayOfWeek}</h2>
-      <div id="empty-diary"></div>
-      <p>이 날의 일기가 없어요</p>
-      <button id="diary_button" onClick={handleWriteDiary}>
-        일기 쓰러 가기
-      </button>
-    </div>
-  )}
-</div>
-
+            {loading ? (
+              <div id="no-diary">
+                <div id="empty-diary"></div>
+                <p>이 날의 일기가 없어요</p>
+                <button id="diary_button" onClick={handleWriteDiary}>
+                  일기 쓰러 가기
+                </button>
+              </div>
+            ) : error ? (
+              <div id="no-diary">
+                <div id="empty-diary"></div>
+                <p>이 날의 일기가 없어요</p>
+                <button id="diary_button" onClick={handleWriteDiary}>
+                  일기 쓰러 가기
+                </button>
+              </div>
+            ) : selectedDay?.diary ? (
+              <>
+                <h2>
+                  {month}월 {day}일 {dayOfWeek}
+                  <span className="hex-code">#{diary.color?.hexa}</span>
+                </h2>
+                <img src={diary.url} alt="Diary illustration" />
+                <p id="emotion_text">대표 감정</p>
+                <div className="emotions">
+                  {diary.emotion.map((emotion, index) => (
+                    <button key={index} className="emotion">
+                      {emotion}
+                    </button>
+                  ))}
+                </div>
+                <p id="ai_text">모디의 한 마디</p>
+                <p className="ai-message">{diary.comment}</p>
+                <p id="diary_text">이 날의 일기</p>
+                <p className="diary-entry">{diary.diary.content}</p>
+                <button id="diary_button" onClick={handleResultDiary}>
+                  일기 자세히 보기
+                </button>
+              </>
+            ) : (
+              <div id="no-diary">
+                <h2>{selectedDay?.diary.date}</h2>
+                <div id="empty-diary"></div>
+                <p>이 날의 일기가 없어요</p>
+                <button id="diary_button" onClick={handleWriteDiary}>
+                  일기 쓰러 가기
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <div id="nevi">
           <button id="home" onClick={() => navigate("/")}></button>
