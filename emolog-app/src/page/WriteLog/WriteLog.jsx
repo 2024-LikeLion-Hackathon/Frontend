@@ -91,7 +91,8 @@ function WriteLog() {
                           maxLength={maxLength}
                           value={text}
                           onChange={handleChange}
-                          placeholder="오늘의 일기를 작성해보세요">
+                          placeholder="오늘의 일기를 작성해보세요
+                          2줄 이상 작성해야 모디가 읽을 수 있어요 :)">
                 </textarea>
                 <div id="counter" style={textStyle}> 
                     {text.length}/{maxLength}

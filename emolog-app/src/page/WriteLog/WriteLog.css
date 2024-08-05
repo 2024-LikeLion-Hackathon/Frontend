@@ -107,7 +107,6 @@
         justify-content: space-around;
     }
     #inputbox{
-    
         position: absolute;
         top: 178px; 
         bottom: 80px;
@@ -133,7 +132,6 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        border-radius: 20px;
         
         resize: none;
         font-family: 'Pretendard';
@@ -142,9 +140,6 @@
         font-size: 14px;
         line-height: 18px;
         /* 오늘의 일기를 작성해보세요 */
-
-
-
 
     }
 
