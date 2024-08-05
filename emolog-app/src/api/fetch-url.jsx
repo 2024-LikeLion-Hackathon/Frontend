@@ -1,6 +1,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
+
 const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr'; // 수정된 BASE_URL
 
 /**
@@ -11,6 +12,8 @@ const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr'; //
  * @returns {Promise<Object>} 서버 응답 데이터
  */
 export const fetchUrl = async (content, date, token) => {
+  
+  
   try {
     // FormData 객체 생성 및 데이터 추가
     const formData = new FormData();
@@ -27,6 +30,7 @@ export const fetchUrl = async (content, date, token) => {
     });
 
     console.log("반환값", response.data);
+   
     return response.data;
   } catch (error) {
     if (error.response) {

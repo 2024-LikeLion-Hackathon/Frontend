@@ -7,6 +7,7 @@ export const DiaryProvider = ({ children }) => {
         date: '',
         q_a: { question: '', answer: '' },
         emotion: '',
+        url:''
     });
 
     const updateDiary = (newData) => {
@@ -36,6 +37,7 @@ export const DiaryProvider = ({ children }) => {
             date: '',
             q_a: { question: '', answer: '' },
             emotion: '',
+            url:''
         });
     };
 
