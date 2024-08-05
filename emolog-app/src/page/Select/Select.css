@@ -4,14 +4,19 @@
     justify-content: center;
     margin: 0;
 }
-.select{
-    width: 500px;
-    height: 97vh;
+
+.common-flex {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
+    flex-direction: column;
+    height: 97vh;
+    justify-content: flex-start;
     margin: 0;
+    width: 500px;
+}
+
+.select{
+   
     
 
     #logoBox{
@@ -79,7 +84,7 @@
         font-weight: 700;
         font-size: 16px;
         line-height: 18px;
-    
+        margin-left: 15px;
         display: flex;
         align-items: center;
 

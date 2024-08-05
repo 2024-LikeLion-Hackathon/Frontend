@@ -88,7 +88,7 @@ function Select() {
     };
 
     return (
-        <div className="cont">
+        <div className="common-flex">
             <div className="select">
                 <div id="logoBox">
                     <div id="logo"></div>

@@ -61,7 +61,7 @@ const KakaoLogin = () => {
             localStorage.setItem('token', result.accessToken);
 
             // 기존 사용자와 신규 사용자를 구분하여 리디렉션
-            if (result.isNew) {
+            if (result.new === true) {
               navigate('/userform');
             } else {
               navigate('/');
@@ -69,8 +69,6 @@ const KakaoLogin = () => {
           } else {
             console.error('서버 응답에 토큰이 없습니다.');
           }
-            if(!result.new){ navigate('/');}
-            else{navigate('/userform');}
           
          
         } catch (error) {
