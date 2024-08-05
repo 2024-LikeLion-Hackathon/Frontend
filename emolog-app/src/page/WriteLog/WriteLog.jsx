@@ -1,9 +1,11 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
 import { postAiDiary } from "../../api/postAiDiary";
+import { fetchUrl } from "../../api/fetch-url";
+
 
 
 Modal.setAppElement('#root'); // 접근성 설정
@@ -20,14 +22,22 @@ function WriteLog() {
     const date = today.toISOString().split('T')[0];
     const month = today.getMonth() + 1;
     const day = today.getDate();
+    const [token, setToken] = useState('');
   
+
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            setToken(storedToken)
+        }
+    }, []);
 
     const handleChange = (event) => {
         if (event.target.value.length <= maxLength) {
             setText(event.target.value);
         }
     };
-    const id="30";
+
 
     const textStyle = {
         color: text.length >= maxLength ? 'red' : '#666',
@@ -37,7 +47,7 @@ function WriteLog() {
         setModalIsOpen(true);
         setTimeout(() => {
             closeModal();
-            navigate('/chat');
+            navigate('/chat', { state: { content: text }});
         }, 3000); // 2초 후에 페이지 이동
     };
     
@@ -48,12 +58,13 @@ function WriteLog() {
     const handleSubmit = async () => {
         try {
             openModal();
-        
-        updateDiary({ date, content: text });
-        console.log("Diary Updated:", { date, content: text }); //확인용 로그
-        console.log(id,text);
-        const result = postAiDiary(id, text);
+            updateDiary({ date });
+            console.log("Diary Updated:", { date }); //확인용 로그
+            console.log(text);
+        const result = postAiDiary( text);
         console.log('ai서버응답:',result);
+        const backres = fetchUrl(text, date, token);
+        console.log('백엔드서버응답:',backres);
 
         } catch (error) {
             console.error('Error fetching emotions:', error);

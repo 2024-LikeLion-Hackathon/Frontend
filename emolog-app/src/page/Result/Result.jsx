@@ -12,7 +12,6 @@ function Result() {
     const location = useLocation();
     const { resetDiary } = useContext(DiaryContext);
     const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
-    const diary_id = location.state.id;
     const [diary, setDiary] = useState({
         diary: {
             date: "",
@@ -27,10 +26,12 @@ function Result() {
         },
         emotion: [],
         comment: "",
+        url: "",
         q_a: {
             question: "",
             answer: ""
         }
+
     });
     const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
@@ -171,7 +172,7 @@ function Result() {
                 </div>
             </div>
             <div id="resultBox">
-                <div id="img"></div>
+                <div id="img" style={{ backgroundImage:`url(${diary.url})` }}></div>
                 <div id="ment">{diary.comment}</div>
                 <div id="colorBox">
                     <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>

@@ -156,7 +156,6 @@ const Weekly = () => {
 
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
-
     try {
       setLoading(true);
       const response = await axios.get(
@@ -175,6 +174,7 @@ const Weekly = () => {
       setLoading(false);
     }
   };
+  
 
   // 날짜 포맷팅 함수
 const formatDate = (dateStr) => {
@@ -219,7 +219,7 @@ const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
             <button onClick={handleNextWeek}>&gt;</button>
           </div>
         </header>
-
+  
         <div className="weekly-content">
           <div className="color-circle-nav">
             {weekData.map((day, index) => (
@@ -269,7 +269,7 @@ const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
           )}
         </div>
       </div>
-
+  
       <div id="nevi">
         <button id="home" onClick={() => navigate("/")}></button>
         <button id="diary" onClick={() => navigate("/write")}></button>
@@ -277,6 +277,7 @@ const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
       </div>
     </div>
   );
+  
 };
 
 export default Weekly;

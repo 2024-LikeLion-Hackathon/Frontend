@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {refreshToken} from './refreshToken'
+import { refreshToken } from './refreshToken';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
 
 /**
  * 사용자 정보를 업데이트하는 함수
@@ -18,8 +18,7 @@ export const putUser = async (userData, token) => {
     });
     return response.data;
   } catch (error) { 
-    
-      if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
       try {
         const newToken = await refreshToken(token);
         const retryResponse = await axios.put(`${BASE_URL}/api/user`, userData, {
