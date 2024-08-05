@@ -200,9 +200,9 @@ header {
 .diary-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 95%;
-  margin-left: 10px;
+  /* align-items: center; */
+  max-width: 90%;
+  margin-left: 40px;
 }
 
 .diary-section h2 {
@@ -210,13 +210,15 @@ header {
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  margin-bottom: 48px;
-  width: 100%;
+  margin-bottom: 40px;
+  width: 93%;
 }
 
 .diary-section img {
   width: 406px;
   height: 272px;
+  border-radius: 3%;
+  margin-bottom: 10px;
 }
 
 #emotion_text {
@@ -230,9 +232,11 @@ header {
 
 .emotions {
   display: flex;
-  justify-content: space-around; 
+  justify-content: space-between; 
   width: 90%;
   margin: 0 auto; 
+  max-width: 405px;
+  margin-left: 0px;
 }
 
 button.emotion{
@@ -279,6 +283,11 @@ button.emotion{
   background-color: #eee;
   border-radius: 5px;
   padding-left: 10px;
+}
+
+.diary-entry{
+  width: 405px;
+  margin-bottom: 25px;
 }
 
 #diary_button {
