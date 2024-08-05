@@ -7,7 +7,7 @@
 #back {
   position: absolute;
   width: 500px;
-  height: 1024px;
+  height: 100vh;
   left: 50%;
   top: 0;
   transform: translateX(-50%);
@@ -130,24 +130,24 @@
   align-items: center;
   font-size: 16px;
   margin-left: 15px;
-  margin-bottom: 48px;
+  margin-bottom: 20px;
   width: 90%;
 }
 
 .diary-container {
   width: 345px;
-  max-height: 1024px;
   top: 20px;
   left: 130px;
   background: #f4f4f4;
   border-radius: 10px;
-  margin-bottom: 80px;
+  margin-bottom: 120px;
 }
 
 .diary-container img {
   max-width: 100%;
   height: auto;
-  margin-left: 10px;
+  margin-left: 15px;
+  border-radius: 3%;
 }
 
 #emotion_text {
@@ -199,7 +199,7 @@ button.emotion{
   line-height: 16px;
   display: flex;
   align-items: center;
-  margin-left: 10px;
+  margin: 15px 0 15px 10px;
   color: #000000;
 }
 
@@ -220,8 +220,7 @@ button.emotion{
 }
 
 .diary-entry {
-  margin: 10px 0;
-  margin-left: 10px;
+  margin: 15px 10px;
 }
 
 #diary_button {
@@ -234,6 +233,7 @@ button.emotion{
   border-radius: 5%;
   cursor: pointer;
   margin-left: 10px;
+  margin-bottom: 15px;
 }
 
 #no-diary {

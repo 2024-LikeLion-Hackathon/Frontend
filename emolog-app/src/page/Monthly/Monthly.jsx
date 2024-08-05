@@ -115,25 +115,29 @@ const Monthly = () => {
   }, [token, currentMonth]);
 
   const handleDayClick = async (day) => {
-    const selectedDate = `${today.getFullYear()}-${String(currentMonth + 1).padStart(
-      2,
-      "0"
-    )}-${String(day).padStart(2, "0")}`;
-  
-    try {
-      setLoading(true);
-      const response = await getDiarySummaries(selectedDate, token);
-      setDiary(response);
-      setSelectedDay(response.diary.date === selectedDate ? response : { diary: { date: selectedDate } });
-    } catch (err) {
-      console.error('Error fetching diary details:', err);
-      setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
-      setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
-    } finally {
-      setLoading(false);
-    }
-  };
-  
+  const selectedDate = `${today.getFullYear()}-${String(
+    currentMonth + 1
+  ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+  try {
+    setLoading(true);
+    const response = await getDiarySummaries(selectedDate, token);
+    setDiary(response);
+    setSelectedDay(
+      response.diary.date === selectedDate
+        ? response
+        : { diary: { date: selectedDate } }
+    );
+  } catch (err) {
+    console.error("Error fetching diary details:", err);
+    setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
+    setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
+  } finally {
+    setLoading(false);
+  }
+};
+
+
   const handlePreviousMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1));
   };
