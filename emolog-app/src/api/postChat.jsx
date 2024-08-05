@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://3.34.51.210:8000'; // 수정된 BASE_URL
+const BASE_URL ='https://emolog.kro.kr'; // 수정된 BASE_URL
 
 /**
  * 감정 데이터를 가져오는 함수
@@ -9,8 +9,9 @@ const BASE_URL = 'http://3.34.51.210:8000'; // 수정된 BASE_URL
  * @returns {Promise<Object>} 서버 응답 데이터
  */
 export const postChat = async (content, chatting) => {
+  console.log("전송 데이터",content,chatting);
   try {
-    console.log("전송 데이터",content,chatting);
+    
     const response = await axios.post(`${BASE_URL}/api/ai/chat`, {
       content: content,
       chatting: chatting

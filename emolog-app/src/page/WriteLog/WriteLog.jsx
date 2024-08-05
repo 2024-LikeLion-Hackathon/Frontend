@@ -45,7 +45,7 @@ function WriteLog() {
         setTimeout(() => {
             closeModal();
             navigate('/chat', { state: { content: text }});
-        }, 3000); // 3초 후에 페이지 이동
+        }, 10000); // 3초 후에 페이지 이동
     };
     
     const closeModal = () => {
@@ -74,9 +74,7 @@ function WriteLog() {
 
         } catch (error) {
             console.error('Error in handleSubmit:', error);
-        } finally {
-            closeModal(); // 성공 여부와 상관없이 모달 닫기
-        }
+        } 
     };
 
     return (
