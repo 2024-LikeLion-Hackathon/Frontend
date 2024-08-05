@@ -47,7 +47,7 @@ function WriteLog() {
         setTimeout(() => {
             closeModal();
             navigate('/chat', { state: { content: text }});
-        }, 3000); // 3초 후에 페이지 이동
+        }, 10000); // 3초 후에 페이지 이동
     };
     
     const closeModal = () => {
@@ -64,9 +64,14 @@ function WriteLog() {
         console.log('백엔드서버응답:',backres);
 
         } catch (error) {
+<<<<<<< HEAD
+            console.error('Error in handleSubmit:', error);
+        } 
+=======
             console.error('Error fetching emotions:', error);
         }
         
+>>>>>>> origin/main
     };
 
     return (
