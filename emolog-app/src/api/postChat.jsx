@@ -1,6 +1,10 @@
 import axios from 'axios';
 
+<<<<<<< HEAD
 const BASE_URL ='https://emolog.kro.kr'; // 수정된 BASE_URL
+=======
+const BASE_URL = 'https://emolog.kro.kr'; // 수정된 BASE_URL
+>>>>>>> origin/main
 
 /**
  * 감정 데이터를 가져오는 함수
