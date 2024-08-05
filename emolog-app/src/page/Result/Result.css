@@ -108,6 +108,7 @@
         left: calc(50% - 468px/2);
         top: 186px;
         border-radius: 5px;
+        background-size: contain;
     }
     #ment{
         word-spacing:-.2ch ;

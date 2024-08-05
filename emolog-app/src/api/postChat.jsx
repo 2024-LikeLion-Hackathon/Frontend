@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://43.202.44.75:8000'; // 수정된 BASE_URL
+const BASE_URL = 'http://3.34.51.210:8000'; // 수정된 BASE_URL
 
 /**
  * 감정 데이터를 가져오는 함수

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr';
 
 /**
  * 쿠키에서 값을 가져오는 유틸리티 함수

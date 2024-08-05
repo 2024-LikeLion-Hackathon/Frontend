@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr';
 
 /**
  * 특정 ID의 일기 데이터를 서버로부터 가져오는 함수
