@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect} from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
 import { postAiDiary } from "../../api/postAiDiary";
 import { fetchUrl } from "../../api/fetch-url";
-
 
 
 Modal.setAppElement('#root'); // 접근성 설정
@@ -24,7 +23,6 @@ function WriteLog() {
     const day = today.getDate();
     const [token, setToken] = useState('');
   
-
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
@@ -38,17 +36,16 @@ function WriteLog() {
         }
     };
 
-
     const textStyle = {
         color: text.length >= maxLength ? 'red' : '#666',
     };
-   
+
     const openModal = () => {
         setModalIsOpen(true);
         setTimeout(() => {
             closeModal();
             navigate('/chat', { state: { content: text }});
-        }, 3000); // 2초 후에 페이지 이동
+        }, 3000); // 3초 후에 페이지 이동
     };
     
     const closeModal = () => {
@@ -59,17 +56,27 @@ function WriteLog() {
         try {
             openModal();
             updateDiary({ date });
-            console.log("Diary Updated:", { date }); //확인용 로그
+            console.log("Diary Updated:", { date }); // 확인용 로그
             console.log(text);
-        const result = postAiDiary( text);
-        console.log('ai서버응답:',result);
-        const backres = fetchUrl(text, date, token);
-        console.log('백엔드서버응답:',backres);
+
+            // postAiDiary는 백그라운드에서 호출합니다.
+            postAiDiary(text)
+                .then(result => {
+                    console.log('AI 서버 응답:', result);
+                })
+                .catch(error => {
+                    console.error('Error in postAiDiary:', error);
+                });
+
+            // fetchUrl 호출
+            const backres = fetchUrl(text, date, token);
+            console.log('백엔드 서버 응답:', backres);
 
         } catch (error) {
-            console.error('Error fetching emotions:', error);
+            console.error('Error in handleSubmit:', error);
+        } finally {
+            closeModal(); // 성공 여부와 상관없이 모달 닫기
         }
-        
     };
 
     return (
