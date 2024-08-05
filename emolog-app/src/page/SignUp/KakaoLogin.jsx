@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { postKakaoUser } from '../../api/postKakaoUser'; 
+import { postKakaoUser } from "../../api/postKakaoUser";
 import "./SignUp.css";
 
 const KakaoLogin = () => {
@@ -9,10 +9,10 @@ const KakaoLogin = () => {
   useEffect(() => {
     const loadKakaoSdk = () => {
       if (!window.Kakao) {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = "https://developers.kakao.com/sdk/js/kakao.js";
         script.onload = () => {
-          window.Kakao.init(process.env.REACT_APP_KAKAO_SECRET); 
+          window.Kakao.init(process.env.REACT_APP_KAKAO_SECRET);
         };
         document.head.appendChild(script);
       } else if (!window.Kakao.isInitialized()) {
@@ -33,48 +33,54 @@ const KakaoLogin = () => {
       scope: "profile_nickname,account_email",
       success: async function (authObj) {
         try {
-          const response = await window.Kakao.API.request({ url: "/v2/user/me" });
+          const response = await window.Kakao.API.request({
+            url: "/v2/user/me",
+          });
           const kakaoAccount = response.kakao_account;
           console.log(kakaoAccount);
 
           // 사용자 정보를 서버로 전송
-          const result = await postKakaoUser({
-            id: response.id,
-            connected_at: response.connected_at,
-            profile: {
-              nickname: kakaoAccount.profile.nickname,
-              thumbnail_image_url: kakaoAccount.profile.thumbnail_image_url,
-              profile_image_url: kakaoAccount.profile.profile_image_url,
-              is_default_image: kakaoAccount.profile.is_default_image
+          const result = await postKakaoUser(
+            {
+              id: response.id,
+              connected_at: response.connected_at,
+              profile: {
+                nickname: kakaoAccount.profile.nickname,
+                thumbnail_image_url: kakaoAccount.profile.thumbnail_image_url,
+                profile_image_url: kakaoAccount.profile.profile_image_url,
+                is_default_image: kakaoAccount.profile.is_default_image,
+              },
+              email: kakaoAccount.email,
+              is_email_valid: kakaoAccount.is_email_valid,
+              is_email_verified: kakaoAccount.is_email_verified,
             },
-            email: kakaoAccount.email,
-            is_email_valid: kakaoAccount.is_email_valid,
-            is_email_verified: kakaoAccount.is_email_verified
-          }, authObj.access_token);
+            authObj.access_token
+          );
 
-          console.log('사용자 데이터가 서버에 성공적으로 전송되었습니다.');
-          console.log('서버 응답:', result);
+          console.log("사용자 데이터가 서버에 성공적으로 전송되었습니다.");
+          console.log("서버 응답:", result);
 
           if (result.accessToken) {
             // 응답에 토큰이 있는 경우 저장
-            console.log('토큰:', result.accessToken);
-            localStorage.setItem('token', result.accessToken);
+            console.log("토큰:", result.accessToken);
+            localStorage.setItem("token", result.accessToken);
 
             // 기존 사용자와 신규 사용자를 구분하여 리디렉션
             if (result.isNew) {
-              navigate('/userform');
+              navigate("/userform");
             } else {
-              navigate('/');
+              navigate("/");
             }
+            navigate("/");
           } else {
-            console.error('서버 응답에 토큰이 없습니다.');
+            console.error("서버 응답에 토큰이 없습니다.");
           }
-            if(!result.new){ navigate('/');}
-            else{navigate('/userform');}
-          
-         
+                  
         } catch (error) {
-          console.error('카카오 사용자 데이터를 가져오거나 서버에 전송하는 중 오류가 발생했습니다:', error);
+          console.error(
+            "카카오 사용자 데이터를 가져오거나 서버에 전송하는 중 오류가 발생했습니다:",
+            error
+          );
         }
       },
       fail: (error) => {
@@ -85,8 +91,7 @@ const KakaoLogin = () => {
 
   return (
     <div className="kakaoIdLogin">
-      <button onClick={handleKakaoLogin}>
-      </button>
+      <button onClick={handleKakaoLogin}></button>
     </div>
   );
 };
