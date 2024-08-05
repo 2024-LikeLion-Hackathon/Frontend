@@ -47,7 +47,7 @@ function Select() {
     const emoClicked = (emotion) => {
         if (selectedEmotions.includes(emotion)) {
             setSelectedEmotions(selectedEmotions.filter((emo) => emo !== emotion));
-        } else if (selectedEmotions.length < 3) {
+        } else if (selectedEmotions.length < 6) {
             setSelectedEmotions([...selectedEmotions, emotion]);
         }    
     };
@@ -98,8 +98,8 @@ function Select() {
                     <div id="btnBox">
                         <button 
                             id="finishbtn" 
-                            className={selectedEmotions.length === 3 ? 'finish' : 'disabled'}
-                            disabled={selectedEmotions.length !== 3}
+                            className={selectedEmotions.length === 6 ? 'finish' : 'disabled'}
+                            disabled={selectedEmotions.length !== 6}
                             onClick={handleSubmit}
                         >
                             
@@ -109,7 +109,7 @@ function Select() {
                 <div id="selectEmo">
                     <div id="info">
                         <span id="modi">MoDi가 추천해주는 감정들 순서대로 보여드려요 </span>
-                        오늘의 감정과 가장 잘 어울리는 단어 3가지를 골라주세요
+                        오늘의 감정과 가장 잘 어울리는 단어 6가지를 골라주세요
                     </div>
                     <div id="emos">
                         {emotions.map((emotion) => (
