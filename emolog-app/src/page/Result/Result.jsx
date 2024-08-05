@@ -6,6 +6,7 @@ import { ko } from 'date-fns/locale';
 import { getDiaryId } from '../../api/getDiaryId';
 import { deleteDiary } from "../../api/deleteDiary";
 import { DiaryContext } from "../../context/DiaryContext";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 function Result() {
     const navigate = useNavigate();
@@ -164,7 +165,20 @@ function Result() {
         resetDiary(); // DiaryContext 초기화
         navigate('/'); // 메인 페이지로 이동
     };
-
+    const handleDiaryButtonClick = async () => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        try {
+          const response = await getDiarySummaries(todayDate, token);
+          if (response && response.diary && response.diary.date) {
+            navigate('/result', { state: { date: todayDate } });
+          } else {
+            navigate('/write');
+          }
+        } catch (error) {
+          console.error("Error fetching today's diary:", error);
+          navigate('/write');
+        }
+      };
     return (
         <div className="common-flex">
             <div className="result">
@@ -225,7 +239,7 @@ function Result() {
                 </div>
                 <div id="nevi">
                     <button id="home" onClick={() => navigate('/')}></button>
-                    <button id="diary" onClick={() => navigate('/write')}></button>
+                    <button id="diary" onClick={handleDiaryButtonClick}></button>
                     <button id="my" onClick={() => navigate('/mypage')}></button>
                 </div>
             </div>

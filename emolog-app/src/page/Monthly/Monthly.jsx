@@ -5,6 +5,7 @@ import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 import "./Monthly.css";
 
+
 const generateCalendar = (daysInMonth, firstDayIndex) => {
   const calendar = [];
   let day = 1;
@@ -77,10 +78,11 @@ const Monthly = () => {
     location.state?.date || new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedRefreshToken = localStorage.getItem("refreshToken");
-    setToken(storedToken);
-    setRefreshToken(storedRefreshToken);
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      console.log(location.state);
+    }
   }, []);
 
   useEffect(() => {
@@ -113,34 +115,46 @@ const Monthly = () => {
   }, [token, currentMonth]);
 
   const handleDayClick = async (day) => {
-    const selectedDate = `${today.getFullYear()}-${String(
-      currentMonth + 1
-    ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
+    const selectedDate = `${today.getFullYear()}-${String(currentMonth + 1).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}`;
+  
     try {
       setLoading(true);
       const response = await getDiarySummaries(selectedDate, token);
       setDiary(response);
-      setSelectedDay(
-        response.diary.date === selectedDate
-          ? response
-          : { diary: { date: selectedDate } }
-      );
+      setSelectedDay(response.diary.date === selectedDate ? response : { diary: { date: selectedDate } });
     } catch (err) {
-      console.error("Error fetching diary details:", err);
+      console.error('Error fetching diary details:', err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
       setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
     } finally {
       setLoading(false);
     }
   };
-
+  
   const handlePreviousMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1));
   };
 
   const handleNextMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 11 ? 0 : prevMonth + 1));
+  };
+
+  const handleDiaryButtonClick = async () => {
+    const todayDate = new Date().toISOString().split('T')[0];
+    try {
+      const response = await getDiarySummaries(todayDate, token);
+      if (response && response.diary && response.diary.date) {
+        navigate('/result', { state: { date: todayDate } });
+      } else {
+        navigate('/write');
+      }
+    } catch (error) {
+      console.error("Error fetching today's diary:", error);
+      navigate('/write');
+    }
   };
 
   const daysInCurrentMonth = new Date(
@@ -159,18 +173,16 @@ const Monthly = () => {
 
   const handleResultDiary = () => {
     if (selectedDay?.diary.date) {
-      navigate("/result", { state: { date: selectedDay.diary.date } });
+      navigate('/result', { state: { date: selectedDay.diary.date } });
     } else {
       alert("No diary entry selected");
     }
   };
 
   const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
-  const month = isNaN(diaryDate) ? "" : format(diaryDate, "M", { locale: ko });
-  const day = isNaN(diaryDate) ? "" : format(diaryDate, "d", { locale: ko });
-  const dayOfWeek = isNaN(diaryDate)
-    ? ""
-    : format(diaryDate, "EEEE", { locale: ko });
+  const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
+  const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
+  const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
 
   return (
     <div className="monthly-container">
@@ -219,8 +231,7 @@ const Monthly = () => {
                       const selectedDate = `${today.getFullYear()}-${String(
                         currentMonth + 1
                       ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                      const backgroundColor =
-                        diaryColors[selectedDate] || "#d9d9d9";
+                      const backgroundColor = diaryColors[selectedDate] || "#d9d9d9";
                       return (
                         <div
                           key={dayIndex}
@@ -260,7 +271,6 @@ const Monthly = () => {
           <div className="diary-section">
             {loading ? (
               <div id="no-diary">
-                 <h2>{selectedDay?.diary.date}</h2>
                 <div id="empty-diary"></div>
                 <p>이 날의 일기가 없어요</p>
                 <button id="diary_button" onClick={handleWriteDiary}>
@@ -269,7 +279,6 @@ const Monthly = () => {
               </div>
             ) : error ? (
               <div id="no-diary">
-                 <h2>{selectedDay?.diary.date}</h2>
                 <div id="empty-diary"></div>
                 <p>이 날의 일기가 없어요</p>
                 <button id="diary_button" onClick={handleWriteDiary}>
@@ -295,7 +304,10 @@ const Monthly = () => {
                 <p className="ai-message">{diary.comment}</p>
                 <p id="diary_text">이 날의 일기</p>
                 <p className="diary-entry">{diary.diary.content}</p>
-                <button id="diary_button" onClick={handleResultDiary}>
+                <button
+                  id="diary_button"
+                  onClick={handleResultDiary}
+                >
                   일기 자세히 보기
                 </button>
               </>
@@ -310,10 +322,11 @@ const Monthly = () => {
               </div>
             )}
           </div>
+
         </div>
         <div id="nevi">
           <button id="home" onClick={() => navigate("/")}></button>
-          <button id="diary" onClick={() => navigate("/write")}></button>
+          <button id="diary" onClick={handleDiaryButtonClick}></button>
           <button id="my" onClick={() => navigate("/mypage")}></button>
         </div>
       </div>

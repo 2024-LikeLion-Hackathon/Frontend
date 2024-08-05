@@ -7,6 +7,7 @@ import { ko } from 'date-fns/locale';
 import { DiaryContext } from '../../context/DiaryContext';
 import { postDiary } from "../../api/postDiary";
 import { postContent } from "../../api/postContent";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 function Select() {
     const navigate = useNavigate(); 
@@ -15,6 +16,7 @@ function Select() {
     const [emotions, setEmotions] = useState([]);
     const [selectedEmotions, setSelectedEmotions] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modal1IsOpen, setModal1IsOpen] = useState(false);
     const [token, setToken] = useState('');
     const content = location.state.content;
    
@@ -26,6 +28,7 @@ function Select() {
     }, []);
 
     useEffect(() => {
+        openModal1();
         const fetchEmotions = async () => {
             try {
                 
@@ -60,9 +63,33 @@ function Select() {
            
         }, 3000);
     };
-    
+
+    const openModal1 = () => {
+        setModal1IsOpen(true);
+        setTimeout(() => {
+            closeModal1();
+        }, 3000);
+    };
+
+    const handleDiaryButtonClick = async () => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        try {
+          const response = await getDiarySummaries(todayDate, token);
+          if (response && response.diary && response.diary.date) {
+            navigate('/result', { state: { date: todayDate } });
+          } else {
+            navigate('/write');
+          }
+        } catch (error) {
+          console.error("Error fetching today's diary:", error);
+          navigate('/write');
+        }
+      };
     const closeModal = () => {
         setModalIsOpen(false);
+    };
+    const closeModal1 = () => {
+        setModal1IsOpen(false);
     };
     
     const handleSubmit = async () => {
@@ -125,9 +152,21 @@ function Select() {
                 </div>
                 <div id="nevi">
                     <button id="home" onClick={() => navigate('/')} ></button>
-                    <button id="diary" onClick={() => navigate('/write')}></button>
+                    <button id="diary" onClick={handleDiaryButtonClick}></button>
                     <button id="my" onClick={() => navigate('/mypage')}></button>
                 </div>
+                <Modal
+                    isOpen={modal1IsOpen}
+                    onRequestClose={closeModal1}
+                    contentLabel="Pop up Message"
+                    ariaHideApp={false}
+                    className="modal"
+                    overlayClassName="overlay"
+                >
+                    <img src="load1.gif" alt="Submitting" />
+                    <div>MoDi가 오늘의 감정을 고르고 있어요</div>
+                    <div>잠시만 기다려주세요</div>
+                </Modal>
 
                 <Modal
                     isOpen={modalIsOpen}

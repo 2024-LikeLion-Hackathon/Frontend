@@ -139,7 +139,20 @@ const Weekly = () => {
     console.log(weekData);
     return weekData;
   };
-
+  const handleDiaryButtonClick = async () => {
+    const todayDate = new Date().toISOString().split('T')[0];
+    try {
+      const response = await getDiarySummaries(todayDate, token);
+      if (response && response.diary && response.diary.date) {
+        navigate('/result', { state: { date: todayDate } });
+      } else {
+        navigate('/write');
+      }
+    } catch (error) {
+      console.error("Error fetching today's diary:", error);
+      navigate('/write');
+    }
+  };
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
     try {
@@ -324,7 +337,7 @@ const Weekly = () => {
       </div>
       <div id="nevi">
         <button id="home" onClick={() => navigate("/")}></button>
-        <button id="diary" onClick={() => navigate("/write")}></button>
+        <button id="diary" onClick={handleDiaryButtonClick}></button>
         <button id="my" onClick={() => navigate("/mypage")}></button>
       </div>
     </div>
