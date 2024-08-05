@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { refreshToken } from './refreshToken'; // 경로를 실제 파일 위치에 맞게 조정
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'https://emolog.kro.kr/';
 
 /**
  * 특정 날짜의 일기 요약 데이터를 서버로부터 가져오는 함수

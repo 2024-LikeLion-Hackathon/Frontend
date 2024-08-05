@@ -50,11 +50,18 @@ const Weekly = () => {
   const fetchDiaryData = async () => {
     try {
       setLoading(true);
-
+  
       // 색상 데이터 요청
       const colorData = await fetchColorData(currentMonth, selectedWeek);
-      setDiarySummaries(colorData);
-
+  
+      // 색상 데이터가 배열인지 확인
+      if (Array.isArray(colorData)) {
+        setDiarySummaries(colorData);
+      } else {
+        console.error('Color data is not an array:', colorData);
+        setDiarySummaries([]);
+      }
+  
       // 다이어리 요약 데이터 요청
       const diaryDataResponse = await axios.get(
         `/api/diary/summary/${initialDate}`,
@@ -69,6 +76,7 @@ const Weekly = () => {
       setLoading(false);
     }
   };
+  
 
   const handleErrors = (error) => {
     if (error.response) {
@@ -130,15 +138,19 @@ const Weekly = () => {
     const startDay = (weekNumber - 1) * 7 + 1;
     const endDay = weekNumber * 7;
     const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-
+  
+    // diarySummaries가 배열인지 확인
+    const validDiarySummaries = Array.isArray(diarySummaries) ? diarySummaries : [];
+  
     const weekData = [];
     for (let day = startDay; day <= endDay && day <= daysInMonth; day++) {
       const dateStr = `${currentYear}-${String(currentMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-      const summary = diarySummaries.find(summary => summary.date === dateStr);
+      const summary = validDiarySummaries.find(summary => summary.date === dateStr);
       weekData.push(summary || { date: dateStr, color: { hexa: "d9d9d9" } });
     }
     return weekData;
   };
+  
 
   const weekData = getWeekData(selectedWeek);
 

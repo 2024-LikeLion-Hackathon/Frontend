@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000';
 
 /**
  * 카카오 사용자 정보를 서버로 전송하는 함수

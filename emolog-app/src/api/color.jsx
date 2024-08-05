@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/';
 
 
 export const fetchColorData = async (month, week) => {
