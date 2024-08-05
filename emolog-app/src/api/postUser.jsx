@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://emolog.kro.kr/';
+const BASE_URL = process.env.REACT_APP_BASE_URL //||'https://emolog.kro.kr';
 
 /**
  * 사용자 정보를 저장하는 함수

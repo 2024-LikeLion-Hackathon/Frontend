@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://emolog.kro.kr/';
+const BASE_URL = process.env.REACT_APP_BASE_URL //||'https://emolog.kro.kr';
 
 export const postLogout = async (token) => {
     try {

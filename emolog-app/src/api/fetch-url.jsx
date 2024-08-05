@@ -1,7 +1,7 @@
 import axios from 'axios';
 import FormData from 'form-data';
 
-const BASE_URL = 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com'; // 수정된 BASE_URL
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr'; // 수정된 BASE_URL
 
 /**
  * 감정 데이터를 가져오는 함수
@@ -18,6 +18,7 @@ export const fetchUrl = async (content, date, token) => {
     formData.append('date', date);
 
     // 요청 보내기
+    console.log(formData);
     const response = await axios.post(`${BASE_URL}/api/image/fetch-url`, formData, {
       headers: {
       // FormData 헤더 추가  ...formData.getHeaders(), 

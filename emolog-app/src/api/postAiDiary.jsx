@@ -10,7 +10,7 @@ const BASE_URL = 'http://3.34.51.210:8000'; // 수정된 BASE_URL
  */
 export const postAiDiary = async (content) => {
   try {
-    const response = await axios.post(`${BASE_URL}/api/ai/image`, {
+    const response =  await axios.post(`${BASE_URL}/api/ai/image`, {
       content: content
     });
     console.log("반환값",response.data);

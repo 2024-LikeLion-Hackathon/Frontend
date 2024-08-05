@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { refreshToken } from './refreshToken';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr';
 
 /**
  * 사용자 정보를 업데이트하는 함수

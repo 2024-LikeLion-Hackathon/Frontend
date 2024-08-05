@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'; // 기본 URL 설정
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr'; // 기본 URL 설정
 
 /**
  * 마이페이지 정보를 가져오는 함수
