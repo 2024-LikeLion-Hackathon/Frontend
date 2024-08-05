@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
 import Modal from 'react-modal';
 import { DiaryContext } from '../../context/DiaryContext';
-import { postAiDiary } from "../../api/postAiDiary";
 import { fetchUrl } from "../../api/fetch-url";
 
 
@@ -61,8 +60,6 @@ function WriteLog() {
             updateDiary({ date });
             console.log("Diary Updated:", { date }); //확인용 로그
             console.log(text);
-        const result = postAiDiary( text);
-        console.log('ai서버응답:',result);
         const backres = fetchUrl(text, date, token);
         console.log('백엔드서버응답:',backres);
 
