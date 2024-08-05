@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-<<<<<<< HEAD
-=======
 import { fetchColorData } from '../../api/color';
 import { format, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 import "./Weekly.css";
 
 const Weekly = () => {
@@ -28,11 +25,7 @@ const Weekly = () => {
     emotion: [],
     comment: "",
   });
-<<<<<<< HEAD
-  const [selectedDay, setSelectedDay] = useState(null);
-=======
   const [selectedDay, setSelectedDay] = useState({ diary: { date: "", emotion: [], comment: "", content: "" } });
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
   const [selectedWeek, setSelectedWeek] = useState(Math.ceil(today.getDate() / 7));
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth() + 1);
@@ -52,29 +45,15 @@ const Weekly = () => {
   useEffect(() => {
     if (!token) return;
     fetchDiaryData();
-<<<<<<< HEAD
-  }, [token, selectedWeek, currentMonth]); // token, selectedWeek, currentMonth가 변경될 때마다 호출됨
-=======
   }, [token, selectedWeek, currentMonth]);
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 
   const fetchDiaryData = async () => {
     try {
       setLoading(true);
 
       // 색상 데이터 요청
-<<<<<<< HEAD
-      const colorResponse = await axios.get(
-        `/api/color?month=${currentMonth}&week=${selectedWeek}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setDiarySummaries(colorResponse.data);
-=======
       const colorData = await fetchColorData(currentMonth, selectedWeek);
       setDiarySummaries(colorData);
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
 
       // 다이어리 요약 데이터 요청
       const diaryDataResponse = await axios.get(
@@ -95,85 +74,6 @@ const Weekly = () => {
     if (error.response) {
       switch (error.response.status) {
         case 400:
-<<<<<<< HEAD
-          switch (error.response.data.error) {
-            case "User-101":
-              setError("이미 존재하는 회원입니다.");
-              break;
-            case "User-103":
-              setError("OAuth 로그인 중 오류 발생");
-              break;
-            case "Token-101":
-              setError("Token이 유효하지 않습니다.");
-              break;
-            case "Token-102":
-              setError("토큰이 만료되었습니다.");
-              break;
-            case "Token-103":
-              setError("지원되지 않는 토큰입니다.");
-              break;
-            case "Token-104":
-              setError("토큰이 올바른 형식이 아니거나 claim이 비어 있습니다.");
-              break;
-            case "Diary-201":
-              setError("해당 날짜에 일기가 이미 존재합니다.");
-              break;
-            case "Diary-202":
-              setError("해당 일기에 접근 권한이 없습니다.");
-              break;
-            case "Diary-203":
-              setError("이미지 저장 중 오류 발생");
-              break;
-            case "Diary-204":
-              setError("API 연결 중 오류 발생");
-              break;
-            default:
-              setError("클라이언트 오류가 발생했습니다.");
-              break;
-          }
-          break;
-        case 401:
-          switch (error.response.data.error) {
-            case "User-102":
-              setError("접근 권한이 없습니다.");
-              break;
-            case "Token-100":
-              setError("존재하지 않는 회원입니다.");
-              break;
-            case "Token-104":
-              setError("해당 RefreshToken에 맞는 회원이 존재하지 않습니다.");
-              break;
-            default:
-              setError("인증 오류가 발생했습니다.");
-              break;
-          }
-          break;
-        case 404:
-          switch (error.response.data.error) {
-            case "Token-105":
-              setError("토큰이 존재하지 않습니다.");
-              break;
-            case "Diary-200":
-              setError("해당 일기가 존재하지 않습니다.");
-              break;
-            default:
-              setError("요청한 리소스를 찾을 수 없습니다.");
-              break;
-          }
-          break;
-        case 500:
-          setError("내부 서버 오류가 발생했습니다.");
-          break;
-        default:
-          setError("서버 오류가 발생했습니다.");
-          break;
-      }
-    } else if (error.request) {
-      console.error("No response received:", error.request);
-      setError("서버로부터 응답을 받지 못했습니다.");
-    } else {
-      console.error("Error setting up request:", error.message);
-=======
           setError(`클라이언트 오류: ${error.response.data.error}`);
           break;
         case 401:
@@ -192,7 +92,6 @@ const Weekly = () => {
     } else if (error.request) {
       setError("서버로부터 응답을 받지 못했습니다.");
     } else {
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
       setError("요청을 설정하는 중에 오류가 발생했습니다.");
     }
   };
@@ -245,11 +144,6 @@ const Weekly = () => {
 
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
     try {
       setLoading(true);
       const response = await axios.get(
@@ -259,19 +153,11 @@ const Weekly = () => {
         }
       );
       setDiary(response.data);
-<<<<<<< HEAD
-      setSelectedDay(response.data.diary.date === selectedDate ? response.data : { diary: { date: selectedDate } });
-    } catch (err) {
-      console.error('Error fetching diary details:', err);
-      setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
-      setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
-=======
       setSelectedDay(response.data.diary.date === selectedDate ? response.data : { diary: { date: selectedDate, emotion: [], comment: "" } });
     } catch (err) {
       console.error('Error fetching diary details:', err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
       setSelectedDay({ diary: { date: selectedDate, emotion: [], comment: "" } });
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
     } finally {
       setLoading(false);
     }
@@ -330,22 +216,10 @@ const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
                 className={`color-circle-container ${selectedDay?.diary.date === day.date ? "selected" : ""}`}
               >
                 <div
-<<<<<<< HEAD
-                  className={`color-circle ${
-                    selectedDay?.diary.date === day.date ? "selected" : ""
-                  }`}
-                  onClick={() => handleDayClick(day)}
-                  style={{
-                    backgroundColor:
-                      day.color && day.color.hexa
-                        ? `#${day.color.hexa}`
-                        : `#d9d9d9`,
-=======
                   className={`color-circle ${selectedDay?.diary.date === day.date ? "selected" : ""}`}
                   onClick={() => handleDayClick(day)}
                   style={{
                     backgroundColor: day.color && day.color.hexa ? `#${day.color.hexa}` : `#d9d9d9`,
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
                   }}
                 ></div>
               </div>
@@ -355,17 +229,10 @@ const formattedDate = formatDate(selectedDay.diary.date || today.toISOString());
             <div id="loading">Loading...</div>
           ) : selectedDay?.diary ? (
             <div className="diary-container">
-<<<<<<< HEAD
-              <h2>{selectedDay.diary.date}</h2>
-              <p id="emotion_text">대표 감정</p>
-              <div className="emotions">
-                {selectedDay.emotion.map((emotion, index) => (
-=======
               <h2>{formattedDate}</h2>
               <p id="emotion_text">대표 감정</p>
               <div className="emotions">
                 {selectedDay.diary.emotion.map((emotion, index) => (
->>>>>>> 92c91f3d8e5565e4de3ba9168a3fc74e9879e095
                   <button key={index} className="emotion">
                     {emotion}
                   </button>
