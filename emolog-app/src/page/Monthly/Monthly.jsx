@@ -255,6 +255,7 @@ const Monthly = () => {
           <div className="diary-section">
   {loading ? (
     <div id="no-diary">
+      <h2>{month}월 {day}일 {dayOfWeek}</h2>
       <div id="empty-diary"></div>
       <p>이 날의 일기가 없어요</p>
       <button id="diary_button" onClick={handleWriteDiary}>
@@ -263,6 +264,7 @@ const Monthly = () => {
     </div>
   ) : error ? (
     <div id="no-diary">
+      <h2>{month}월 {day}일 {dayOfWeek}</h2>
       <div id="empty-diary"></div>
       <p>이 날의 일기가 없어요</p>
       <button id="diary_button" onClick={handleWriteDiary}>
@@ -297,7 +299,7 @@ const Monthly = () => {
     </>
   ) : (
     <div id="no-diary">
-      <h2>{selectedDay?.diary.date}</h2>
+      <h2>{month}월 {day}일 {dayOfWeek}</h2>
       <div id="empty-diary"></div>
       <p>이 날의 일기가 없어요</p>
       <button id="diary_button" onClick={handleWriteDiary}>
