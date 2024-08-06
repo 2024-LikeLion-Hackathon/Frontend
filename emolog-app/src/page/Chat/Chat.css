@@ -359,7 +359,55 @@ background-image: url('../../asset/img/emobtn_go.png');
  
     }
 
+
+
+    }
+
+    @media screen and (max-width: 500px) {
+        .chat{
+            width: 100vw;
+            #logoBox{
+                width: 98vw;
+            }
+            #logo{
+                left: auto;
+            }
+            #secondBox{
+                width: 98vw;
+            }
+            #inputbox{
+                width: 98vw;
+            }
+            #chatbox{
+                width: 100vw;
+            }
+            .messages{
+                width: 98vw;
+            }
+            .message_form{
+                display: flex;
+                justify-content: center;
+            }
+            #messageinput{
+                width: 90vw;
+                justify-self: center;
+                left: auto;
+            }
+            #submitbtn{
+                margin-right: 20px;
+                background-size: contain;
+                background-repeat: no-repeat;
+            }
+            #nevi{
+                width: 100vw;
+                left: auto;
+            }
+        }
+        
+    }
+
+
     
-}
+
 
 

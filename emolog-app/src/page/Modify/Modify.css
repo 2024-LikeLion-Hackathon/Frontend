@@ -236,3 +236,34 @@
     }
 
 }
+@media screen and (max-width: 500px) {
+    .modify{
+        width: 100vw;
+        #logoBox{
+            width: 98vw;
+        }
+        #logo{
+            left: auto;
+        }
+        #secondBox{
+            width: 98vw;
+        }
+        #titlebtn{
+            width: 98vw;
+        }
+        #nickname{
+            width: 98vw;
+        }
+        #age{
+            width: 98vw;
+        }
+        button{
+            width: 98vw;
+        }
+        #nevi{
+            width: 100vw;
+            left: auto;
+        }
+    }
+
+}

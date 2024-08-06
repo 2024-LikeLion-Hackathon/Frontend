@@ -18,7 +18,7 @@
         width: 468px;
         height:10% ;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
 
     }
     #cancel{
@@ -246,8 +246,8 @@
 
         /* Rectangle 51 */
 
-    position: absolute;
-    width: 378px;
+   
+    
     height: 440px;
     
 
@@ -283,3 +283,69 @@
     margin-bottom: 20px; /* 이미지 아래 여백 추가 */
   }
   
+@media screen and (max-width: 500px) {
+    .writelog{
+        width: 100vw;
+       
+
+        #logoBox{
+            width: 100%;
+            justify-content: flex-start;
+            
+        }
+        #logo{
+            margin-left: 10px;
+            left: auto;
+            position: relative;
+            
+        }
+        #date{
+            margin-left: 10px;
+        }
+         #cancle{
+            width: 98vw;
+         }
+         #secondBox{
+            width: 98vw;
+
+         }
+         #inputbox{
+            width: 97vw;
+            padding-left: 10px;
+         }
+          #nevi{
+            width: 100vw;
+         }
+         #loginput{
+            justify-content: flex-start;
+            width: 97vw;
+         }
+         #loginput::placeholder{
+            text-align:start;
+            
+
+            width: auto;
+            height: 18px;
+            
+    
+            font-family: 'Pretendard';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 18px;
+            /* identical to box height, or 129% */
+            display: flex;
+            align-items: center;
+    
+            color: #878787;
+    
+        
+        }
+
+       
+    
+    }
+   
+   
+    
+}
