@@ -32,11 +32,6 @@ function App() {
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/modify" element={<Modify />} />
 
-          {/* Default route to redirect based on user signed-in status */}
-          <Route
-            path="/"
-            element={isSignedIn ? <Navigate to="/monthly" /> : <Navigate to="/signup" />}
-          />
         </Routes>
       </Router>
     </DiaryProvider>
