@@ -24,6 +24,7 @@
         height:10% ;
         display: flex;
         align-items: center;
+        position: fixed;
 
     }
 
@@ -72,7 +73,7 @@
         justify-content: space-between;
         margin-bottom: 12px;
         align-items: center;
-
+        position: fixed;
     }
     #date{
         
@@ -180,7 +181,7 @@
 
         
         width: 468px;
-        max-height: 640px;
+        max-height: 52%;
         overflow-y: scroll;
         position: absolute;
         top: 257px;
@@ -302,8 +303,14 @@
         #logoBox{
             width: 98vw;
         }
+        #info{
+            left: auto;
+            margin: 10px;
+            margin-top: -8px;
+        }
         #logo{
             left: auto;
+            margin-left: 10px;
         }
         #secondBox{
             width:98vw ;
@@ -313,10 +320,12 @@
         }
         #emos{
             width: 98vw;
+          
         }
         #nevi{
             width: 100vw;
             left: auto;
+            position: fixed;
         }
 
 

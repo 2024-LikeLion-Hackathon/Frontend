@@ -244,6 +244,7 @@
         }
         #logo{
             left: auto;
+            margin-left: 10px;
         }
         #secondBox{
             width: 98vw;
@@ -252,7 +253,7 @@
             width: 98vw;
         }
         #nickname{
-            width: 98vw;
+            width: 80vw;
         }
         #age{
             width: 98vw;
