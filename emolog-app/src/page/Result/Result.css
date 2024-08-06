@@ -271,17 +271,26 @@
         position: absolute;
         top:782px;
         display: flex;
-        justify-content: space-around;
+        flex-direction: column;
+        align-items: center;
+       
     }
-
+    .emotion-row{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        margin-bottom: 10px;
+    }
     #dt_container{
         position: absolute;
-        top:890px;
+        top:910px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
         height: auto;
+        
 
     }
     
@@ -546,6 +555,7 @@
         }
         #logo{
             left: auto;
+            margin-left: 10px;
         }
         #secondBox{
             width: 98vw;
@@ -554,12 +564,8 @@
             width: 100vw;
         }
         
-      
-        #ment{
-           
-        }
-        #colorBox{
-            width: 94.2vw;
+        #date{
+            margin-left: 10px;
         }
         
         #emotions{
