@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './Modify.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUser } from '../../api/getUser'; // getUser 함수 import
 import { putUser } from "../../api/putUser";
 

@@ -21,10 +21,35 @@
         align-items: center;
 
     }
-    #emobtn{
+    .emotion_default{
 
   
-width: 151px;
+        width: 151px;
+        height: 44px;
+
+        font-family: 'Pretendard';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+
+
+
+        color: #000000;
+
+
+        background: #ffffff;
+        border-radius: 5px;
+        border: none;
+        margin: 5px;
+        background-image: url('../../asset/img/emobtn.png');
+
+
+
+
+    }
+
+    .emotion_selected{
+        width: 151px;
 height: 44px;
 
 font-family: 'Pretendard';
@@ -41,11 +66,7 @@ background: #ffffff;
 border-radius: 5px;
 border: none;
 margin: 5px;
-background-image: url('../../asset/img/emobtn.png');
-
-
-
-
+background-image: url('../../asset/img/emobtn_go.png');
     }
 
 

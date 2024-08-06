@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-northeast-2.elasticbeanstalk.com';
+const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr';
 
 /**
  * 일기 데이터를 서버로 전송하는 함수
@@ -9,6 +9,8 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://emolog-server.ap-nort
  * @returns {Promise<Object>} 서버 응답 데이터
  */
 export const postDiary = async (diaryData, token) => {
+
+  
   try {
     console.log('Sending diary data:', diaryData, token); // 추가된 로그
     const response = await axios.post(`${BASE_URL}/api/diary`, diaryData, {

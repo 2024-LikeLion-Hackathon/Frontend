@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import './Result.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { format, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { getDiaryId } from '../../api/getDiaryId';
+import { deleteDiary } from "../../api/deleteDiary";
+import { DiaryContext } from "../../context/DiaryContext";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 function Result() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { resetDiary } = useContext(DiaryContext);
     const initialDate = location.state?.date || new Date().toISOString().split('T')[0];
     const [diary, setDiary] = useState({
         diary: {
@@ -23,43 +27,54 @@ function Result() {
         },
         emotion: [],
         comment: "",
+        url: "",
         q_a: {
             question: "",
             answer: ""
         }
+
     });
     const [token, setToken] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [diaryId, setDiaryId] = useState('');
 
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            console.log(storedToken);
             setToken(storedToken);
+            console.log(location.state);
         }
     }, []);
 
     useEffect(() => {
-        if (!token) return; // 토큰이 없으면 데이터를 가져오지 않음
+        if (!token) return;
 
-        // 마이페이지 정보를 가져오는 함수 호출
         const fetchDiaryData = async () => {
             try {
                 setLoading(true);
+                const storedDiaryId = localStorage.getItem(initialDate);
+                if (!storedDiaryId) {
+                    
+                    const DiaryData = await getDiaryId(initialDate, token);
+                     setDiary(DiaryData);
+                     return; // Diary ID가 없으면 함수 종료
+                }
+                else{
+                setDiaryId(storedDiaryId); // 상태에 ID 저장
                 const DiaryData = await getDiaryId(initialDate, token);
-                setDiary(DiaryData);
+                setDiary(DiaryData);}
             } catch (error) {
-                console.error('Error fetching mypage data:', error);
-                setError('Error fetching mypage data');
+                console.error('Error fetching diary data:', error);
+                setError('Error fetching diary data');
             } finally {
                 setLoading(false);
             }
         };
+        
 
         fetchDiaryData();
-    }, [token]);
-
+    }, [token, initialDate]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading diary data.</div>;
@@ -72,21 +87,28 @@ function Result() {
 
     // 문자열을 배열로 변환
     const parseArray = (str) => {
-        return str ? str.split(',').map(item => item.trim()).filter(item => item.length > 0) : [];
+        return str ? str.split('/').map(item => item.trim()).filter(item => item.length > 0) : [];
     };
 
-    const emotions = parseArray(diary.emotion.join(','));
+    const emotions = parseArray(diary.emotion.join('/'));
 
-    // 문자열을 메시지 배열로 변환
+    // 문자열을 메시지 배열로 변환 (질문과 답변을 따로 파싱하고 순서대로 합침)
     const parseMessages = (questions, answers) => {
         const messages = [];
-        const qA = [...parseArray(questions), ...parseArray(answers)];
+        const qArray = parseArray(questions);
+        const aArray = parseArray(answers);
+        const maxLength = Math.max(qArray.length, aArray.length);
+
         let id = 1;
 
-        qA.forEach((item, index) => {
-            const sender = index % 2 === 0 ? 'user' : 'ai';
-            messages.push({ id: id++, sender: sender, text: item });
-        });
+        for (let i = 0; i < maxLength; i++) {
+            if (i < qArray.length) {
+                messages.push({ id: id++, sender: 'ai', text: qArray[i] });
+            }
+            if (i < aArray.length) {
+                messages.push({ id: id++, sender: 'user', text: aArray[i] });
+            }
+        }
 
         return messages;
     };
@@ -124,73 +146,102 @@ function Result() {
         );
     };
 
-    const deleteHandler = () => {
+    const deleteHandler = async () => {
+        console.log("1",diaryId);
         if (window.confirm('삭제하시겠습니까?')) {
-            // 삭제 로직을 여기에 추가하세요.
-            console.log('삭제되었습니다.');
+            try {
+                
+                await deleteDiary(diaryId ,token);
+                console.log('삭제되었습니다.');
+                navigate('/'); // 삭제 후 메인 페이지로 이동
+            } catch (error) {
+                console.error('Error deleting diary:', error);
+                setError('Error deleting diary');
+            }
         }
     };
 
+    const handleFinish = () => {
+        resetDiary(); // DiaryContext 초기화
+        navigate('/'); // 메인 페이지로 이동
+    };
+    const handleDiaryButtonClick = async () => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        try {
+          const response = await getDiarySummaries(todayDate, token);
+          if (response && response.diary && response.diary.date) {
+            navigate('/result', { state: { date: todayDate } });
+          } else {
+            navigate('/write');
+          }
+        } catch (error) {
+          console.error("Error fetching today's diary:", error);
+          navigate('/write');
+        }
+      };
     return (
-        <div className="result">
-            <div id="logoBox">
-                <div id="logo"></div>
-            </div>
-            <div id="secondBox">
-                <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
-                <div id="btnBox">
-                    <button id="finishbtn"></button>
+        <div className="common-flex">
+            <div className="result">
+                <div id="logoBox">
+                    <div id="logo"></div>
                 </div>
-            </div>
-            <div id="resultBox">
-                <div id="img"></div>
-                <div id="ment">{diary.comment}</div>
-                <div id="colorBox">
-                    <div id="color" style={{ backgroundColor: `#${diary.color.hexa}` }}></div>
-                    <div className="color_container"></div>
-                    <div id="rgb">
-                        <div id="r" className="rgb_container">
-                            <div className="rgbbox">R</div>
-                            <div id="r_value" className="rgb_value">{diary.color.red}</div>
-                        </div>
-                        <div id="g" className="rgb_container">
-                            <div className="rgbbox">G</div>
-                            <div id="g_value" className="rgb_value">{diary.color.green}</div>
-                        </div>
-                        <div id="b" className="rgb_container">
-                            <div className="rgbbox">B</div>
-                            <div id="b_value" className="rgb_value">{diary.color.blue}</div>
-                        </div>
+                <div id="secondBox">
+                    <div id="date">{month}월 {day}일 {dayOfWeek}의 일기</div>
+                    <div id="btnBox">
+                        <button id="finishbtn" onClick={handleFinish}></button>
                     </div>
                 </div>
-                <div id="color_hexa">#{diary.color.hexa}</div>
-                <div id="emotions">
-                    {emotions.map((emotion) => (
-                        <button
-                            key={emotion}
-                            className={`emotion`}
-                        >
-                            {emotion}
-                        </button>
-                    ))}
-                </div>
-                <div id="dt_container">
-                    <div id="diary_content">{diary.diary.content}</div>
-                    <div id="text">
-                        <div id="icon"></div>
-                        <div id="chat_rep">MoDi와의 대화 다시보기</div>
+                <div id="resultBox">
+                    <div id="img" style={{ backgroundImage:`url(${diary.url})` }}></div>
+                    <div id="ment">{diary.comment}</div>
+                    <div id="colorBox">
+                        <div id="color" style={{ backgroundColor: diary.color.hexa ? `#${diary.color.hexa}` : 'black' }}></div>
+
+                        <div className="color_container"></div>
+                        <div id="rgb">
+                            <div id="r" className="rgb_container">
+                                <div className="rgbbox">R</div>
+                                <div id="r_value" className="rgb_value">{diary.color.red}</div>
+                            </div>
+                            <div id="g" className="rgb_container">
+                                <div className="rgbbox">G</div>
+                                <div id="g_value" className="rgb_value">{diary.color.green}</div>
+                            </div>
+                            <div id="b" className="rgb_container">
+                                <div className="rgbbox">B</div>
+                                <div id="b_value" className="rgb_value">{diary.color.blue}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div id="chat">
-                        <MessageList messages={messages} />
+                    <div id="color_hexa">#{diary.color.hexa}</div>
+                    <div id="emotions">
+                        {emotions.map((emotion) => (
+                            <button
+                                key={emotion}
+                                className={`emotion`}
+                            >
+                                {emotion}
+                            </button>
+                        ))}
                     </div>
-                    <button id="lastbtn" onClick={() => navigate('/')}>확인</button>
-                    <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
+                    <div id="dt_container">
+                        <div id="diary_content">{diary.diary.content}</div>
+                        <div id="text">
+                            <div id="icon"></div>
+                            <div id="chat_rep">MoDi와의 대화 다시보기</div>
+                        </div>
+                        <div id="chat">
+                            <MessageList messages={messages} />
+                        </div>
+                        <button id="lastbtn" onClick={handleFinish}>확인</button>
+                        <button id="deletebtn" onClick={deleteHandler}>삭제하기</button>
+                    </div>
                 </div>
-            </div>
-            <div id="nevi">
-                <button id="home" onClick={() => navigate('/')} ></button>
-                <button id="diary" onClick={() => navigate('/write')}></button>
-                <button id="my" onClick={() => navigate('/mypage')}></button>
+                <div id="nevi">
+                    <button id="home" onClick={() => navigate('/')}></button>
+                    <button id="diary" onClick={handleDiaryButtonClick}></button>
+                    <button id="my" onClick={() => navigate('/mypage')}></button>
+                </div>
             </div>
         </div>
     );

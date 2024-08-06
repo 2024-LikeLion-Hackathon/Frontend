@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import './Mypage.css';
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { getMypage } from '../../api/getMypage';
 import { postLogout } from "../../api/postLogout";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
 
 function Mypage() {
     const navigate = useNavigate();  
@@ -60,7 +61,20 @@ function Mypage() {
     };
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-
+    const handleDiaryButtonClick = async () => {
+        const todayDate = new Date().toISOString().split('T')[0];
+        try {
+          const response = await getDiarySummaries(todayDate, token);
+          if (response && response.diary && response.diary.date) {
+            navigate('/result', { state: { date: todayDate } });
+          } else {
+            navigate('/write');
+          }
+        } catch (error) {
+          console.error("Error fetching today's diary:", error);
+          navigate('/write');
+        }
+      };
     return (
         <div className="Mypage">
             <div id="logoBox">
@@ -87,7 +101,7 @@ function Mypage() {
             <div id="copyR"></div>
             <div id="nevi">
                 <button id="home" onClick={() => navigate('/')} ></button>
-                <button id="diary" onClick={() => navigate('/write')}></button>
+                <button id="diary" onClick={handleDiaryButtonClick}></button>
                 <button id="my" onClick={() => navigate('/mypage')}></button>
             </div>
         </div>

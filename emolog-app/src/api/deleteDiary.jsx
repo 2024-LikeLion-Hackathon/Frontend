@@ -4,16 +4,17 @@ const BASE_URL = process.env.REACT_APP_BASE_URL //|| 'https://emolog.kro.kr';
 
 /**
  * 특정 ID의 일기 데이터를 서버로부터 가져오는 함수
- * @param {} date - 가져올 일기의 ID
- * @param {string} token - 사용자 토큰
+ * @param {string} id - 가져올 일기의 ID
  * @returns {Promise<Object>} 서버 응답 데이터
  */
-export const getDiaryId = async (date, token) => {
+export const deleteDiary= async (id, token) => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/diary/${date}`, {
+    console.log(id);
+    const response = await axios.delete(`${BASE_URL}/api/diary/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가
-             
+        
+       
       },
     });
     console.log(response.data);

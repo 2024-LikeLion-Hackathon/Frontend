@@ -1,22 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import { useNavigate, useLocation } from "react-router-dom";
+import { getDiarySummaries } from "../../api/getDiarySummaries";
+import { format, parseISO } from "date-fns";
+import { ko } from "date-fns/locale";
 import "./Monthly.css";
 
-const months = [
-  "1월",
-  "2월",
-  "3월",
-  "4월",
-  "5월",
-  "6월",
-  "7월",
-  "8월",
-  "9월",
-  "10월",
-  "11월",
-  "12월",
-];
 
 const generateCalendar = (daysInMonth, firstDayIndex) => {
   const calendar = [];
@@ -40,82 +28,115 @@ const generateCalendar = (daysInMonth, firstDayIndex) => {
   return calendar;
 };
 
+const fetchColors = async (month, token) => {
+  const response = await fetch(`/api/color?month=${month}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch color data");
+  }
+
+  return response.json();
+};
+
 const Monthly = () => {
   const navigate = useNavigate();
   const today = new Date();
+  const [diary, setDiary] = useState({
+    diary: {
+      date: "",
+      dayOfWeek: "",
+      content: "",
+    },
+    color: {
+      hexa: "",
+      red: 147,
+      green: 134,
+      blue: 92,
+    },
+    emotion: [],
+    comment: "",
+    q_a: {
+      question: "",
+      answer: "",
+    },
+    summary: "",
+    url: "",
+  });
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState(null);
-  const [diarySummaries, setDiarySummaries] = useState([]);
+  const [diaryColors, setDiaryColors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState('');
-  
+  const [token, setToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
+  const location = useLocation();
+  const initialDate =
+    location.state?.date || new Date().toISOString().split("T")[0];
+
   useEffect(() => {
-    // 로컬 스토리지에서 토큰 읽어오기
     const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
+    if (storedToken) {
+      setToken(storedToken);
+      console.log(location.state);
+    }
   }, []);
 
-  const currentYear = today.getFullYear();
-  const todayString = `${currentYear}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
   useEffect(() => {
-    const fetchDiarySummaries = async () => {
-      setLoading(true);
+    if (!token) return;
+
+    const fetchDiaryData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/color?month=${currentMonth + 1}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가
-            },
-          }
-        );
-        setDiarySummaries(response.data || []); // 응답 데이터가 없을 경우 빈 배열로 초기화
-      } catch (err) {
-        setError("다이어리 요약 정보를 가져오는 데 실패했습니다.");
+        setLoading(true);
+
+        const colorData = await fetchColors(currentMonth + 1, token);
+        const colorMap = colorData.reduce((acc, entry) => {
+          acc[entry.date] = `#${entry.hexa}`;
+          return acc;
+        }, {});
+
+        setDiaryColors(colorMap);
+
+        const DiaryData = await getDiarySummaries(initialDate, token);
+        setDiary(DiaryData);
+        setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : null);
+      } catch (error) {
+        console.error("Error fetching diary data:", error);
+        setError("Error fetching diary data");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDiarySummaries();
-  }, [currentMonth, token]);
+    fetchDiaryData();
+  }, [token, currentMonth]);
 
   const handleDayClick = async (day) => {
-    const selectedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    const selected = diarySummaries.find(
-      (entry) => entry.diary?.date === selectedDate
-    ) || { date: selectedDate, diary: null };
+  const selectedDate = `${today.getFullYear()}-${String(
+    currentMonth + 1
+  ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
-    setSelectedDay(selected);
-    
-    if (selected.diary) {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/diary/summary/${selected.date}`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`, // 사용자 토큰을 헤더에 추가
-            },
-          }
-        );
-        setSelectedDay({
-          ...selected,
-          diary: response.data.diary,
-          color: response.data.color,
-          imageUrl: response.data.imageUrl,
-          emotion: response.data.emotion,
-          comment: response.data.comment,
-        });
-      } catch (err) {
-        setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  try {
+    setLoading(true);
+    const response = await getDiarySummaries(selectedDate, token);
+    setDiary(response);
+    setSelectedDay(
+      response.diary.date === selectedDate
+        ? response
+        : { diary: { date: selectedDate } }
+    );
+  } catch (err) {
+    console.error("Error fetching diary details:", err);
+    setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
+    setSelectedDay({ diary: { date: selectedDate } }); // 일기가 없는 날에도 선택되도록 설정
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handlePreviousMonth = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1));
@@ -125,15 +146,47 @@ const Monthly = () => {
     setCurrentMonth((prevMonth) => (prevMonth === 11 ? 0 : prevMonth + 1));
   };
 
-  const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+  const handleDiaryButtonClick = async () => {
+    const todayDate = new Date().toISOString().split('T')[0];
+    try {
+      const response = await getDiarySummaries(todayDate, token);
+      if (response && response.diary && response.diary.date) {
+        navigate('/result', { state: { date: todayDate } });
+      } else {
+        navigate('/write');
+      }
+    } catch (error) {
+      console.error("Error fetching today's diary:", error);
+      navigate('/write');
+    }
+  };
+
+  const daysInCurrentMonth = new Date(
+    today.getFullYear(),
+    currentMonth + 1,
+    0
+  ).getDate();
+  const firstDayIndex = new Date(today.getFullYear(), currentMonth, 1).getDay();
   const adjustedFirstDayIndex = (firstDayIndex + 6) % 7;
 
   const calendar = generateCalendar(daysInCurrentMonth, adjustedFirstDayIndex);
 
   const handleWriteDiary = () => {
-    navigate("/write", { state: { date: selectedDay?.date } });
+    navigate("/write", { state: { date: selectedDay?.diary.date } });
   };
+
+  const handleResultDiary = () => {
+    if (selectedDay?.diary.date) {
+      navigate('/result', { state: { date: selectedDay.diary.date } });
+    } else {
+      alert("No diary entry selected");
+    }
+  };
+
+  const diaryDate = diary.diary.date ? parseISO(diary.diary.date) : new Date();
+  const month = isNaN(diaryDate) ? '' : format(diaryDate, 'M', { locale: ko });
+  const day = isNaN(diaryDate) ? '' : format(diaryDate, 'd', { locale: ko });
+  const dayOfWeek = isNaN(diaryDate) ? '' : format(diaryDate, 'EEEE', { locale: ko });
 
   return (
     <div className="monthly-container">
@@ -143,11 +196,7 @@ const Monthly = () => {
             <img src={require("../../asset/img/logo.png")} alt="Logo" />
           </div>
           <div className="tab">
-            <span
-              className="active"
-              id="month"
-              onClick={() => navigate("/monthly")}
-            >
+            <span className="active" id="month" onClick={() => navigate("/")}>
               Month
             </span>
             <span id="bar"></span>
@@ -160,7 +209,7 @@ const Monthly = () => {
         <div id="mainBoard">
           <div id="month_tab">
             <div id="month_text">
-              {currentYear}년 {currentMonth + 1}월
+              {today.getFullYear()}년 {currentMonth + 1}월
             </div>
             <div id="button_tab">
               <button onClick={handlePreviousMonth}>&lt;</button>
@@ -171,31 +220,27 @@ const Monthly = () => {
           <div className="calendar-container">
             <div className="calendar">
               <div className="calendar-header">
-                {["월", "화", "수", "목", "금", "토", "일"].map((day, index) => (
-                  <div key={index} className="calendar-header-day">
-                    {day}
-                  </div>
-                ))}
+                {["월", "화", "수", "목", "금", "토", "일"].map(
+                  (day, index) => (
+                    <div key={index} className="calendar-header-day">
+                      {day}
+                    </div>
+                  )
+                )}
               </div>
               <div className="calendar-body">
                 {calendar.map((week, weekIndex) => (
                   <div key={weekIndex} className="calendar-week">
                     {week.map((day, dayIndex) => {
-                      const selectedDate = `${currentYear}-${String(
+                      const selectedDate = `${today.getFullYear()}-${String(
                         currentMonth + 1
                       ).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                      const diaryEntry = diarySummaries.find(
-                        (entry) => entry.diary?.date === selectedDate
-                      );
-                      const backgroundColor = diaryEntry
-                        ? diaryEntry.color.hexa
-                        : "#d9d9d9";
-
+                      const backgroundColor = diaryColors[selectedDate] || "#d9d9d9";
                       return (
                         <div
                           key={dayIndex}
                           className={`calendar-day ${day ? "" : "null"} ${
-                            day && selectedDay?.date === selectedDate
+                            day && selectedDay?.diary.date === selectedDate
                               ? "selected"
                               : ""
                           }`}
@@ -203,7 +248,12 @@ const Monthly = () => {
                         >
                           {day && (
                             <>
-                              <div id="union" style={{ backgroundColor }}></div>
+                              <div
+                                id="union"
+                                style={{
+                                  backgroundColor: backgroundColor,
+                                }}
+                              ></div>
                               {day}
                             </>
                           )}
@@ -226,7 +276,7 @@ const Monthly = () => {
             {loading ? (
               <div id="no-diary">
                 <div id="empty-diary"></div>
-                <p>이 날은 일기가 없어요</p>
+                <p>이 날의 일기가 없어요</p>
                 <button id="diary_button" onClick={handleWriteDiary}>
                   일기 쓰러 가기
                 </button>
@@ -234,7 +284,7 @@ const Monthly = () => {
             ) : error ? (
               <div id="no-diary">
                 <div id="empty-diary"></div>
-                <p>데이터를 가져오는 중 오류가 발생했습니다</p>
+                <p>이 날의 일기가 없어요</p>
                 <button id="diary_button" onClick={handleWriteDiary}>
                   일기 쓰러 가기
                 </button>
@@ -242,64 +292,46 @@ const Monthly = () => {
             ) : selectedDay?.diary ? (
               <>
                 <h2>
-                  {selectedDay.diary.date}
-                  <span className="hex-code">{selectedDay.color?.hexa}</span>
+                  {month}월 {day}일 {dayOfWeek}
+                  <span className="hex-code">#{diary.color?.hexa}</span>
                 </h2>
-                <div className="color-circle-container">
-                  {diarySummaries.map((day, index) => (
-                    <div
-                      key={index}
-                      className={`color-circle ${
-                        selectedDay.diary.date === day.diary?.date
-                          ? "selected"
-                          : ""
-                      }`}
-                      style={{ backgroundColor: day.color.hexa }}
-                      onClick={() => handleDayClick(day.diary.date)}
-                    ></div>
-                  ))}
-                </div>
-                <img src={selectedDay.imageUrl} alt="Diary illustration" />
+                <img src={diary.url} alt="Diary illustration" />
+                <p id="emotion_text">대표 감정</p>
                 <div className="emotions">
-                  <p id="emotion_text">대표 감정</p>
-                  {selectedDay.emotion.map((emotion, index) => (
-                    <span key={index} className="emotion-tag">
+                  {diary.emotion.map((emotion, index) => (
+                    <button key={index} className="emotion">
                       {emotion}
-                    </span>
+                    </button>
                   ))}
                 </div>
                 <p id="ai_text">모디의 한 마디</p>
-                <p className="ai-message">{selectedDay.comment}</p>
+                <p className="ai-message">{diary.comment}</p>
                 <p id="diary_text">이 날의 일기</p>
-                <p className="diary-entry">{selectedDay.diary.content}</p>
+                <p className="diary-entry">{diary.diary.content}</p>
                 <button
                   id="diary_button"
-                  onClick={() =>
-                    alert("일기 자세히 보기 기능은 추후 추가될 예정입니다.")
-                  }
+                  onClick={handleResultDiary}
                 >
                   일기 자세히 보기
                 </button>
               </>
             ) : (
               <div id="no-diary">
-                <h2>
-                  {selectedDay?.date}
-                  <span className="hex-code">{selectedDay?.color?.hexa}</span>
-                </h2>
+                <h2>{selectedDay?.diary.date}</h2>
                 <div id="empty-diary"></div>
-                <p>이 날은 일기가 없어요</p>
+                <p>이 날의 일기가 없어요</p>
                 <button id="diary_button" onClick={handleWriteDiary}>
                   일기 쓰러 가기
                 </button>
               </div>
             )}
           </div>
+
         </div>
         <div id="nevi">
-          <button id="home" onClick={() => navigate('/')}></button>
-          <button id="diary" onClick={() => navigate('/write')}></button>
-          <button id="my" onClick={() => navigate('/mypage')}></button>
+          <button id="home" onClick={() => navigate("/")}></button>
+          <button id="diary" onClick={handleDiaryButtonClick}></button>
+          <button id="my" onClick={() => navigate("/mypage")}></button>
         </div>
       </div>
     </div>
