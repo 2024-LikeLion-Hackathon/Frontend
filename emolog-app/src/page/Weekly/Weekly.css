@@ -136,6 +136,7 @@
 
 .diary-container {
   width: 345px;
+  min-height:700px;
   top: 20px;
   left: 130px;
   background: #f4f4f4;

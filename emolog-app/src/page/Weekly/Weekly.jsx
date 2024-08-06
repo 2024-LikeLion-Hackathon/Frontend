@@ -65,7 +65,9 @@ const Weekly = () => {
       try {
         setLoading(true);
 
+        // 색상 데이터 요청
         const colorData = await fetchColor(token, currentMonth, selectedWeek);
+        console.log('Color Data:', colorData); // 색상 데이터 확인
         const colorArray = colorData.map((entry) => ({
           date: entry.date,
           color: `#${entry.hexa}`,
@@ -76,10 +78,9 @@ const Weekly = () => {
         // 다이어리 요약 데이터 요청
         const DiaryData = await getDiarySummaries(initialDate, token);
         setDiary(DiaryData);
-        setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : null);
+        setSelectedDay(DiaryData.diary.date === initialDate ? DiaryData : { diary: { date: initialDate, emotion: [], comment: "" } });
       } catch (error) {
-        console.error("Error fetching diary data:", error);
-        setError("Error fetching diary data");
+        handleErrors(error);
       } finally {
         setLoading(false);
       }
@@ -87,6 +88,7 @@ const Weekly = () => {
     fetchDiaryData();
   }, [token, selectedWeek, currentMonth]);
 
+  // 오류 처리
   const handleErrors = (error) => {
     if (error.response) {
       switch (error.response.status) {
@@ -120,6 +122,7 @@ const Weekly = () => {
     }
   }, [diarySummaries, selectedWeek, currentMonth, currentYear]);
 
+  // 주간 데이터 생성
   const getWeekData = (weekNumber) => {
     const startDay = (weekNumber - 1) * 7 + 1;
     const endDay = weekNumber * 7;
@@ -136,9 +139,11 @@ const Weekly = () => {
       );
       weekData.push(summary || { date: dateStr, color: "#d9d9d9" });
     }
-    console.log(weekData);
+    console.log('Week Data:', weekData); // 주간 데이터 확인
     return weekData;
   };
+
+  // 다이어리 버튼 클릭 핸들러
   const handleDiaryButtonClick = async () => {
     const todayDate = new Date().toISOString().split("T")[0];
     try {
@@ -154,6 +159,7 @@ const Weekly = () => {
     }
   };
 
+  // 일기 클릭 핸들러
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
 
@@ -168,6 +174,7 @@ const Weekly = () => {
           ? response.data
           : { diary: { date: selectedDate, emotion: [], comment: "" } }
       );
+      console.log("성공");
     } catch (err) {
       console.error("Error fetching diary details:", err);
       setError("다이어리 세부 정보를 가져오는 데 실패했습니다.");
@@ -278,7 +285,7 @@ const Weekly = () => {
                   }`}
                   onClick={() => handleDayClick(day)}
                   style={{
-                    backgroundColor: day.color ? day.color : `#d9d9d9`,
+                    backgroundColor: day.color || `#d9d9d9`,
                   }}
                 ></div>
               </div>
