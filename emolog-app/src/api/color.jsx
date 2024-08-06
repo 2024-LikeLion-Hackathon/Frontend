@@ -1,11 +1,27 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL; //|| 'https://emolog.kro.kr';
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'https://emolog.kro.kr';
 
+// 월 단위로 색상 데이터를 가져오는 함수
+export const fetchMonthlyColors = async (token, month) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/color?month=${month}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching monthly color data:", error);
+    throw error;
+  }
+};
+
+// 주 단위로 색상 데이터를 가져오는 함수
 export const fetchColor = async (token, month, week) => {
   try {
     const fetchWeekData = async (weekNumber) => {
-      const response = await axios.get(`/api/color?month=${month}&week=${weekNumber}`, {
+      const response = await axios.get(`${BASE_URL}/api/color?month=${month}&week=${weekNumber}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

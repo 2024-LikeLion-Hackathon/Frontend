@@ -205,7 +205,7 @@ header {
   margin-left: 40px;
 }
 
-.diary-section h2 {
+#daily {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -256,6 +256,13 @@ button.emotion{
   font-size: 14px;
   line-height: 18px;
   color: #000000;
+}
+
+#aiimage{
+  width: 406px;
+  height: 272px;
+  border-radius: 3%;
+  justify-content: center;
 }
 
 #ai_text,
