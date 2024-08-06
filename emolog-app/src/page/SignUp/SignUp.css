@@ -40,8 +40,7 @@
     background: url("../../asset/img/copyrigt_emo.png");
   }
 
-.kakaoIdLogin button{
-
+  .kakaoIdLogin button {
     position: absolute;
     width: 328px;
     height: 54px;

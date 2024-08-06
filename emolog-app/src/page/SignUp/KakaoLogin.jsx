@@ -70,8 +70,8 @@ const KakaoLogin = () => {
               navigate("/userform");
             } else {
               navigate("/");
-            }
-            navigate("/");
+            } 
+            
           } else {
             console.error("서버 응답에 토큰이 없습니다.");
           }
