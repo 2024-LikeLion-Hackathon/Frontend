@@ -160,7 +160,15 @@ function Result() {
             }
         }
     };
+    const chunkArray = (array, size) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += size) {
+            result.push(array.slice(i, i + size));
+        }
+        return result;
+    };
 
+    const emotionChunks = chunkArray(emotions, 3);
     const handleFinish = () => {
         resetDiary(); // DiaryContext 초기화
         navigate('/'); // 메인 페이지로 이동
@@ -215,14 +223,19 @@ function Result() {
                     </div>
                     <div id="color_hexa">#{diary.color.hexa}</div>
                     <div id="emotions">
-                        {emotions.map((emotion) => (
-                            <button
-                                key={emotion}
-                                className={`emotion`}
-                            >
-                                {emotion}
-                            </button>
+                    {emotionChunks.map((chunk, index) => (
+                            <div key={index} className="emotion-row">
+                                {chunk.map((emotion) => (
+                                    <button
+                                        key={emotion}
+                                        className={`emotion`}
+                                    >
+                                        {emotion}
+                                    </button>
+                                ))}
+                            </div>
                         ))}
+
                     </div>
                     <div id="dt_container">
                         <div id="diary_content">{diary.diary.content}</div>
