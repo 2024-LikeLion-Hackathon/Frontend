@@ -2,11 +2,26 @@ import React from "react";
 import KakaoLogin from "./KakaoLogin";
 import "./SignUp.css";
 
-const Signup = () => {
+const Naver = () => {
+  const NaverLogin = () => {
+    window.location.href = "https://emolog.kro.kr/oauth2/authorization/naver";
+  };
 
-  const naverUrl = "https://emolog.kro.kr/login/oauth2/code/naver";
-  const googleUrl = "https://emolog.kro.kr/login/oauth2/code/google"
+  return <button id="naver" onClick={NaverLogin}></button>;
+};
+
+
+const Google = () => {
+
+  const handleLogin = () => {
+    window.location.href = "https://emolog.kro.kr/oauth2/authorization/google";
   
+  };
+
+  return <button id="google"onClick={handleLogin}></button>;
+}
+
+const Signup = () => {
   return (
     <div className="SignUp">
       <div className="container">
@@ -16,8 +31,12 @@ const Signup = () => {
           <div id="kakao">
             <KakaoLogin />
           </div>
-          <button id="naver" onClick={window.location.replace(naverUrl)}></button>
-         <button id="google" onClick={window.location.replace(googleUrl)}></button>
+          <div>
+            <Naver />
+          </div>
+          <div >
+            <Google />
+          </div>
           <div id="copyright"></div>
         </div>
       </div>
