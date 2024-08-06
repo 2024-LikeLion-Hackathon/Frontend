@@ -22,7 +22,7 @@ function App() {
         <Routes>
           
           <Route path="/signup" element={<Signup />} />
-          <Route path="/userform" element={<Userform />} />
+          <Route path="/" element={<Userform />} />
           <Route path="/write" element={<WriteLog />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/weekly" element={<Weekly />} />
