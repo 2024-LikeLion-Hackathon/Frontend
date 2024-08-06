@@ -141,7 +141,8 @@
     }
 
     #goWrite{
-        background-image: url('../../asset/img/goWrite.png')
+        background-image: url('../../asset/img/goWrite.png');
+        background-position: center;
     }
 
     #thirdBox{
@@ -252,12 +253,27 @@
         }
         #logo{
             left: auto;
+            margin-left: 10px;
         }
         #secondBox{
             width: 98vw;
         }
         #thirdBox{
             width: 98vw;
+        }
+        #modify.t{
+            width: auto;
+            
+        }
+        .btnCont{
+            width: 30%;
+        }
+        #goWrite{
+            padding: 0;
+            
+        }
+        #a{
+            margin-left: auto;
         }
         .longBtn{
             width: 98vw;
