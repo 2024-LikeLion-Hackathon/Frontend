@@ -42,5 +42,4 @@
     ]
   },
   "proxy": "http://emolog-server.ap-northeast-2.elasticbeanstalk.com"
-
 }

@@ -19,11 +19,12 @@ function Select() {
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
-            setToken(storedToken)
+            setToken(storedToken);
         }
     }, []);
 
     useEffect(() => {
+        console.log('Diary content changed:', diary.content);
         const fetchEmotions = async () => {
             try {
                 const content = diary.content || '';
@@ -37,6 +38,10 @@ function Select() {
         };
         fetchEmotions();
     }, [diary.content]);
+
+    useEffect(() => {
+        console.log('Select component rendered');
+    });
 
     const date = diary.date ? parseISO(diary.date) : new Date();
     const month = isNaN(date) ? '' : format(date, 'M', { locale: ko });
