@@ -240,32 +240,28 @@
     border-radius: 4px;
     outline: none;
     max-width: 500px;
-    width: 50%;
+    width: 400px;
     z-index: 1000; /* 모달이 다른 요소들 위에 표시되도록 */
     text-align: center; /* 텍스트 가운데 정렬 */
 
-        /* Rectangle 51 */
-
-   
         
-        height: 440px;
+    height: auto;
         
 
-        background: #FFFFFF;
-        border-radius: 10px;
+    background: #FFFFFF;
+    border-radius: 10px;
 
 
-        font-family: 'Pretendard';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 18px;
-        line-height: 28px;
-        letter-spacing: -1px;
-        color: #000000;
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: -1px;
+    color: #000000;
 
 
-
-  }
+}
   
   .overlay {
     position: fixed;
