@@ -41,7 +41,7 @@ const Form = ({ token }) => {
     try {
       await putUser({ nickname, age }, token);
       alert("사용자 정보가 저장되었습니다.");
-      navigate('/');
+      navigate('/monthly');
     } catch (error) {
       alert("사용자 정보를 저장하는 중 오류가 발생했습니다.");
     }
