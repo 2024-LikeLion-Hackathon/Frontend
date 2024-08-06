@@ -1,6 +1,6 @@
 .common-flex {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
     height: 97vh;
     justify-content: flex-start;
@@ -111,6 +111,9 @@
         top: 186px;
         border-radius: 5px;
         background-size: contain;
+        background-repeat: no-repeat;
+        align-self: center;
+        background-position: center;
     }
     #ment{
         word-spacing:-.2ch ;
@@ -533,6 +536,9 @@
 
 }
 @media screen and (max-width: 500px) {
+    .common-flex{
+        width: 100vw;
+    }
     .result{
         width: 100vw;
         #logoBox{
@@ -547,20 +553,20 @@
         #resultBox{
             width: 100vw;
         }
-        #img{
-            width: 95vw;
-        }
+        
+      
         #ment{
-            width: 94.2vw;
+           
         }
         #colorBox{
             width: 94.2vw;
         }
+        
         #emotions{
             width: 98vw;
         }
         #diary_content{
-            width: 96vw;
+            width: 89vw;
         }
         #text{
             width: 96vw;
