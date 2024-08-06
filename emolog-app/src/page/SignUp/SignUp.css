@@ -57,7 +57,7 @@
     height: 54px;
     left: calc(50% - 328px / 2);
     top: 534px;
-
+    border: none;
     background: url("../../asset/img/naver.png");
   }
 
@@ -67,7 +67,7 @@
     height: 54px;
     left: calc(50% - 328px / 2);
     top: 604px;
-
+    border: none;
     background: url("../../asset/img/google.png");
   }
 }
