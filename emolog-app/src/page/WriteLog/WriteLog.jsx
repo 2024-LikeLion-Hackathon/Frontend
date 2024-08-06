@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import './WriteLog.css';
-
 import { DiaryContext } from '../../context/DiaryContext';
 import { fetchUrl } from "../../api/fetch-url";
 import { getDiarySummaries } from "../../api/getDiarySummaries";
@@ -43,8 +42,9 @@ function WriteLog() {
 
   
     const handleSubmit = () => {
-        navigate('/chat', { state: { content: text } });
-    
+      
+       
+
         updateDiary({ date, content:text });
         console.log("Diary Updated:", { date }); // 확인용 로그
         console.log(text);
@@ -56,6 +56,7 @@ function WriteLog() {
           .catch((error) => {
             console.error('Error in handleSubmit:', error);
           });
+           navigate('/chat', { state: { content: text } });
       };
 
     const handleDiaryButtonClick = async () => {

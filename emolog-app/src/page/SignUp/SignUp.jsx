@@ -3,6 +3,10 @@ import KakaoLogin from "./KakaoLogin";
 import "./SignUp.css";
 
 const Signup = () => {
+
+  const naverUrl = "https://emolog.kro.kr/login/oauth2/code/naver";
+  const googleUrl = "https://emolog.kro.kr/login/oauth2/code/google"
+  
   return (
     <div className="SignUp">
       <div className="container">
@@ -12,8 +16,8 @@ const Signup = () => {
           <div id="kakao">
             <KakaoLogin />
           </div>
-          <a href="https://emolog.kro.kr/login/oauth2/code/naver"><div id="naver" ></div></a>
-          <a href="https://emolog.kro.kr/login/oauth2/code/google"><div id="google"></div></a>
+          <button id="naver" onClick={window.location.replace(naverUrl)}></button>
+         <button id="google" onClick={window.location.replace(googleUrl)}></button>
           <div id="copyright"></div>
         </div>
       </div>
