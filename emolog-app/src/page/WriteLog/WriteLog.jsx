@@ -45,7 +45,7 @@ function WriteLog() {
     const handleSubmit = () => {
         navigate('/chat', { state: { content: text } });
     
-        updateDiary({ date });
+        updateDiary({ date, content:text });
         console.log("Diary Updated:", { date }); // 확인용 로그
         console.log(text);
     
