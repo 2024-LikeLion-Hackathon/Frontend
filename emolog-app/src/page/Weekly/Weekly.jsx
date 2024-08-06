@@ -140,21 +140,23 @@ const Weekly = () => {
     return weekData;
   };
   const handleDiaryButtonClick = async () => {
-    const todayDate = new Date().toISOString().split('T')[0];
+    const todayDate = new Date().toISOString().split("T")[0];
     try {
       const response = await getDiarySummaries(todayDate, token);
       if (response && response.diary && response.diary.date) {
-        navigate('/result', { state: { date: todayDate } });
+        navigate("/result", { state: { date: todayDate } });
       } else {
-        navigate('/write');
+        navigate("/write");
       }
     } catch (error) {
       console.error("Error fetching today's diary:", error);
-      navigate('/write');
+      navigate("/write");
     }
   };
+
   const handleDayClick = async (day) => {
     const selectedDate = day.date;
+
     try {
       setLoading(true);
       const response = await axios.get(`/api/diary/summary/${selectedDate}`, {
@@ -297,12 +299,16 @@ const Weekly = () => {
                   <img id="aiimage" src={diary.url} alt="Diary illustration" />
                   <p id="emotion_text">대표 감정</p>
                   <div className="emotions">
-                    {diary.emotion.map((emotion, index) => (
-                      <button key={index} className="emotion">
-                        {emotion}
-                      </button>
-                    ))}
+                    {diary.emotion.map(
+                      (emotion, index) =>
+                        index < 3 && (
+                          <button key={index} className="emotion">
+                            {emotion}
+                          </button>
+                        )
+                    )}
                   </div>
+
                   <p id="ai_text">모디의 한 마디</p>
                   <p className="ai-message">{selectedDay.comment}</p>
 
