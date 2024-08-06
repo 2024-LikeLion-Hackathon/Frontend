@@ -292,3 +292,33 @@
         background-image: url('../../asset/img/my.png');
     }
 }
+
+@media screen and (max-width: 500px) {
+    .common-flex{
+        width: 100vw;
+    }
+    .select{
+        width: 100vw;
+        #logoBox{
+            width: 98vw;
+        }
+        #logo{
+            left: auto;
+        }
+        #secondBox{
+            width:98vw ;
+        }
+        #selectEmo{
+            width: 100vw;
+        }
+        #emos{
+            width: 98vw;
+        }
+        #nevi{
+            width: 100vw;
+            left: auto;
+        }
+
+
+    }
+}

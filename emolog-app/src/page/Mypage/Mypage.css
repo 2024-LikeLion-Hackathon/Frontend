@@ -243,3 +243,28 @@
     background-image: url('../../asset/img/my.png');
     }
 }
+
+@media screen and (max-width: 500px) {
+    .Mypage{
+        width: 100vw;
+    }
+    #logoBox{
+        width: 100vw;
+    }
+    #logo{
+        left: auto;
+    }
+    #secondBox{
+        width: 98vw;
+    }
+    #thirdBox{
+        width: 98vw;
+    }
+    .longBtn{
+        width: 98vw;
+    }
+    #nevi{
+        width: 100vw;
+        left: auto;
+    }
+}
