@@ -12,8 +12,8 @@ const Signup = () => {
           <div id="kakao">
             <KakaoLogin />
           </div>
-          <div id="naver"></div>
-          <div id="google"></div>
+          <a href="https://emolog.kro.kr/login/oauth2/code/naver"><div id="naver" ></div></a>
+          <a href="https://emolog.kro.kr/login/oauth2/code/google"><div id="google"></div></a>
           <div id="copyright"></div>
         </div>
       </div>
