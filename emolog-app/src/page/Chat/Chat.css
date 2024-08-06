@@ -403,7 +403,10 @@ background-image: url('../../asset/img/emobtn_go.png');
                 left: auto;
             }
         }
-        
+        .modal{
+            width: 80%;
+            
+        }
     }
 
 

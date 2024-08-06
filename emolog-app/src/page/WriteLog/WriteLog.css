@@ -240,19 +240,19 @@
     border-radius: 4px;
     outline: none;
     max-width: 500px;
-    width: 90%;
+    width: 50%;
     z-index: 1000; /* 모달이 다른 요소들 위에 표시되도록 */
     text-align: center; /* 텍스트 가운데 정렬 */
 
         /* Rectangle 51 */
 
    
-    
-    height: 440px;
-    
+        
+        height: 440px;
+        
 
-    background: #FFFFFF;
-    border-radius: 10px;
+        background: #FFFFFF;
+        border-radius: 10px;
 
 
         font-family: 'Pretendard';
@@ -281,7 +281,7 @@
     max-width: 100%;
     height: auto;
     margin-bottom: 20px; /* 이미지 아래 여백 추가 */
-  }
+}
   
 @media screen and (max-width: 500px) {
     .writelog{
